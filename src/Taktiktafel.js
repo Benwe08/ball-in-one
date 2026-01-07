@@ -218,9 +218,9 @@ const Taktiktafel = ({ title }) => {
   const previousScene = szene > 0 ? szene - 1 : null;
   const [szenen, setSzenen] = useState({
     0: [
-      { id: 1,familie: crypto.randomUUID(), kennung: 1, x: 40,  y: 200 ,title: "TW"},
-      { id: 2,familie: crypto.randomUUID(), kennung: 2, x: 150, y: 200 ,title: "TW"},
-      { id: 3,familie: crypto.randomUUID(), kennung: 3, x: 105, y: 300 ,title: ""}
+      { id: 1,familie: Math.random().toString(36).substr(2, 9), kennung: 1, x: 40,  y: 200 ,title: "TW"},
+      { id: 2,familie: Math.random().toString(36).substr(2, 9), kennung: 2, x: 150, y: 200 ,title: "TW"},
+      { id: 3,familie: Math.random().toString(36).substr(2, 9), kennung: 3, x: 105, y: 300 ,title: ""}
     ]
   });
 
@@ -230,9 +230,9 @@ const Taktiktafel = ({ title }) => {
 
   setSzenen({
     0: [
-      { id: 1, familie: crypto.randomUUID(), kennung: 1, x: 40,  y: 200, title: "TW" },
-      { id: 2, familie: crypto.randomUUID(), kennung: 2, x: 150, y: 200, title: "TW" },
-      { id: 3, familie: crypto.randomUUID(), kennung: 3, x: 105, y: 300, title: "" }
+      { id: 1, familie: Math.random().toString(36).substr(2, 9), kennung: 1, x: 40,  y: 200, title: "TW" },
+      { id: 2, familie: Math.random().toString(36).substr(2, 9), kennung: 2, x: 150, y: 200, title: "TW" },
+      { id: 3, familie: Math.random().toString(36).substr(2, 9), kennung: 3, x: 105, y: 300, title: "" }
     ]
   });
 
@@ -250,7 +250,7 @@ const Taktiktafel = ({ title }) => {
 
       const newWidget = {
         id: Date.now() + Math.random(),
-        familie: crypto.randomUUID(),  
+        familie: Math.random().toString(36).substr(2, 9),  
         title: original?.title ?? "TW",
         x: data.x,
         y: data.y,
@@ -526,7 +526,6 @@ const isAutoPlaying = useRef(false);
             if (!ghost) return null;
 
             if (real.x < 250 || ghost.x < 250) return null;
-            if (real.y > 100 || ghost.y > 100) return null;
             const size = real.kennung === 3 ? 50 : 70;
             const half = size / 2;
 
