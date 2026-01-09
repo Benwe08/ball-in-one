@@ -28,6 +28,9 @@ const Liste = ({ title }) => {
       position: 'absolute',
       left: posl,
       top: post,
+      fontFamily: "sans-serif",
+      fontWeight: "bold",
+      display: "inline-block",
     }}>
       <h3>{title}</h3>
     </div>
@@ -53,7 +56,9 @@ const Gespeichert = ({title, onClick, savesnumber}) => {
       backgroundColor: "orange",
       left: 1470,
       top: t + 100,
-      cursor: "pointer"
+      cursor: "pointer",
+      fontFamily: "sans-serif",
+      fontWeight: "bold",
     }}>
       <h3>{title}</h3>
     </div>
@@ -72,7 +77,10 @@ const Szenewid = ({ title }) => {
       maxHeight: '80vh',
       border: 'none',
       fontSize: '40px',
-      textAlign: 'center'
+      textAlign: 'center',
+      fontFamily: "sans-serif",
+      fontWeight: "bold",
+      display: "inline-block"
     }}>
       <h3>{title}</h3>
     </div>
@@ -182,6 +190,9 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
           pointerEvents: ghost ? "none" : "auto",
           zIndex: ghost ? 0 : zi,
           transition: isMoving ? "transform 1s ease-in-out" : "none",
+          fontFamily: "sans-serif",
+          fontWeight: "bold",
+          display: "inline-block"
         }}
       >
         <h3
