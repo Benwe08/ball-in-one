@@ -1,64 +1,75 @@
 import { useState, useRef } from "react";
 import Draggable from "react-draggable";
 import React from "react";
+import HandballF from "./assets/HandballFeld.png";
+import FußballF from "./assets/FußballFeld.png"
+import TennisF from "./assets/TennisFeld.png"
+import VolleyballF from "./assets/VolleyballFeld.png"
+import HandballB from "./assets/HandballBall.png";
+import FußballB from "./assets/FußballBall.png"
+import TennisB from "./assets/TennisBall.png"
+import VolleyballB from "./assets/VolleyballBall.png"
+import { FiChevronRight,FiPlay,FiChevronLeft,FiRotateCcw,FiTrash2,FiSave,FiUpload,FiDownload,FiEdit3 } from "react-icons/fi";
 
-const Liste = ({ title }) => {
+const Liste = ({ title, children }) => {
   let posl, post, w
   if (title === "Widgets:"){
-    posl = "0px";
-    post = "100px";
-    w = "250px"
+    posl = "0vw";
+    post = "5vw";
+    w = "15vw"
   }
   else if (title === "Spielzüge:"){
-    posl = "1470px";
-    post = "100px";
-    w = "350px"
+    posl = "77vw"
+    post = "5vw";
+    w = "19vw"
   }
   
   return (
     <div style={{
       width: w,   
-      height: '1000px',  
-      maxWidth: '90%',   
-      maxHeight: '80vh',
+      height: '40vw', 
       border: '1px solid #ccc',
-      padding: '5px',
-      borderRadius: '5px',
-      boxShadow: '2px 2px 5px rgba(0,0,0,0.1)',
+      padding: '0.5vw',
+      borderRadius: '1vw',
       position: 'absolute',
       left: posl,
       top: post,
       fontFamily: "sans-serif",
       fontWeight: "bold",
-      display: "inline-block",
+      display: "flex",
+      flexDirection:"column",
+      fontSize: "0.9vw",
+      overflowY: "hidden"
     }}>
-      <h3>{title}</h3>
+      <h3 style={{margin: "0.5vw 0", borderBottom: "1.5vw solid #ffffff"}}>{title}</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', paddingBottom:"1vw",paddingTop:"1vw", overflowY:"auto", flexGrow:1 }}>
+        {children}
+        </div>
     </div>
   );
 };
 
-const Gespeichert = ({title, onClick, savesnumber}) => {
-  const t = savesnumber * 100 + 100
-  console.log(t)
+const Gespeichert = ({title, onClick,style}) => {
   return (
     <div
       onClick={() => onClick(title)} 
       style={{
-      width: '350px',   
-      height: '100px',  
-      maxWidth: '90%',   
-      maxHeight: '80vh',
-      border: '2px solid #000000',
-      padding: '5px',
-      borderRadius: '10px',
+      width: '100%',   
+      height: '8vw',  
+      border: '0.2vw solid #000000',
+      padding: '0.5vw',
+      borderRadius: '0.5vw',
       boxShadow: '2px 2px 5px rgba(0,0,0,0.1)',
-      position: 'absolute',
+      position: 'relative',
       backgroundColor: "orange",
-      left: 1470,
-      top: t + 100,
       cursor: "pointer",
       fontFamily: "sans-serif",
       fontWeight: "bold",
+      marginBottom: "0.5vw",
+      boxSizing: "border-box",
+      display:"flex", 
+      alignItems:"center", 
+      justifyContent:"center"
     }}>
       <h3>{title}</h3>
     </div>
@@ -68,15 +79,13 @@ const Gespeichert = ({title, onClick, savesnumber}) => {
 const Szenewid = ({ title }) => {
   return (
     <div style={{
-      left: '82px',
-      top: '685px',
-      width: '100px',   
-      height: '70px',
+      left: '5.5vw',
+      top: '35.5vw',
+      width: '5.5vw',   
+      height: '3vw',
       position: 'absolute',  
-      maxWidth: '90%',   
-      maxHeight: '80vh',
       border: 'none',
-      fontSize: '40px',
+      fontSize: '2.5vw',
       textAlign: 'center',
       fontFamily: "sans-serif",
       fontWeight: "bold",
@@ -90,7 +99,7 @@ const Szenewid = ({ title }) => {
 /* --------------------------------------------------
    A SINGLE WIDGET (original or clone)
    -------------------------------------------------- */
-const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, isAnimating,isMoving, startPos}) => {
+const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, isAnimating,isMoving, startPos,canEdit,aktuellerBall}) => {
   let we, h, b, br, bc, co, ta, fs, c, bi, bs, zi;
   const nodeRef = useRef(null);
   const ref = useRef(null);
@@ -106,67 +115,56 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
 
 
   if (kennung === 1){
-    we = '70px';
-    h = '70px';  
-    b = '1px solid #ccc';
-    br = '70px';
+    we = '4vw';
+    h = '4vw';  
+    b = '0.15vw solid #000000';
+    br = '50%';
     bc = 'blue';
     bi = 'none'
     co = 'white';
     ta = 'center';
-    fs = '17px';
+    fs = '1vw';
     c = 'grab';
     bs = 'cover'
     zi = 1
   }
   
   else if (kennung === 2){
-    we = '70px';
-    h = '70px';  
-    b = '1px solid #ccc';
-    br = '70px';
+    we = '4vw';
+    h = '4vw';  
+    b = '0.15vw solid #000000';
+    br = '50%';
     bc = 'red';
     bi = 'none'
     co = 'white';
     ta = 'center';
-    fs = '17px';
+    fs = '1vw';
     c = 'grab';
     bs = 'cover'
     zi = 1
   }
 
   else if (kennung === 3){
-    we = '50px';
-    h = '50px';  
+    we = '3vw';
+    h = '3vw';  
     b = '0px solid #ccc';
-    br = '70px';
+    br = '50%';
     bc = 'none'
-    bi = 'url(https://cdn.uhlsport.com/media/80/a4/de/1721458825/200190301_png.jpg?ts=1729089777)';
+    bi = `url(${aktuellerBall})`;
     co = 'white';
     ta = 'center';
     fs = '0px';
     c = 'grab';
-    bs = '75px 75px'
+    bs = '5.2vw 5.2vw'
     zi = 2
   }
 
-  else{
-    we = '70px';
-    h = '70px';  
-    b = '1px solid #ccc';
-    br = '70px';
-    bc = 'green';
-    co = 'white';
-    ta = 'center';
-    fs = '17px';
-    c = 'grab';
-  }
   
   return (
     <Draggable
       nodeRef={nodeRef}
       position={{ x: currentX, y: currentY }}
-      disabled={ghost || isAnimating || isMoving}
+      disabled={ghost || isAnimating || isMoving || canEdit}
       onStart={ghost ? () => {} : (e, data) => onClone(id, data, kennung)} 
       onStop={ghost ? () => {} : (e, data) => onStopCommand(id, data)}
     >
@@ -192,17 +190,18 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
           transition: isMoving ? "transform 1s ease-in-out" : "none",
           fontFamily: "sans-serif",
           fontWeight: "bold",
-          display: "inline-block"
+          display:"flex", alignItems:"center", justifyContent:"center"
         }}
       >
         <h3
           ref={ref}
-          contentEditable
+          contentEditable={canEdit && !ghost}
           suppressContentEditableWarning
           onBlur={handleBlur}
           style={{
-            cursor: "text",
+            cursor: canEdit ? "text" : (ghost ? "default" : "grab"),
             outline: "none",
+            userSelect: canEdit ? "text" : "none",
           }}
         >
           {title}
@@ -221,19 +220,44 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
 
 const Taktiktafel = ({ title }) => {
   const [szene, setSzene] = useState(0);
+  const [sportart, setSportart] = useState("H");
   const [isAnimating, setIsAnimating] = useState(false);
   const [isMoving, setIsMoving] = useState(false);
   const [gespeicherteZuege, setGespeicherteZuege] = useState([]);
   const [isExporting, setIsExporting] = useState(false);
   const [isdeleting, setIsdeleting] = useState(false);
   const previousScene = szene > 0 ? szene - 1 : null;
+  const [isEditingText, setIsEditingText] = useState(false);
+  const bilderFMap = {
+  H: HandballF,
+  F: FußballF,
+  V: VolleyballF,
+  T: TennisF
+  };
+    const bilderBMap = {
+  H: HandballB,
+  F: FußballB,
+  V: VolleyballB,
+  T: TennisB
+  };
+  const aktuellerBall = bilderBMap[sportart]
+  const aktuellesFeld = bilderFMap[sportart]
   const [szenen, setSzenen] = useState({
     0: [
-      { id: 1,familie: Math.random().toString(36).substr(2, 9), kennung: 1, x: 40,  y: 200 ,title: "TW"},
-      { id: 2,familie: Math.random().toString(36).substr(2, 9), kennung: 2, x: 150, y: 200 ,title: "TW"},
-      { id: 3,familie: Math.random().toString(36).substr(2, 9), kennung: 3, x: 105, y: 300 ,title: ""}
+      { id: 1,familie: Math.random().toString(36).substr(2, 9), kennung: 1, x: 2,  y: 10 ,title: "TW"},
+      { id: 2,familie: Math.random().toString(36).substr(2, 9), kennung: 2, x: 10,  y: 10,title: "TW"},
+      { id: 3,familie: Math.random().toString(36).substr(2, 9), kennung: 3, x: 6.5,  y: 15,title: ""}
     ]
   });
+  const [windowSize, setWindowSize] = useState({ w: window.innerWidth, h: window.innerWidth });
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({ w: window.innerWidth, h: window.innerWidth });
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const clear = () => {
 
@@ -241,9 +265,9 @@ const Taktiktafel = ({ title }) => {
 
   setSzenen({
     0: [
-      { id: 1, familie: Math.random().toString(36).substr(2, 9), kennung: 1, x: 40,  y: 200, title: "TW" },
-      { id: 2, familie: Math.random().toString(36).substr(2, 9), kennung: 2, x: 150, y: 200, title: "TW" },
-      { id: 3, familie: Math.random().toString(36).substr(2, 9), kennung: 3, x: 105, y: 300, title: "" }
+      { id: 1, familie: Math.random().toString(36).substr(2, 9), kennung: 1, x: 2,  y: 10 , title: "TW" },
+      { id: 2, familie: Math.random().toString(36).substr(2, 9), kennung: 2, x: 10,  y: 10, title: "TW" },
+      { id: 3, familie: Math.random().toString(36).substr(2, 9), kennung: 3, x: 6.5,  y: 15, title: "" }
     ]
   });
 
@@ -254,7 +278,12 @@ const Taktiktafel = ({ title }) => {
 };
 
   const cloneWidget = (id, data, kennung) => {
-    if (data.x >= 250) return;
+
+
+    const xRelativ = (data.x / window.innerWidth) * 100;
+    const yRelativ = (data.y / window.innerWidth) * 100;
+
+        if (xRelativ >= 15) return;
 
     setSzenen(prev => {
       const original = prev[szene].find(w => w.id === id);
@@ -263,8 +292,8 @@ const Taktiktafel = ({ title }) => {
         id: Date.now() + Math.random(),
         familie: Math.random().toString(36).substr(2, 9),  
         title: original?.title ?? "TW",
-        x: data.x,
-        y: data.y,
+        x: xRelativ,
+        y: yRelativ,
         kennung
       };
 
@@ -429,28 +458,27 @@ const isAutoPlaying = useRef(false);
   }
 
   const handleStop = (id, data, isTitleChange = false) => {
+    const xRelativ = (data.x / window.innerWidth) * 100;
+    const yRelativ = (data.y / window.innerWidth) * 100;
 
-    if (!isTitleChange && (data.x <= 250 ||  data.y <= 100) && !String(id).startsWith("main")) {
-      setTimeout(() => {
-        setSzenen(prev => ({
-          ...prev,
-          [szene]: prev[szene].filter(w => w.id !== id)
-        }));
-      }, 0);
+
+    if (!isTitleChange && (xRelativ < 15 || xRelativ > 75 || yRelativ < 5 || yRelativ > 41 ) && !String(id).startsWith("main")) {
+      setSzenen(prev => ({
+        ...prev,
+        [szene]: prev[szene].filter(w => w.id !== id)
+      }));
       return;
     }
-
 
     setSzenen(prev => ({
       ...prev,
       [szene]: prev[szene].map(w =>
         w.id === id ? {
           ...w,
-          x: data.x ?? w.x, 
-          y: data.y ?? w.y,
+          x: xRelativ, 
+          y: yRelativ,
           title: data.title ?? w.title
-        } 
-        : w
+        } : w
       )
     }));
   };
@@ -460,19 +488,25 @@ const isAutoPlaying = useRef(false);
     <div
       style={{ position: "relative", width: "100%", height: "1000px" }}
     >
-      <img src="https://t3.ftcdn.net/jpg/03/71/45/14/360_F_371451475_Udjp9ZLzy2XbO5aIcYdiJ92haFay2ZON.jpg" alt="Externes Bild" style={{left: "265px",top: "100px", position: "absolute", width: '1200px', height: '1000px', maxHeight: '80vh'}} />
+      <img src={aktuellesFeld} alt="Externes Bild" style={{left: "16.1vw",top: "6vw", position: "absolute", width: '60.9vw', height: 'auto'}} />
       <Liste title="Widgets:" />
-      <button onClick={angeklicktvor} style={{backgroundImage: "url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkOeoqBKYwzzLzMfKQvawRjfnKKZe3ofMHzA&s)",left: "185px",top: '730px', position: "absolute", padding: "35px 35px", backgroundPosition: 'center',backgroundSize: "115px 115px", border: "none", cursor:"pointer"}}>
+      <button onClick={angeklicktvor} style={{left: "11vw",top: '37.9vw', position: "absolute",width:"4.5vw",height:"4.5vw", borderRadius:"50%", border: "0.1vw solid black", cursor:"pointer", fontSize:"3.5vw", display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:"white"}}>
+      <FiChevronRight />
       </button>
-      <button onClick={angeklicktzur} style={{backgroundImage: "url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkOeoqBKYwzzLzMfKQvawRjfnKKZe3ofMHzA&s)",left: "10px",top: '730px', position: "absolute", padding: "35px 35px", backgroundPosition: 'center',backgroundSize: "115px 115px", border: "none", transform: "rotate(180deg)", cursor:"pointer"}}>
+      <button onClick={angeklicktzur} style={{left: "0.8vw",top: '37.9vw', position: "absolute",width:"4.5vw",height:"4.5vw", borderRadius:"50%", border: "0.1vw solid black", cursor:"pointer", fontSize:"3.5vw", display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:"white"}}>
+      <FiChevronLeft />
       </button>
       <Szenewid title={szene} />
-      <button onClick={abspielen} style={{backgroundImage: "url(https://static.vecteezy.com/system/resources/thumbnails/035/753/221/small/video-play-button-icon-for-graphic-design-logo-web-site-social-media-mobile-app-ui-illustration-png.png)",left: "85px",top: '600px', position: "absolute", padding: "50px 50px", backgroundPosition: 'center',backgroundSize: "100px 100px", border: "none", cursor:"pointer", borderRadius:"50px"}}>
+      <button onClick={abspielen} style={{left: "5vw",top: '31vw', position: "absolute", width:"6.5vw", height:"6.5vw",cursor:"pointer", borderRadius:"50%", border:"0.5vw solid black", fontSize:"4vw", display:"flex", alignItems:"center", justifyContent:"center", paddingLeft:"1vw",backgroundColor:"white"}}>
+      <FiPlay/>
       </button>
-      <button onClick={clear} style={{left: "35px",top: '540px', position: "absolute", width:"200px",height:"50px", border: "2px solid black",backgroundColor:"#ff0000ff", cursor:"pointer",color:"white" ,display: 'flex',justifyContent: 'center',alignItems: 'center',textAlign: 'center', borderRadius:"50px", fontSize:"25px"}}>
-        <h3>clear</h3>
+      <button onClick={clear} style={{left: "11vw",top: '27vw', position: "absolute", width:"4vw",height:"4vw", border: "0.15vw solid black",cursor:"pointer",display: 'flex',justifyContent: 'center',alignItems: 'center', borderRadius:"50%", fontSize:"2.5vw",backgroundColor:"white"}}>
+        <FiRotateCcw />
       </button>
-      <Liste title="Spielzüge:" />
+      <button onClick={() => setIsEditingText(!isEditingText)} style={{left: "1.5vw",top: '27vw', position: "absolute", width:"4vw",height:"4vw", border: "0.15vw solid black",cursor:"pointer",display: 'flex',justifyContent: 'center',alignItems: 'center', borderRadius:"50%", fontSize:"2.5vw",backgroundColor: isEditingText ? "black" : "white",color: isEditingText ? "white" : "black"}}>
+        <FiEdit3 />
+      </button>
+      <Liste title="Spielzüge:" >
       {gespeicherteZuege.map((zug, index) => (
         <Gespeichert 
           key={zug.id}
@@ -506,14 +540,43 @@ const isAutoPlaying = useRef(false);
           }}
         />
       ))}
-      <button onClick={spielzugspeichern} style={{backgroundImage: "url(https://img.freepik.com/vektoren-premium/diskette-schwarzes-symbol-schaltflaeche-speichern-vektorgrafik_833641-1549.jpg)",left: "1570px",top: '110px', position: "absolute", padding: "30px  30px", backgroundPosition: 'center',backgroundSize: "100px 100px", border: "none", cursor:"pointer", borderRadius:"0px"}}>
+      </Liste>
+      <button onClick={spielzugspeichern} style={{left: "83vw",top: '5.5vw', position: "absolute", width:"3.5vw",height:"3.5vw", border: "0.3vw solid black", cursor:"pointer", borderRadius:"50%",fontSize:"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:"white"}}>
+      <FiSave color="black"/>
       </button>
-      <button onClick={spielzugloeschen} style={{backgroundImage: "url(https://media.istockphoto.com/id/928418914/de/vektor/abfalleimer-m%C3%BClleimer-m%C3%BClleimer-symbol.jpg?s=612x612&w=0&k=20&c=AVBll3HCJn47siu14hATrHzVXBwEHKlR-HDeLtd5ynU=)",left: "1630px",top: '110px', position: "absolute", padding: "26px  26px", backgroundPosition: 'center',backgroundSize: "65px 65px", border: isdeleting ? "4px solid red" : "4px solid white", cursor:"pointer", borderRadius:"0px",}}>
+      <button onClick={spielzugloeschen} style={{left: "86.4vw",top: '5.5vw',color: isdeleting ? "white" : "black" ,position: "absolute", width:"3.5vw",height:"3.5vw", border: "0.3vw solid black", cursor:"pointer", borderRadius:"50%",fontSize:"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:isdeleting ? "black" : "white"}}>
+        <FiTrash2/>
       </button>
-      <button onClick={importing} style={{backgroundImage: "url(https://t4.ftcdn.net/jpg/05/93/54/91/360_F_593549119_JOuhPhytRMiZLlvAZ5WHhpoDsRGd0Kzi.jpg)",left: "1750px",top: '110px', position: "absolute", padding: "26px  26px", backgroundPosition: 'center',backgroundSize: "60px 60px", cursor:"pointer", border: "none",}}>
+      <button onClick={importing} style={{left: "89.8vw",top: '5.5vw', position: "absolute", width:"3.5vw",height:"3.5vw", border: "0.3vw solid black", cursor:"pointer", borderRadius:"50%",fontSize:"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:"white"}}>
+        <FiDownload/>
       </button>
-      <button onClick={exporting} style={{backgroundImage: "url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpz_Rc5k_62_4fHCD8u9Ji8woifs_-ZKiKRg&s)",left: "1689px",top: '110px', position: "absolute", padding: "26px  26px", backgroundPosition: 'center',backgroundSize: "60px 60px", cursor:"pointer",border: isExporting ? "4px solid blue" : "none",}}>
+      <button onClick={exporting} style={{left: "93.2vw",top: '5.5vw',color: isExporting ? "white" : "black", position: "absolute", width:"3.5vw",height:"3.5vw", border: "0.3vw solid black", cursor:"pointer", borderRadius:"50%",fontSize:"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:isExporting ? "black" : "white"}}>
+        <FiUpload/>
       </button>
+      <select 
+        value={sportart} 
+        onChange={(e) => setSportart(e.target.value)}
+        style={{
+          position: "absolute",
+          left: "1.5vw",
+          top: "22vw", // Über dem Edit-Button
+          width: "13.5vw",
+          height: "3vw",
+          borderRadius: "0.5vw",
+          border: "0.15vw solid black",
+          fontFamily: "sans-serif",
+          fontWeight: "bold",
+          fontSize: "1vw",
+          padding: "0.2vw",
+          cursor: "pointer",
+          backgroundColor: "white"
+        }}
+      >
+        <option value="H">Handball</option>
+        <option value="F">Fußball</option>
+        <option value="V">Volleyball</option>
+        <option value="T">Tennis</option>
+      </select>
 
       <svg
         style={{
@@ -536,14 +599,14 @@ const isAutoPlaying = useRef(false);
             console.log("REAL", real, "GHOST", ghost)
             if (!ghost) return null;
 
-            if (real.x < 250 || ghost.x < 250) return null;
-            const size = real.kennung === 3 ? 50 : 70;
-            const half = size / 2;
+            if (real.x < 15 || ghost.x < 15) return null;
 
-            const realX = real.x + half;
-            const realY = real.y + half ;
-            const ghostX = ghost.x + half;
-            const ghostY = ghost.y + half;
+            const offset = real.kennung === 3 ? 1.5 : 2;
+
+            const realX = ((real.x + offset) * window.innerWidth) / 100 ;
+            const realY = ((real.y + offset) * window.innerWidth) / 100 ;
+            const ghostX = ((ghost.x + offset) * window.innerWidth) / 100 ;
+            const ghostY = ((ghost.y + offset) * window.innerWidth) / 100 ;
 
             return (
               <line
@@ -571,9 +634,10 @@ const isAutoPlaying = useRef(false);
             onClone={() => {}}          
             onStopCommand={() => {}}    
             kennung={w.kennung}
-            x={w.x}
-            y={w.y}
+            x={(w.x * window.innerWidth) / 100}
+            y={(w.y * window.innerWidth) / 100}
             ghost={true}                
+            aktuellerBall={aktuellerBall}
           />
         ))
       }
@@ -594,11 +658,16 @@ const isAutoPlaying = useRef(false);
             onClone={cloneWidget}
             onStopCommand={handleStop}
             kennung={w.kennung}
-            x={w.x} 
-            y={w.y}
+            x={(w.x * window.innerWidth) / 100} 
+            y={(w.y * window.innerWidth) / 100}
             isAnimating={isAnimating}
             isMoving={isMoving}
-            startPos={ghost ? { x: ghost.x, y: ghost.y } : null}
+            startPos={ghost ? {
+                x:(ghost.x * window.innerWidth) / 100, 
+                y:(ghost.y * window.innerWidth) / 100 
+              } : null}
+            canEdit={isEditingText}
+            aktuellerBall={aktuellerBall}
           />
 
         </React.Fragment>

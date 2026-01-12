@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Versteckt die Scrollbar in Chrome/Safari */
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE und Edge */
+  scrollbar-width: none;     /* Firefox */
+}
