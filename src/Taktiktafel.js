@@ -253,7 +253,7 @@ const Taktiktafel = ({ isMobile, aktuellesTeam }) => {
       { id: 3,familie: Math.random().toString(36).substr(2, 9), kennung: 3, x: isMobile ? 7.5 : 6.5,  y:isMobile ? 88: 15,title: ""}
     ]
   });
-  const [windowSize, setWindowSize] = useState({ w: window.innerWidth, h: window.innerWidth });
+  const [, setWindowSize] = useState({ w: window.innerWidth, h: window.innerWidth });
 
   React.useEffect(() => {
     const handleResize = () => {
