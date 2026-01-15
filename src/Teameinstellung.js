@@ -54,7 +54,7 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
       const fileName = `${user.id}-${Math.random().toString(36).substring(2)}.${fileExt}`;
       const filePath = fileName; // Pfad im Bucket
 
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const {error: uploadError } = await supabase.storage
         .from('teambilder') // Dein Bucket-Name
         .upload(filePath, bildDatei);
 
@@ -306,7 +306,7 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
                   width: isMobile ?'15vw':"5vw", height:isMobile ?'15vw': "5vw", borderRadius: "50%", 
                   backgroundColor: "#eee", overflow: "hidden", border: "1px solid #ccc" 
                 }}>
-                  {team.bild ? <img src={team.bild} style={{width: "100%", height: "100%", objectFit: "cover"}} /> : "⚽"}
+                  {team.bild ? <img src={team.bild} style={{width: "100%", height: "100%", objectFit: "cover"}}  alt='Team Logo'/> : "⚽"}
                 </div>
                 <p style={{ fontSize: isMobile ?'3.3vw':"1vw", marginTop: "0.5vw", color: "black", fontFamily:"sans-serif" }}>{team.name}</p>
               </div>
