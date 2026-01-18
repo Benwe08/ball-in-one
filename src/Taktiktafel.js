@@ -9,29 +9,34 @@ import HandballB from "./assets/HandballBall.png";
 import FußballB from "./assets/FußballBall.png"
 import TennisB from "./assets/TennisBall.png"
 import VolleyballB from "./assets/VolleyballBall.png"
-import { FiChevronRight,FiPlay,FiChevronLeft,FiRotateCcw,FiTrash2,FiSave,FiUpload,FiDownload,FiEdit3 } from "react-icons/fi";
+import { createClient } from '@supabase/supabase-js';
+import { FiChevronRight,FiPlay,FiChevronLeft,FiRotateCcw,FiTrash2,FiSave,FiUpload,FiDownload} from "react-icons/fi";
+import { FaQuestion } from "react-icons/fa6";
 
 
 
+const supabase = createClient('https://fdwsacwvndkerbjbqcmi.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZkd3NhY3d2bmRrZXJiamJxY21pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNDQ2NjksImV4cCI6MjA4MzcyMDY2OX0.01CcKVq-bSO7M97DoT-o9PJ-jgVJ1RqTtarQRbktyiY');
 
 
 const Liste = ({ title, children, isMobile }) => {
-  let posl, post, w
+  let posl, post, w, h
   if (title === "Widgets:"){
     posl = "0vw";
     post = isMobile ?'72vw' :"5vw";
-    w = isMobile ?'94vw' :"15vw"
+    w = isMobile ?'94vw' :"15vw";
+    h = isMobile ?'25vw' :'40vw'
   }
   else if (title === "Spielzüge:"){
     posl = isMobile ?'0vw' :"77vw"
     post = isMobile ?'100vw' :"5vw";
-    w = isMobile ?'94vw' :"19vw"
+    w = isMobile ?'94vw' :"19vw";
+    h = isMobile ?'70vw' :'40vw'
   }
   
   return (
     <div style={{
       width: w,   
-      height: isMobile ?'25vw' :'40vw', 
+      height: h,
       border: '1px solid #ccc',
       padding: '0.5vw',
       borderRadius: '1vw',
@@ -45,7 +50,7 @@ const Liste = ({ title, children, isMobile }) => {
       fontSize: isMobile ?'3vw' :"0.9vw",
       overflowY: "hidden"
     }}>
-      <h3 style={{margin: "0.5vw 0", borderBottom: "1.5vw solid #ffffff"}}>{title}</h3>
+      <h3 style={{margin: "0.5vw 0", borderBottom: isMobile ? "6vw solid #ffffff" : "1.5vw solid #ffffff"}}>{title}</h3>
       <div style={{ display: 'flex', flexDirection: 'column', paddingBottom:"1vw",paddingTop:"1vw", overflowY:"auto", flexGrow:1 }}>
         {children}
         </div>
@@ -53,13 +58,13 @@ const Liste = ({ title, children, isMobile }) => {
   );
 };
 
-const Gespeichert = ({title, onClick,style}) => {
+const Gespeichert = ({title, onClick,style, isMobile}) => {
   return (
     <div
       onClick={() => onClick(title)} 
       style={{
       width: '100%',   
-      height: '8vw',  
+      height: isMobile? '15vw' : "8vw",  
       border: '0.2vw solid #000000',
       padding: '0.5vw',
       borderRadius: '0.5vw',
@@ -105,6 +110,8 @@ const Szenewid = ({ title,isMobile }) => {
    -------------------------------------------------- */
 const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, isAnimating,isMoving, startPos,canEdit,aktuellerBall, isMobile}) => {
   let we, h, b, br, bc, co, ta, fs, c, bi, bs, zi;
+  const [isEditing, setIsEditing] = useState(false);
+  const lastTap = useRef(0);
   const nodeRef = useRef(null);
   const ref = useRef(null);
   const [title, setTitle] = useState(orititle);
@@ -112,45 +119,71 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
   const currentY = isAnimating && startPos ? startPos.y: y;
 
   const handleBlur = () => {
-    const newTitle = ref.current.innerText;
+    setIsEditing(false); // WICHTIG: Reaktiviert das Ziehen (Draggable)
+    
+    const newTitle = ref.current.innerText; 
+
     setTitle(newTitle);
+    
     onStopCommand(id, { x, y, title: newTitle }, true);
   };
 
 
+    const handleDragStart = (e, data) => {
+    if (ghost) return;
+
+    const now = Date.now();
+    const DOUBLE_TAP_DELAY = 300;
+
+    if (now - lastTap.current < DOUBLE_TAP_DELAY) {
+      lastTap.current = 0; 
+
+    
+        setIsEditing(true);
+        return false;
+  
+    }
+    
+    lastTap.current = now;
+
+    onClone(id, data, kennung);
+    return true; // Erlaubt das Ziehen
+  };
+
+
   if (kennung === 1){
-    we = isMobile ?'10vw' :'4vw';
-    h = isMobile ?'10vw' :'4vw';  
+    we = isMobile ?'8vw' :'4vw';
+    h = isMobile ?'8vw' :'4vw';  
     b = '0.15vw solid #000000';
     br = '50%';
     bc = 'blue';
     bi = 'none'
     co = 'white';
     ta = 'center';
-    fs = isMobile ?'3vw' :'1vw';
+    fs = isMobile ?'2.5vw' :'1vw';
     c = 'grab';
     bs = 'cover'
     zi = 1
   }
   
   else if (kennung === 2){
-    we = isMobile ?'10vw' :'4vw';
-    h = isMobile ?'10vw' :'4vw';  
+    we = isMobile ?'8vw' :'4vw';
+    h = isMobile ?'8vw' :'4vw';  
     b = '0.15vw solid #000000';
     br = '50%';
     bc = 'red';
     bi = 'none'
     co = 'white';
     ta = 'center';
-    fs = isMobile ?'3vw' :'1vw';
+    fs = isMobile ?'2.5vw' :'1vw';
     c = 'grab';
     bs = 'cover'
     zi = 1
   }
 
   else if (kennung === 3){
-    we = isMobile ?'8vw' :'3vw';
-    h = isMobile ?'8vw' :'3vw';  
+    we = isMobile ?'6vw' :'3vw';
+    h = isMobile ?'6vw' :'3vw';  
     b = '0px solid #ccc';
     br = '50%';
     bc = 'none'
@@ -159,7 +192,7 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
     ta = 'center';
     fs = '0px';
     c = 'grab';
-    bs = isMobile ?'12vw 12vw' :'5.2vw 5.2vw'
+    bs = isMobile ?'10vw 10vw' :'5.2vw 5.2vw'
     zi = 2
   }
 
@@ -168,8 +201,8 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
     <Draggable
       nodeRef={nodeRef}
       position={{ x: currentX, y: currentY }}
-      disabled={ghost || isAnimating || isMoving || canEdit}
-      onStart={ghost ? () => {} : (e, data) => onClone(id, data, kennung)} 
+      disabled={ghost || isAnimating || isMoving || isEditing}
+      onStart={handleDragStart} 
       onStop={ghost ? () => {} : (e, data) => onStopCommand(id, data)}
     >
       <div
@@ -194,14 +227,15 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
           transition: isMoving ? "transform 1s ease-in-out" : "none",
           fontFamily: "sans-serif",
           fontWeight: "bold",
-          display:"flex", alignItems:"center", justifyContent:"center"
+          display:"flex", alignItems:"center", justifyContent:"center",
+          
         }}
       >
         <h3
           ref={ref}
-          contentEditable={canEdit && !ghost}
-          suppressContentEditableWarning
+          contentEditable={isEditing}
           onBlur={handleBlur}
+          suppressContentEditableWarning
           style={{
             cursor: canEdit ? "text" : (ghost ? "default" : "grab"),
             outline: "none",
@@ -226,12 +260,29 @@ const Taktiktafel = ({ isMobile, aktuellesTeam }) => {
   const [szene, setSzene] = useState(0);
   const [sportart, setSportart] = useState("H");
   const [isAnimating, setIsAnimating] = useState(false);
+  const [tutStep, setTutStep] = useState(0);
+  const tutInhalt = [
+    { t: "Willkommen!", d: "Wähle zuerst deine Sportart aus." },
+    { t: "Spieler", d: "Ziehe die Icons mit dem Namen TW und den Ball auf das Spielfeld." },
+    { t: "Umbenennen", d: "Klicke zweimal auf die Icons um den Namen ändern zu können." },
+    { t: "Löschen", d: "Ziehe ein Icon aus dem Spielfeld um es zu löschen." },
+    { t: "Szenen", d: "Klicke auf den Pfeil nach rechts um in die nächste Szene zu kommen." },
+    { t: "Bewegung", d: "Bewege deine Icons auf dem Spielfeld." },
+    { t: "Rückgang", d: "Klicke auf den Pfeil nach links um in die vorherige Szene zu kommen." },
+    { t: "Animation", d: "Drücke auf den Play Button um die Animation abzuspielen." },
+    { t: "Speichern", d: "Klicke auf den Speicher Knopf um den aktuellen Spielzug zu speichern." },
+    { t: "Laden", d: "Klicke auf den Spielzug um ihn erneut zu laden." },
+    { t: "Löschen", d: "Klicke auf den Mülleimer und dann auf den zu löschenden Spielzug zum löschen. Zum abbbrechen wieder auf den Mülleimer klicken." },
+    { t: "Exportieren", d: "Klicke auf Export und dann auf den zu exportierenden Spielzug zum exportieren. Zum abbbrechen wieder auf Export klicken." },
+    { t: "Importieren", d: "Klicke auf Import um einen heruntergeladenen Spielzug zu importieren." },
+    { t: "Aufräumen", d: "Klicke auf den aktualisieren Knopf um das Spielfeld zu leeren." },
+    { t: "Fertig", d: "Jetzt bist du bereit für Ball-in-one." },
+  ];
   const [isMoving, setIsMoving] = useState(false);
   const [gespeicherteZuege, setGespeicherteZuege] = useState([]);
   const [isExporting, setIsExporting] = useState(false);
   const [isdeleting, setIsdeleting] = useState(false);
   const previousScene = szene > 0 ? szene - 1 : null;
-  const [isEditingText, setIsEditingText] = useState(false);
   const bilderFMap = {
   H: HandballF,
   F: FußballF,
@@ -265,21 +316,31 @@ const Taktiktafel = ({ isMobile, aktuellesTeam }) => {
 
 
   const clear = () => {
-
+  const resetId = Date.now();
   setSzene(0);
 
+  const basisWidgets = [
+      { id: `b1-${resetId}`, familie: Math.random().toString(36).substr(2, 9), kennung: 1, x: isMobile ? 1 :2,  y:isMobile ? 78 : 10 , title: "TW" },
+      { id: `b2-${resetId}`, familie: Math.random().toString(36).substr(2, 9), kennung: 2, x: isMobile ? 12 :10,  y:isMobile ? 78 : 10, title: "TW" },
+      { id: `b3-${resetId}`, familie: Math.random().toString(36).substr(2, 9), kennung: 3, x: isMobile ? 7.5 :6.5,  y:isMobile ? 88 : 15, title: "" }
+  ];
+
   setSzenen({
-    0: [
-      { id: 1, familie: Math.random().toString(36).substr(2, 9), kennung: 1, x: isMobile ? 1 :2,  y:isMobile ? 78 : 10 , title: "TW" },
-      { id: 2, familie: Math.random().toString(36).substr(2, 9), kennung: 2, x: isMobile ? 12 :10,  y:isMobile ? 78 : 10, title: "TW" },
-      { id: 3, familie: Math.random().toString(36).substr(2, 9), kennung: 3, x: isMobile ? 7.5 :6.5,  y:isMobile ? 88 : 15, title: "" }
-    ]
+    0: basisWidgets
   });
 
   setIsAnimating(false);
   setIsMoving(false);
   isAutoPlaying.current = false;
   setPlaying(false);
+};
+
+const tutorial = () => {
+  if (tutStep < tutInhalt.length) {
+    setTutStep(prev => prev + 1); // Erhöht den Schritt (1, 2, 3...)
+  } else {
+    setTutStep(0);// Schließt das Tutorial nach dem letzten Schritt
+  }
 };
 
   useEffect(() => {
@@ -422,17 +483,59 @@ const Taktiktafel = ({ isMobile, aktuellesTeam }) => {
     input.click();
   }
 
-  function spielzugspeichern() {
-  const name = prompt("Name des Spielzugs:", "");
+  useEffect(() => {
+    const ladeSpielzuege = async () => {
+      if (!aktuellesTeam) return;
+
+      const { data, error } = await supabase
+        .from('spielzuege')
+        .select('*')
+        .eq('team_id', aktuellesTeam.id);
+
+      if (!error && data) {
+        setGespeicherteZuege(data);
+      }
+    };
+
+    ladeSpielzuege();
+  }, [aktuellesTeam]);
+
+async function spielzugspeichern() {
+  console.log("Starte Speichervorgang...");
+  console.log("Aktuelles Team:", aktuellesTeam);
+  console.log("Szenen Daten:", szenen);
+
+  const name = prompt("Name des Spielzugs:");
   if (!name) return;
 
-  const neuerZug = {
-    id: Date.now(),
-    title: name,
-    daten: JSON.parse(JSON.stringify(szenen)) // Tiefe Kopie der aktuellen Szenen
-  };
+  if (!aktuellesTeam?.id) {
+    console.error("STOPP: Keine Team-ID vorhanden!");
+    alert("Fehler: Du musst ein Team ausgewählt haben.");
+    return;
+  }
 
-  setGespeicherteZuege(prev => [...prev, neuerZug]);
+  try {
+    const { data, error } = await supabase
+      .from('spielzuege')
+      .insert([{ 
+        team_id: Number(aktuellesTeam.id), // Sicherstellen, dass es eine Zahl ist
+        name: name, 
+        daten: szenen,
+        is_mobile_data: isMobile
+      }])
+      .select();
+
+    if (error) {
+      console.error("Supabase Error Details:", error);
+      alert(`Fehler: ${error.message} (${error.code})`);
+    } else {
+      console.log("Erfolgreich gespeichert:", data);
+      setGespeicherteZuege(prev => [...prev, data[0]]);
+      alert("Gespeichert!");
+    }
+  } catch (err) {
+    console.error("Unerwarteter Fehler:", err);
+  }
 }
 
   
@@ -561,39 +664,99 @@ const isAutoPlaying = useRef(false);
       <button onClick={clear} style={{padding: 0 ,color: "black",left:isMobile ?'73vw' : "11vw",top: isMobile ?'74vw' :'27vw', position: "absolute", width:isMobile ?'10vw' :"4vw",height:isMobile ?'10vw' :"4vw", border: "0.15vw solid black",cursor:"pointer",display: 'flex',justifyContent: 'center',alignItems: 'center', borderRadius:"50%", fontSize:isMobile ?'6vw' :"2.5vw",backgroundColor:"white"}}>
         <FiRotateCcw />
       </button>
-      <button onClick={() => setIsEditingText(!isEditingText)} style={{padding: 0 ,left:isMobile ?'84vw' : "1.5vw",top:isMobile ?'74vw' : '27vw', position: "absolute", width:isMobile ?'10vw' :"4vw",height:isMobile ?'10vw' :"4vw", border: "0.15vw solid black",cursor:"pointer",display: 'flex',justifyContent: 'center',alignItems: 'center', borderRadius:"50%", fontSize:isMobile ?'6vw' :"2.5vw",backgroundColor: isEditingText ? "black" : "white",color: isEditingText ? "white" : "black"}}>
-        <FiEdit3 />
+      <button onClick={tutorial} style={{padding: 0 ,left:isMobile ?'84vw' : "1.5vw",top:isMobile ?'74vw' : '27vw', position: "absolute", width:isMobile ?'10vw' :"4vw",height:isMobile ?'10vw' :"4vw", border: "0.15vw solid black",cursor:"pointer",display: 'flex',justifyContent: 'center',alignItems: 'center', borderRadius:"50%", fontSize:isMobile ?'6vw' :"2.5vw",backgroundColor: "white",color:"black"}}>
+        <FaQuestion />
       </button>
       <Liste title="Spielzüge:" isMobile={isMobile}>
       {gespeicherteZuege.map((zug, index) => (
         <Gespeichert 
           key={zug.id}
-          title={zug.title}
+          isMobile={isMobile}
+          title={zug.name}
           savesnumber={index}
           style={{ top: 100 + (index * 110) + "px",
             border: isdeleting  ? '3px solid red' : '2px solid #0000',
             opacity: (isExporting || isdeleting) ? 0.8 : 1
            }} 
-          onClick={() => {
+          onClick={async() => {
             if (isdeleting) {
-              setGespeicherteZuege(prev => prev.filter(z => z.id !== zug.id));
-              setIsdeleting(false); 
-              console.log("Gelöscht:", zug.title);
+              const { error } = await supabase
+                .from('spielzuege')
+                .delete()
+                .eq('id', zug.id);
+
+              if (error) {
+                alert("Fehler beim Löschen in der Datenbank");
+              } else {
+                setGespeicherteZuege(prev => prev.filter(z => z.id !== zug.id));
+              }
+              setIsdeleting(false)
             } else if (isExporting) {
               const dataStr = JSON.stringify([zug], null, 2); // Exportiert nur diesen einen Zug
               const dataBlob = new Blob([dataStr], { type: "application/json" });
               const url = URL.createObjectURL(dataBlob);
               const link = document.createElement("a");
               link.href = url;
-              link.download = `${zug.title}.json`;
+              link.download = `${zug.name}.json`;
               link.click();
               URL.revokeObjectURL(url);
               
               setIsExporting(false); // Modus nach Klick beenden
             } else {
-              console.log("Lade Spielzug:", zug.title);
-              setSzenen(zug.daten); 
-              setSzene(0);          
+            console.log("Lade Spielzug:", zug.name);
+                
+                // 1. Wir nehmen die Rohdaten aus der Datenbank
+                let geladeneDaten = JSON.parse(JSON.stringify(zug.daten)); 
+
+                // 2. Definition der Spielfeld-Zonen (Deine Werte aus dem CSS/Style)
+                const desk = { xStart: 16.1, width: 60.9, yStart: 6, height: 38 }; 
+                const mob = { xStart: 0, width: 95, yStart: 12, height: 60 };
+
+                // 3. Transformation NUR wenn der Speicher-Modus vom aktuellen Modus abweicht
+                if (zug.is_mobile_data !== isMobile) {
+
+                  const konvertierteSzenen = {};
+
+                  Object.keys(geladeneDaten).forEach(szeneKey => {
+                    konvertierteSzenen[szeneKey] = geladeneDaten[szeneKey].map(w => {
+                      // Basis-Icons (TW/Ball im Menü) nicht transformieren
+
+                      if ((w.x === 2 || w.x === 1) && (w.y === 78 || w.y === 10)) return { ...w, x: isMobile ? 1 : 2, y: isMobile ? 78 : 10 };
+                      if ((w.x === 10 ||w.x === 12) && (w.y === 78 || w.y ===   10)) return { ...w, x: isMobile ? 12 : 10, y: isMobile ? 78 : 10 };
+                      if ((w.x === 6.5 || w.x === 7.5) && (w.y === 88 || w.y === 15)) return { ...w, x: isMobile ? 7.5 : 6.5, y: isMobile ? 88 : 15 };
+
+
+                      let newX, newY;
+
+                      if (isMobile && !zug.is_mobile_data) {
+                        // FALL: Ich bin am Handy, lade aber einen Desktop-Spielzug
+                        // Berechne, wo das Icon relativ zum Desktop-Feld stand (0 bis 1)
+                        console.log("dddd")
+                        const relX = (w.x - desk.xStart) / desk.width;
+                        const relY = (w.y - desk.yStart) / desk.height;
+
+                        // Übertrage diese relative Position auf das Handy-Feld
+                        newX = mob.xStart + (relX * mob.width);
+                        newY = mob.yStart + (relY * mob.height);
+                      } else if (!isMobile && zug.is_mobile_data) {
+                        console.log("dddcccd")
+                        // FALL: Ich bin am Desktop, lade aber einen Handy-Spielzug
+                        const relX = (w.x - mob.xStart) / mob.width;
+                        const relY = (w.y - mob.yStart) / mob.height;
+
+                        newX = desk.xStart + (relX * desk.width);
+                        newY = desk.yStart + (relY * desk.height);
+                      }
+
+                      return { ...w, x: newX, y: newY };
+                    });
+                  });
+                  geladeneDaten = konvertierteSzenen;
+                }
+
+                // 4. State setzen
+                setSzenen(geladeneDaten);
+                setSzene(0);
             }
           }}
         />
@@ -605,11 +768,11 @@ const isAutoPlaying = useRef(false);
       <button onClick={spielzugloeschen} style={{padding: 0 ,left:isMobile ?'61vw' : "86.4vw",top:isMobile ?'102vw' : '5.5vw',color: isdeleting ? "white" : "black" ,position: "absolute", width:isMobile ?'10vw' :"3.5vw",height:isMobile ?'10vw' :"3.5vw", border: "0.3vw solid black", cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'8vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:isdeleting ? "black" : "white"}}>
         <FiTrash2/>
       </button>
-      <button onClick={importing} style={{padding: 0 ,color: "black",left:isMobile ?'72vw' : "89.8vw",top:isMobile ?'102vw' : '5.5vw', position: "absolute", width:isMobile ?'10vw' :"3.5vw",height:isMobile ?'10vw' :"3.5vw", border: "0.3vw solid black", cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'8vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:"white"}}>
-        <FiDownload/>
-      </button>
-      <button onClick={exporting} style={{padding: 0 ,left:isMobile ?'83vw' : "93.2vw",top:isMobile ?'102vw' : '5.5vw',color: isExporting ? "white" : "black", position: "absolute", width:isMobile ?'10vw' :"3.5vw",height:isMobile ?'10vw' :"3.5vw", border: "0.3vw solid black", cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'8vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:isExporting ? "black" : "white"}}>
+      <button onClick={exporting} style={{padding: 0 ,color: isExporting ? "white" : "black",left:isMobile ?'72vw' : "89.8vw",top:isMobile ?'102vw' : '5.5vw', position: "absolute", width:isMobile ?'10vw' :"3.5vw",height:isMobile ?'10vw' :"3.5vw", border: "0.3vw solid black", cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'8vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:isExporting ? "black" : "white"}}>
         <FiUpload/>
+      </button>
+      <button onClick={importing} style={{padding: 0 ,left:isMobile ?'83vw' : "93.2vw",top:isMobile ?'102vw' : '5.5vw',color: "black", position: "absolute", width:isMobile ?'10vw' :"3.5vw",height:isMobile ?'10vw' :"3.5vw", border: "0.3vw solid black", cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'8vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:"white"}}>
+        <FiDownload/>
       </button>
       <select 
         value={sportart} 
@@ -636,6 +799,68 @@ const isAutoPlaying = useRef(false);
         <option value="V">Volleyball</option>
         <option value="T">Tennis</option>
       </select>
+      
+      {tutStep > 0 && (
+        <div style={{
+          position: "absolute",
+          top: isMobile ? "20vw" : "10vw",
+          left: isMobile ? "10vw" : "35vw",
+          width: isMobile ? "65vw" : "30vw",
+          backgroundColor: "rgba(255, 255, 255, 0.95)",
+          border: "0.4vw solid orange",
+          borderRadius: "1.5vw",
+          padding: "2vw",
+          zIndex: 1000,
+          boxShadow: "0 1vw 3vw rgba(0,0,0,0.3)",
+          fontFamily: "sans-serif",
+          display: "flex",
+          flexDirection: "column",
+          gap: "1vw"
+        }}>
+          <h2 style={{ margin: 0, color: "orange", fontSize: isMobile ? "5vw" : "1.8vw" }}>
+            {tutInhalt[tutStep -1].t}
+          </h2>
+          <p style={{ margin: 0, fontSize: isMobile ? "4vw" : "1.1vw", lineHeight: 1.4 }}>
+            {tutInhalt[tutStep - 1].d}
+          </p>
+          
+          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1vw" }}>
+            <span style={{ fontSize: "1vw", color: "#666" }}>
+              Schritt {tutStep} von {tutInhalt.length}
+            </span>
+            <button 
+              onClick={tutorial}
+              style={{
+                backgroundColor: "orange",
+                border: "none",
+                color: "white",
+                padding: "0.5vw 1.5vw",
+                borderRadius: "0.5vw",
+                cursor: "pointer",
+                fontWeight: "bold"
+              }}
+            >
+              {tutStep < tutInhalt.length ? "Weiter" : "Verstanden"}
+            </button>
+          </div>
+          
+          {/* Ein kleiner Schließen-Button oben rechts */}
+          <button 
+            onClick={() => setTutStep(0)}
+            style={{
+              position: "absolute",
+              top: "0.5vw",
+              right: "0.5vw",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "1.2vw"
+            }}
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       <svg
         style={{
@@ -652,8 +877,8 @@ const isAutoPlaying = useRef(false);
 
         {previousScene !== null &&
           (szenen[szene] ?? []).map(real => {
-            const playerSize = isMobile ? 10 : 4; 
-            const ballSize = isMobile ? 8 : 3;
+            const playerSize = isMobile ? 8 : 4; 
+            const ballSize = isMobile ? 6 : 3;
             const ghost = (szenen[previousScene] ?? []).find(
               g => g.familie === real.familie
             );
@@ -728,7 +953,6 @@ const isAutoPlaying = useRef(false);
                 x:(ghost.x * window.innerWidth) / 100, 
                 y:(ghost.y * window.innerWidth) / 100 
               } : null}
-            canEdit={isEditingText}
             aktuellerBall={aktuellerBall}
             isMobile={isMobile}
           />

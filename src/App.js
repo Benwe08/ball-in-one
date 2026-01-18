@@ -51,11 +51,11 @@ export default function App() {
 
 
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < window.innerHeight);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < window.innerHeight);
     };
 
     window.addEventListener("resize", handleResize);
