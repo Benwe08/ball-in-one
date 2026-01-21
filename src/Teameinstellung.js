@@ -139,9 +139,9 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
       alignItems: "center",
       justifyContent: "center",
       cursor: "pointer",
-      backgroundColor: "#f0f0f0",
-      borderRadius: "1.5vw",
-      border: "1px solid black",
+      backgroundColor: "#212121",
+      borderRadius: "1vw",
+      border: "0.2vw solid #2e2e2e",
       transition: "transform 0.2s",
     };
 
@@ -200,6 +200,24 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
         alert("Fehler: " + error.message);
       }
     };
+
+    const dateiAuswaehlen = () => {
+      document.getElementById('hidden-file-input').click();
+    };
+
+    const handleFileChange = (e) => {
+      const file = e.target.files[0];
+      if (file && file.type.startsWith("image/")) {
+        setBildDatei(file);
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          setTeamBild(reader.result); 
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
   return (
     
     <div 
@@ -219,20 +237,20 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
             }}>
         <div 
         onClick={(e) => e.stopPropagation()}
-        style={{ width: isMobile ?'80vw':'40vw', height:  isMobile ?'60vw':'25vw', marginBottom: '20px', opacity: "1", zIndex:"1001", backgroundColor:"white", borderRadius:"4vw",position:"relative" }} 
+        style={{ width: isMobile ?'80vw':'40vw', height:  isMobile ?'60vw':'25vw', marginBottom: '20px', opacity: "1", zIndex:"1001", backgroundColor:"#171717", borderRadius:"1vw",position:"relative", border:"0.2vw solid #2e2e2e" }} 
               >
         <button 
           onClick={schliessen}
           style={{
             position:"absolute",
-            top: "4%",         
-            right: "4%",        
+            top: "2%",         
+            right: "2%",        
             width:  isMobile ?'7vw':"3vw",
             height:  isMobile ?'7vw':"3vw",
-            backgroundColor:"#ffff",
+            backgroundColor:"#171717",
             fontSize: isMobile ?'5vw':"2vw",
             color: '#9c9c9c',
-            border: '1px solid #9c9c9c',
+            border: 'none',
             cursor: 'pointer',
             zIndex: 1002,
             borderRadius:"50%",
@@ -242,7 +260,43 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
           X
         </button>
         {!erstellenModus ? (
-        <div className='no-scrollbar' style={{ display: "flex", flexWrap: "wrap", gap: "2vw", overflowY: "auto", maxHeight: "80%",padding: "2vw 2vw 3vw 4vw" ,paddingTop: isMobile ?'12vw' : "3vw"}}>
+          
+          <div style={{ 
+            display: "flex", 
+            flexDirection: "column", 
+            height: "100%", 
+            width: "100%",
+            paddingTop: isMobile ? '12vw' : '0vw',
+          }}>
+
+            <div style={{ 
+            display: "flex", 
+            flexDirection: "column", 
+            height: "10%", 
+            width: "100%",
+            paddingTop: isMobile ? '12vw' : '1vw',
+            border: '0.1vw solid #2e2e2e',
+            borderRadius:"1vw"
+          }}>
+
+          
+            
+            {/* --- DER TITEL --- */}
+            <h2 style={{ 
+              color: "white", 
+              fontFamily: "sans-serif", 
+              fontSize: isMobile ? '6vw' : "1.7vw", 
+              margin: "0 0 2vw 4vw", // Abstand nach links (wie die Kacheln) und unten
+              fontWeight: "white"
+            }}>
+              Meine Teams
+            </h2>
+            </div>
+
+        <div className='no-scrollbar' style={{ display: "flex", flexWrap: "wrap", gap: "2vw", overflowY: "auto", maxHeight: "79%",padding: "0vw 0vw 2vw 4vw" ,paddingTop: isMobile ?'12vw' : "1vw", paddingBottom: isMobile ?'0vw' : "0vw"}}>
+
+          
+          
             {/* 1. BESTEHENDE TEAMS ANZEIGEN */}
             {meineTeams.map((team) => (
               <div 
@@ -308,33 +362,34 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
                 }}>
                   {team.bild ? <img src={team.bild} style={{width: "100%", height: "100%", objectFit: "cover"}}  alt='Team Logo'/> : "⚽"}
                 </div>
-                <p style={{ fontSize: isMobile ?'3.3vw':"1vw", marginTop: "0.5vw", color: "black", fontFamily:"sans-serif" }}>{team.name}</p>
+                <p style={{ fontSize: isMobile ?'3.3vw':"1vw", marginTop: "0.5vw", color: "white", fontFamily:"sans-serif" }}>{team.name}</p>
               </div>
             ))}
 
             {/* 2. DER PLUS-BUTTON (Zum Erstellen) */}
             <div onClick={() => setErstellenModus(true)} style={createCardStyle}>
               <span style={{ fontSize: isMobile ?'10vw':"3vw", color: "#9c9c9c" }}>+</span>
-              <p style={{ fontSize: isMobile ?'3.3vw':"1vw", color: "#9c9c9c", fontFamily:"sans-serif" }}>Neu</p>
+              <p style={{ fontSize: isMobile ?'3.3vw':"1vw", color: "#9c9c9c", fontFamily:"sans-serif", textAlign:"center" }}>Neues Team erstellen</p>
             </div>
+          </div>
           </div>
         ):(
           <>
-          <h2 style={{ color: "black", textAlign: "center", fontFamily:"sans-serif", top:"10%", fontSize:isMobile ?'5vw':"2vw"}}>
+          <h2 style={{ color: "white", textAlign: "center", fontFamily:"sans-serif", top:"10%", fontSize:isMobile ?'5vw':"2vw", border:"none", borderRadius:"2vw"}}>
           Team erstellen
           </h2>
           <button 
           onClick={() => setErstellenModus(false)}
           style={{
             position:"absolute",
-            top: "4%",         
-            left: "4%",        
+            top: "2%",         
+            left: "2%",        
             width: isMobile ?'7vw':"3vw",
             height: isMobile ?'7vw':"3vw",
-            backgroundColor:"#ffff",
+            backgroundColor:"#171717",
             fontSize:isMobile ?'5vw':"2vw",
             color: '#9c9c9c',
-            border: '1px solid #9c9c9c',
+            border: 'none',
             cursor: 'pointer',
             zIndex: 1002,
             borderRadius:"50%",
@@ -351,9 +406,18 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
               style={{right: "5%",top: '25%', position: "absolute", cursor:"text", width: isMobile ?'35vw':"20vw", height:isMobile ?'9vw':"3vw", backgroundColor:"#ffffff", color:"black", border: isMobile ?'0.6vw solid #9c9c9c':"2px solid #9c9c9c", borderRadius:isMobile ?'20vw':"5vw", fontSize:isMobile ?'4vw':"2vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}
             />
           
+        <input 
+          type="file" 
+          id="hidden-file-input"
+          accept="image/*" 
+          style={{ display: 'none' }} 
+          onChange={handleFileChange} 
+        />
+
         <div 
               onDrop={handleDrop} 
               onDragOver={handleDragOver}
+              onClick={dateiAuswaehlen}
               style={{width:isMobile ?'35vw': "15vw",height:isMobile ?'35vw': "15vw",border: isMobile ?'0.6vw dashed #9c9c9c':"2px dashed #9c9c9c",borderRadius: "50%",display: "flex",justifyContent: "center",alignItems: "center",textAlign: "center",fontSize: isMobile ?'5vw':"2vw",color: "#9c9c9c",backgroundColor: "#f9f9f9",cursor: "pointer",overflow: "hidden",margin: "1vw 1vw", fontFamily:"sans-serif"}}
             >
         {teamBild ? (

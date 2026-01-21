@@ -64,9 +64,10 @@ export default function App() {
 
   return (
     <div>
+      
       <header >
         <SignedOut>
-
+            
             <div style={{
               position: 'fixed',    
               top: 0,
@@ -78,18 +79,18 @@ export default function App() {
               justifyContent: 'center', 
               alignItems: 'center',     
               zIndex: 1000,        
-              backgroundColor: '#ffffffff' 
+              backgroundColor: '#171717' 
             }}>
               
               <img 
                 src={Logo} 
                 alt="Ball-in-one" 
-                style={{ width: isMobile ?'100vw' : "40vw", height: 'auto',top: isMobile ? "0vw" : "none", }} 
+                style={{ width: isMobile ?'50vw' : "20vw", height: 'auto',top: isMobile ? "0vw" : "none"}} 
               />
 
               <SignInButton mode="modal">
-                <button style={{ width: isMobile ?'50vw' : "20vw",height:isMobile ?'20vw' : "8vw", cursor: 'pointer', borderRadius: '5px', fontSize: '3vw' }}>
-                  Login / Starten
+                <button style={{ width: isMobile ?'50vw' : "20vw",height:isMobile ?'20vw' : "8vw", cursor: 'pointer', borderRadius: '1vw', fontSize: '3vw', color:"white", backgroundColor:"#44c6d5", border:"0.25vw solid #00e5ff" }}>
+                  Login
                 </button>
               </SignInButton>
             </div>
@@ -103,6 +104,22 @@ export default function App() {
       <JoinTeam />
     ) : (
       <>
+      <div 
+    style={{
+              position: 'fixed',    // Fixiert über dem Rest der Seite
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              display: 'flex',      
+              flexDirection: 'column', 
+              justifyContent: 'center', 
+              alignItems: 'center',     
+              zIndex: -1,        
+              backgroundColor: '#171717',
+              pointerEvents:"none"
+            }}
+        />
             <div style={{ 
               position: 'absolute', 
               top: '0.8vw', 
@@ -124,9 +141,9 @@ export default function App() {
             <img 
                 src={Logo} 
                 alt="Ball-in-one" 
-                style={{ width: isMobile ?'15vw' :'8vw', height:isMobile ?'15vw' : "8vw",position:"absolute",left:"0vw",top:"-1vw" }} 
+                style={{ width: isMobile ?'10vw' :'5vw', height:isMobile ?'10vw' : "5vw",position:"absolute",left:isMobile ? '2vw' : "0.6vw",top:isMobile ? '1.2vw' : "0.1vw", borderRadius:"50%"}} 
               />
-              <button onClick={() => setIstOffen(!istOffen)} style={{padding: 0,overflow: "hidden",right: isMobile ?'12vw' :"5vw",top: '0.8vw', position: "absolute", cursor:"pointer", width:isMobile ?'10vw' : "4vw", height:isMobile ?'10vw' :"4vw", backgroundColor:"#9c9c9c", color:"white", zIndex: 200, border: "1px solid #9b9b9bff", borderRadius:"50%", fontSize:"3.5vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}>
+              <button onClick={() => setIstOffen(!istOffen)} style={{padding: 0,overflow: "hidden",right: isMobile ?'12vw' :"5vw",top: '0.8vw', position: "absolute", cursor:"pointer", width:isMobile ?'10vw' : "4vw", height:isMobile ?'10vw' :"4vw", backgroundColor:"#2e2e2e", color:"white", zIndex: 200, border: "none", borderRadius:"50%", fontSize:"3.5vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}>
               {aktuellesTeam && aktuellesTeam.bild ? (
                 <img 
                   src={aktuellesTeam.bild} 

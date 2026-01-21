@@ -10,36 +10,50 @@ import FußballB from "./assets/FußballBall.png"
 import TennisB from "./assets/TennisBall.png"
 import VolleyballB from "./assets/VolleyballBall.png"
 import { createClient } from '@supabase/supabase-js';
-import { FiChevronRight,FiPlay,FiChevronLeft,FiRotateCcw,FiTrash2,FiSave,FiUpload,FiDownload} from "react-icons/fi";
+import { FiChevronRight,FiPlay,FiChevronLeft,FiTrash2,FiSave, FiRefreshCw} from "react-icons/fi";
 import { FaQuestion } from "react-icons/fa6";
-
+import { TbFileExport, TbFileImport } from "react-icons/tb";
 
 
 const supabase = createClient('https://fdwsacwvndkerbjbqcmi.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZkd3NhY3d2bmRrZXJiamJxY21pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNDQ2NjksImV4cCI6MjA4MzcyMDY2OX0.01CcKVq-bSO7M97DoT-o9PJ-jgVJ1RqTtarQRbktyiY');
 
 
 const Liste = ({ title, children, isMobile }) => {
-  let posl, post, w, h
+  let posl, post, w, h, bc,zi
   if (title === "Widgets:"){
-    posl = "0vw";
+    posl = isMobile ?'-1.4vw' :"-0.5vw";
     post = isMobile ?'72vw' :"5vw";
-    w = isMobile ?'94vw' :"15vw";
-    h = isMobile ?'25vw' :'40vw'
+    w = isMobile ?'96.4vw' :"15.5vw";
+    h = isMobile ?'25vw' :'40vw';
+    bc = "rgb(23, 23, 23)";
+    zi= 0
   }
   else if (title === "Spielzüge:"){
-    posl = isMobile ?'0vw' :"77vw"
-    post = isMobile ?'100vw' :"5vw";
-    w = isMobile ?'94vw' :"19vw";
-    h = isMobile ?'70vw' :'40vw'
+    posl = isMobile ?'-1.4vw' :"77vw"
+    post = isMobile ?'98vw' :"5vw";
+    w = isMobile ?'96.4vw' :"20.65vw";
+    h = isMobile ?'70vw' :'40vw';
+    bc = "rgb(23, 23, 23)";
+    zi= 0
+  }
+  else{
+    posl = isMobile ?'-1.4vw' :"-0.5vw"
+    post = isMobile ?'11vw' :"5vw";
+    w = isMobile ?'96.4vw' :"98vw";
+    h = isMobile ?'70vw' :'40vw';
+    bc = "rgb(23, 23, 23)";
+    zi= -1
   }
   
   return (
     <div style={{
       width: w,   
       height: h,
-      border: '1px solid #ccc',
+      border: isMobile ?'0.3vw solid #2e2e2e' :'0.1vw solid #2e2e2e',
+      backgroundColor:bc,
+      color:"white",
       padding: '0.5vw',
-      borderRadius: '1vw',
+      borderRadius: '0.2vw',
       position: 'absolute',
       left: posl,
       top: post,
@@ -48,9 +62,10 @@ const Liste = ({ title, children, isMobile }) => {
       display: "flex",
       flexDirection:"column",
       fontSize: isMobile ?'3vw' :"0.9vw",
-      overflowY: "hidden"
+      overflowY: "hidden",
+      zIndex:zi
     }}>
-      <h3 style={{margin: "0.5vw 0", borderBottom: isMobile ? "6vw solid #ffffff" : "1.5vw solid #ffffff"}}>{title}</h3>
+      <h3 style={{margin: "0.5vw 0", borderBottom: isMobile ? "6vw solid #171717" : "1.5vw solid #171717"}}>{title}</h3>
       <div style={{ display: 'flex', flexDirection: 'column', paddingBottom:"1vw",paddingTop:"1vw", overflowY:"auto", flexGrow:1 }}>
         {children}
         </div>
@@ -58,19 +73,19 @@ const Liste = ({ title, children, isMobile }) => {
   );
 };
 
-const Gespeichert = ({title, onClick,style, isMobile}) => {
+const Gespeichert = ({title, onClick, isMobile, tutInhalt,tutStep, istSichtbar}) => {
   return (
     <div
       onClick={() => onClick(title)} 
       style={{
       width: '100%',   
       height: isMobile? '15vw' : "8vw",  
-      border: '0.2vw solid #000000',
+      border: (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spielzug" && istSichtbar) ? "0.3vw solid #00e5ff" : "0.25vw solid #00e5ff",
       padding: '0.5vw',
-      borderRadius: '0.5vw',
+      borderRadius: '2vw',
       boxShadow: '2px 2px 5px rgba(0,0,0,0.1)',
       position: 'relative',
-      backgroundColor: "orange",
+      backgroundColor: "#44c6d5",
       cursor: "pointer",
       fontFamily: "sans-serif",
       fontWeight: "bold",
@@ -78,8 +93,10 @@ const Gespeichert = ({title, onClick,style, isMobile}) => {
       boxSizing: "border-box",
       display:"flex", 
       alignItems:"center", 
-      justifyContent:"center"
+      justifyContent:"center",
+      color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Spielzug" && istSichtbar) ? "white" : "#212121"
     }}>
+      
       <h3>{title}</h3>
     </div>
   );
@@ -98,7 +115,8 @@ const Szenewid = ({ title,isMobile }) => {
       textAlign: 'center',
       fontFamily: "sans-serif",
       fontWeight: "bold",
-      display: "inline-block"
+      display: "inline-block",
+      color: "white"
     }}>
       <h3>{title}</h3>
     </div>
@@ -108,7 +126,7 @@ const Szenewid = ({ title,isMobile }) => {
 /* --------------------------------------------------
    A SINGLE WIDGET (original or clone)
    -------------------------------------------------- */
-const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, isAnimating,isMoving, startPos,canEdit,aktuellerBall, isMobile}) => {
+const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, isAnimating,isMoving, startPos,canEdit,aktuellerBall, isMobile, tutInhalt, tutStep, istSichtbar}) => {
   let we, h, b, br, bc, co, ta, fs, c, bi, bs, zi;
   const [isEditing, setIsEditing] = useState(false);
   const lastTap = useRef(0);
@@ -154,11 +172,11 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
   if (kennung === 1){
     we = isMobile ?'8vw' :'4vw';
     h = isMobile ?'8vw' :'4vw';  
-    b = '0.15vw solid #000000';
+    b = (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spieler" && istSichtbar) ? "0.2vw solid #00e5ff" : '0.2vw solid #ffff';
     br = '50%';
     bc = 'blue';
     bi = 'none'
-    co = 'white';
+    co = (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spieler" && istSichtbar) ? "#d3d3d3" :  'white';
     ta = 'center';
     fs = isMobile ?'2.5vw' :'1vw';
     c = 'grab';
@@ -169,11 +187,11 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
   else if (kennung === 2){
     we = isMobile ?'8vw' :'4vw';
     h = isMobile ?'8vw' :'4vw';  
-    b = '0.15vw solid #000000';
+    b = (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spieler" && istSichtbar) ? "0.2vw solid #00e5ff" : '0.2vw solid #ffff';
     br = '50%';
     bc = 'red';
     bi = 'none'
-    co = 'white';
+    co = (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spieler" && istSichtbar) ? "#d3d3d3" :  'white';
     ta = 'center';
     fs = isMobile ?'2.5vw' :'1vw';
     c = 'grab';
@@ -184,11 +202,11 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
   else if (kennung === 3){
     we = isMobile ?'6vw' :'3vw';
     h = isMobile ?'6vw' :'3vw';  
-    b = '0px solid #ccc';
+    b = (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spieler" && istSichtbar) ? "0.2vw solid #00e5ff" : '0.2vw solid #ffffff';
     br = '50%';
     bc = 'none'
     bi = `url(${aktuellerBall})`;
-    co = 'white';
+    co = (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spieler" && istSichtbar) ? "#00e5ff" :  'white';
     ta = 'center';
     fs = '0px';
     c = 'grab';
@@ -262,26 +280,29 @@ const Taktiktafel = ({ isMobile, aktuellesTeam }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [tutStep, setTutStep] = useState(0);
   const tutInhalt = [
-    { t: "Willkommen!", d: "Wähle zuerst deine Sportart aus." },
-    { t: "Spieler", d: "Ziehe die Icons mit dem Namen TW und den Ball auf das Spielfeld." },
-    { t: "Umbenennen", d: "Klicke zweimal auf die Icons um den Namen ändern zu können." },
-    { t: "Löschen", d: "Ziehe ein Icon aus dem Spielfeld um es zu löschen." },
-    { t: "Szenen", d: "Klicke auf den Pfeil nach rechts um in die nächste Szene zu kommen." },
-    { t: "Bewegung", d: "Bewege deine Icons auf dem Spielfeld." },
-    { t: "Rückgang", d: "Klicke auf den Pfeil nach links um in die vorherige Szene zu kommen." },
-    { t: "Animation", d: "Drücke auf den Play Button um die Animation abzuspielen." },
-    { t: "Speichern", d: "Klicke auf den Speicher Knopf um den aktuellen Spielzug zu speichern." },
-    { t: "Laden", d: "Klicke auf den Spielzug um ihn erneut zu laden." },
-    { t: "Löschen", d: "Klicke auf den Mülleimer und dann auf den zu löschenden Spielzug zum löschen. Zum abbbrechen wieder auf den Mülleimer klicken." },
-    { t: "Exportieren", d: "Klicke auf Export und dann auf den zu exportierenden Spielzug zum exportieren. Zum abbbrechen wieder auf Export klicken." },
-    { t: "Importieren", d: "Klicke auf Import um einen heruntergeladenen Spielzug zu importieren." },
-    { t: "Aufräumen", d: "Klicke auf den aktualisieren Knopf um das Spielfeld zu leeren." },
-    { t: "Fertig", d: "Jetzt bist du bereit für Ball-in-one." },
+    { t: "Willkommen!", d: "Die zu benutzenden Knöpfe etc. werden im Tutorial mit blinkendem türkisem Rand und Schrift markiert (Siehe Tutorial Knopf)", i:"Tutorial"},
+    { t: "Sportart", d: "Wählen sie zuerst ihre Sportart aus.", i:"Sportart" },
+    { t: "Spieler", d: "Ziehen sie die Icons mit dem Namen TW und den Ball auf das Spielfeld.", i:"Spieler"  },
+    { t: "Umbenennen", d: "Klicken sie zweimal auf die Icons um den Namen ändern zu können.", i:"Spieler"  },
+    { t: "Löschen", d: "Ziehen sie ein Icon aus dem Spielfeld um es zu löschen.", i:"Spieler"  },
+    { t: "Szenen", d: "Klicken sie auf den Pfeil nach rechts um in die nächste Szene zu kommen.", i:"Knopfvor"  },
+    { t: "Bewegung", d: "Bewegen sie ihre Icons auf dem Spielfeld.", i:"Spieler"  },
+    { t: "Rückgang", d: "Klicken sie auf den Pfeil nach links um in die vorherige Szene zu kommen.", i:"Knopfzur"  },
+    { t: "Animation", d: "Drücken sie auf den Play Button um die Animation abzuspielen." , i:"Play" },
+    { t: "Speichern", d: "Klicken sie auf den Speicher Knopf um den aktuellen Spielzug zu speichern." , i:"Save" },
+    { t: "Laden", d: "Klicken sie auf den Spielzug um ihn erneut zu laden." , i:"Spielzug" },
+    { t: "Löschen", d: "Klicken sie auf den Mülleimer und dann auf den zu löschenden Spielzug zum löschen. Zum abbbrechen wieder auf den Mülleimer klicken." , i:"Löschen" },
+    { t: "Exportieren", d: "Klicken sie auf Export und dann auf den zu exportierenden Spielzug zum exportieren. Zum abbbrechen wieder auf Export klicken." , i:"Export" },
+    { t: "Importieren", d: "Klicken sie auf Import um einen heruntergeladenen Spielzug zu importieren." , i:"Import" },
+    { t: "Aufräumen", d: "Klicken sie auf den Neustart Knopf um das Spielfeld zu leeren." , i:"Clear" },
+    { t: "Fertig", d: "Jetzt sind sie bereit für Ball-in-one." , i:"" },
   ];
+
   const [isMoving, setIsMoving] = useState(false);
   const [gespeicherteZuege, setGespeicherteZuege] = useState([]);
   const [isExporting, setIsExporting] = useState(false);
   const [isdeleting, setIsdeleting] = useState(false);
+  const [istSichtbar, setIstSichtbar] = useState(true);
   const previousScene = szene > 0 ? szene - 1 : null;
   const bilderFMap = {
   H: HandballF,
@@ -314,6 +335,13 @@ const Taktiktafel = ({ isMobile, aktuellesTeam }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    const intervall = setInterval(() => {
+      setIstSichtbar((prev) => !prev);
+    }, 500); // 500ms = hartes Blinken
+
+    return () => clearInterval(intervall); // Wichtig: Timer stoppen, wenn Komponente schließt
+  }, []);
 
   const clear = () => {
   const resetId = Date.now();
@@ -335,9 +363,17 @@ const Taktiktafel = ({ isMobile, aktuellesTeam }) => {
   setPlaying(false);
 };
 
-const tutorial = () => {
+const tutorialp = () => {
   if (tutStep < tutInhalt.length) {
     setTutStep(prev => prev + 1); // Erhöht den Schritt (1, 2, 3...)
+  } else {
+    setTutStep(0);// Schließt das Tutorial nach dem letzten Schritt
+  }
+};
+
+const tutorialm = () => {
+  if (tutStep < tutInhalt.length) {
+    setTutStep(prev => prev - 1); // Erhöht den Schritt (1, 2, 3...)
   } else {
     setTutStep(0);// Schließt das Tutorial nach dem letzten Schritt
   }
@@ -623,7 +659,7 @@ const isAutoPlaying = useRef(false);
     const yRelativ = (data.y / window.innerWidth) * 100;
 
 
-    if (!isTitleChange && (isMobile ? (xRelativ < 1 || xRelativ > 80 || yRelativ < 10 || yRelativ > 65 ) : (xRelativ < 15 || xRelativ > 75 || yRelativ < 5 || yRelativ > 41 ))) {
+    if (!isTitleChange && (isMobile ? (xRelativ < 1 || xRelativ > 90 || yRelativ < 10 || yRelativ > 65 ) : (xRelativ < 15 || xRelativ > 75 || yRelativ < 5 || yRelativ > 41 ))) {
       setSzenen(prev => ({
         ...prev,
         [szene]: prev[szene].filter(w => w.id !== id)
@@ -651,20 +687,21 @@ const isAutoPlaying = useRef(false);
     >
       <img src={aktuellesFeld} alt="Externes Bild" style={{left: isMobile ?'0vw' :"16.1vw",top: isMobile ?'12vw' :"6vw", position: "absolute", width: isMobile ?'95vw' :'60.9vw', height: 'auto'}} />
       <Liste title="Widgets:" isMobile={isMobile}/>
-      <button onClick={angeklicktvor} style={{padding: 0 ,color: "black", left:isMobile ?'60vw' : "11vw",top:isMobile ?'86vw' : '37.9vw', position: "absolute",width:isMobile ?'10vw' :"4.5vw",height:isMobile ?'10vw' :"4.5vw", borderRadius:"50%", border: "0.1vw solid black", cursor:"pointer", fontSize:isMobile ?'8vw' :"3.5vw", display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:"white"}}>
+      <Liste title="" isMobile={isMobile}/>
+      <button onClick={angeklicktvor} style={{padding: 0 ,color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfvor" && istSichtbar) ? "#00e5ff" :  "#ffff", left:isMobile ?'60vw' : "11vw",top:isMobile ?'86vw' : '37.9vw', position: "absolute",width:isMobile ?'10vw' :"4.5vw",height:isMobile ?'10vw' :"4.5vw", borderRadius:"50%", border:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfvor" && istSichtbar) ? "0.3vw solid #00e5ff" :  "0.15vw solid #2e2e2e", cursor:"pointer", fontSize:isMobile ?'8vw' :"3.5vw", display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:"#212121"}}>
       <FiChevronRight />
       </button>
-      <button onClick={angeklicktzur} style={{padding: 0 ,color: "black",left: isMobile ?'30vw' :"0.8vw",top:isMobile ?'86vw' : '37.9vw', position: "absolute",width:isMobile ?'10vw' :"4.5vw",height:isMobile ?'10vw' :"4.5vw", borderRadius:"50%", border: "0.1vw solid black", cursor:"pointer", fontSize:isMobile ?'8vw' :"3.5vw", display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:"white"}}>
+      <button onClick={angeklicktzur} style={{padding: 0 ,color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfzur" && istSichtbar) ? "#00e5ff" :   "#ffff",left: isMobile ?'30vw' :"0.8vw",top:isMobile ?'86vw' : '37.9vw', position: "absolute",width:isMobile ?'10vw' :"4.5vw",height:isMobile ?'10vw' :"4.5vw", borderRadius:"50%", border:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfzur" && istSichtbar) ? "0.3vw solid #00e5ff" :  "0.15vw solid #2e2e2e", cursor:"pointer", fontSize:isMobile ?'8vw' :"3.5vw", display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:"#212121"}}>
       <FiChevronLeft />
       </button>
       <Szenewid title={szene} isMobile={isMobile}/>
-      <button onClick={abspielen} style={{padding: 0 ,color: "black",left: isMobile ?'42.5vw' :"5vw",top: isMobile ?'72.5vw' :'31vw', position: "absolute", width:isMobile ?'15vw' :"6.5vw", height:isMobile ?'15vw' :"6.5vw",cursor:"pointer", borderRadius:"50%", border:"0.5vw solid black", fontSize:isMobile ?'8vw' :"4vw", display:"flex", alignItems:"center", justifyContent:"center", paddingLeft:"1vw",backgroundColor:"white"}}>
+      <button onClick={abspielen} style={{padding: 0 ,color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Play" && istSichtbar) ? "#00e5ff" :   "#ffff",left: isMobile ?'42.5vw' :"5vw",top: isMobile ?'72.5vw' :'31vw', position: "absolute", width:isMobile ?'15vw' :"6.5vw", height:isMobile ?'15vw' :"6.5vw",cursor:"pointer", borderRadius:"50%", border:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Play" && istSichtbar) ? "0.5vw solid #00e5ff" : "0.15vw solid #2e2e2e", fontSize:isMobile ?'8vw' :"4vw", display:"flex", alignItems:"center", justifyContent:"center", paddingLeft:"1vw",backgroundColor:"#212121"}}>
       <FiPlay/>
       </button>
-      <button onClick={clear} style={{padding: 0 ,color: "black",left:isMobile ?'73vw' : "11vw",top: isMobile ?'74vw' :'27vw', position: "absolute", width:isMobile ?'10vw' :"4vw",height:isMobile ?'10vw' :"4vw", border: "0.15vw solid black",cursor:"pointer",display: 'flex',justifyContent: 'center',alignItems: 'center', borderRadius:"50%", fontSize:isMobile ?'6vw' :"2.5vw",backgroundColor:"white"}}>
-        <FiRotateCcw />
+      <button onClick={clear} style={{padding: 0 ,color: (tutStep > 0 && tutInhalt[tutStep - 1].i === "Clear" && istSichtbar) ? "#00e5ff" :  "#ffff",left:isMobile ?'73vw' : "11vw",top: isMobile ?'74vw' :'27vw', position: "absolute", width:isMobile ?'10vw' :"4vw",height:isMobile ?'10vw' :"4vw", border: (tutStep > 0 && tutInhalt[tutStep - 1].i === "Clear" && istSichtbar) ? "0.3vw solid #00e5ff" : "0.15vw solid #2e2e2e",cursor:"pointer",display: 'flex',justifyContent: 'center',alignItems: 'center', borderRadius:"50%", fontSize:isMobile ?'6vw' :"2.5vw",backgroundColor:"#212121"}}>
+        <FiRefreshCw />
       </button>
-      <button onClick={tutorial} style={{padding: 0 ,left:isMobile ?'84vw' : "1.5vw",top:isMobile ?'74vw' : '27vw', position: "absolute", width:isMobile ?'10vw' :"4vw",height:isMobile ?'10vw' :"4vw", border: "0.15vw solid black",cursor:"pointer",display: 'flex',justifyContent: 'center',alignItems: 'center', borderRadius:"50%", fontSize:isMobile ?'6vw' :"2.5vw",backgroundColor: "white",color:"black"}}>
+      <button onClick={tutorialp} style={{padding: 0 ,left:isMobile ? '13vw' : "5.5vw",top:isMobile ? '0vw' : '0.1vw', position: "absolute", width:isMobile ?'10vw' :"4.2vw",height:isMobile ?'10vw' :"4.2vw", border: (tutStep > 0 && tutInhalt[tutStep - 1].i === "Tutorial" && istSichtbar) ? "0.3vw solid #00e5ff" : "0.15vw solid #2e2e2e",cursor:"pointer",display: 'flex',justifyContent: 'center',alignItems: 'center', borderRadius:"50%", fontSize:isMobile ?'6vw' :"2.5vw",backgroundColor: "#212121",color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Tutorial" && istSichtbar) ? "#00e5ff" :  "white"}}>
         <FaQuestion />
       </button>
       <Liste title="Spielzüge:" isMobile={isMobile}>
@@ -672,12 +709,11 @@ const isAutoPlaying = useRef(false);
         <Gespeichert 
           key={zug.id}
           isMobile={isMobile}
+          tutInhalt={tutInhalt}
+          tutStep={tutStep}
+          istSichtbar={istSichtbar}
           title={zug.name}
           savesnumber={index}
-          style={{ top: 100 + (index * 110) + "px",
-            border: isdeleting  ? '3px solid red' : '2px solid #0000',
-            opacity: (isExporting || isdeleting) ? 0.8 : 1
-           }} 
           onClick={async() => {
             if (isdeleting) {
               const { error } = await supabase
@@ -762,17 +798,17 @@ const isAutoPlaying = useRef(false);
         />
       ))}
       </Liste>
-      <button onClick={spielzugspeichern} style={{padding: 0 ,left: isMobile ?'50vw' :"83vw",top:isMobile ?'102vw' : '5.5vw', position: "absolute", width:isMobile ?'10vw' :"3.5vw",height:isMobile ?'10vw' :"3.5vw", border: "0.3vw solid black", cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'8vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:"white"}}>
-      <FiSave color="black"/>
+      <button onClick={spielzugspeichern} style={{padding: 0 ,color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Save" && istSichtbar) ? "#00e5ff" :  "white",left: isMobile ?'50vw' :"83vw",top:isMobile ?'99.5vw' : '5.5vw', position: "absolute", width:isMobile ?'10vw' :"3.5vw",height:isMobile ?'10vw' :"3.5vw", border: (tutStep > 0 && tutInhalt[tutStep - 1].i === "Save" && istSichtbar) ? "0.3vw solid #00e5ff" : "0.15vw solid #2e2e2e", cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'8vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:"#212121"}}>
+      <FiSave />
       </button>
-      <button onClick={spielzugloeschen} style={{padding: 0 ,left:isMobile ?'61vw' : "86.4vw",top:isMobile ?'102vw' : '5.5vw',color: isdeleting ? "white" : "black" ,position: "absolute", width:isMobile ?'10vw' :"3.5vw",height:isMobile ?'10vw' :"3.5vw", border: "0.3vw solid black", cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'8vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:isdeleting ? "black" : "white"}}>
+      <button onClick={spielzugloeschen} style={{padding: 0 ,left:isMobile ?'61vw' : "87vw",top:isMobile ?'99.5vw' : '5.5vw',color: isdeleting ? "#212121" : ((tutStep > 0 && tutInhalt[tutStep - 1].i === "Löschen" && istSichtbar) ? "#00e5ff" :  "white") ,position: "absolute", width:isMobile ?'10vw' :"3.5vw",height:isMobile ?'10vw' :"3.5vw", border: (tutStep > 0 && tutInhalt[tutStep - 1].i === "Löschen" && istSichtbar) ? "0.3vw solid #00e5ff" : "0.15vw solid #2e2e2e", cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'8vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:isdeleting ? "#00e5ff" : "#212121"}}>
         <FiTrash2/>
       </button>
-      <button onClick={exporting} style={{padding: 0 ,color: isExporting ? "white" : "black",left:isMobile ?'72vw' : "89.8vw",top:isMobile ?'102vw' : '5.5vw', position: "absolute", width:isMobile ?'10vw' :"3.5vw",height:isMobile ?'10vw' :"3.5vw", border: "0.3vw solid black", cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'8vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:isExporting ? "black" : "white"}}>
-        <FiUpload/>
+      <button onClick={exporting} style={{padding: 0 ,color: isExporting ? "#212121" :(tutStep > 0 && tutInhalt[tutStep - 1].i === "Export" && istSichtbar) ? "#00e5ff" :   "white",left:isMobile ?'72vw' : "91vw",top:isMobile ?'99.5vw' : '5.5vw', position: "absolute", width:isMobile ?'10vw' :"3.5vw",height:isMobile ?'10vw' :"3.5vw", border: (tutStep > 0 && tutInhalt[tutStep - 1].i === "Export" && istSichtbar) ? "0.3vw solid #00e5ff" : "0.15vw solid #2e2e2e", cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'8vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:isExporting ? "#00e5ff" : "#212121"}}>
+        <TbFileExport />
       </button>
-      <button onClick={importing} style={{padding: 0 ,left:isMobile ?'83vw' : "93.2vw",top:isMobile ?'102vw' : '5.5vw',color: "black", position: "absolute", width:isMobile ?'10vw' :"3.5vw",height:isMobile ?'10vw' :"3.5vw", border: "0.3vw solid black", cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'8vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:"white"}}>
-        <FiDownload/>
+      <button onClick={importing} style={{padding: 0 ,left:isMobile ?'83vw' : "95vw",top:isMobile ?'99.5vw' : '5.5vw',color: (tutStep > 0 && tutInhalt[tutStep - 1].i === "Import" && istSichtbar) ? "#00e5ff" :  "white", position: "absolute", width:isMobile ?'10vw' :"3.5vw",height:isMobile ?'10vw' :"3.5vw", border: (tutStep > 0 && tutInhalt[tutStep - 1].i === "Import" && istSichtbar) ? "0.3vw solid #00e5ff" : "0.15vw solid #2e2e2e", cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'8vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:"#212121"}}>
+        <TbFileImport />
       </button>
       <select 
         value={sportart} 
@@ -783,15 +819,15 @@ const isAutoPlaying = useRef(false);
           top: isMobile ?'86vw' :"22vw", // Über dem Edit-Button
           width: isMobile ?'20vw' :"13.5vw",
           height: isMobile ?'10vw' :"3vw",
-          borderRadius: isMobile ?'80vw' :"0.5vw",
-          border: "0.15vw solid black",
+          borderRadius: isMobile ?'3vw' :"0.5vw",
+          border: (tutStep > 0 && tutInhalt[tutStep - 1].i === "Sportart" && istSichtbar) ? "0.15vw solid #00e5ff" : "0.15vw solid #2e2e2e",
           fontFamily: "sans-serif",
           fontWeight: "bold",
           fontSize: isMobile ?'3vw' :"1vw",
           padding: "0.2vw",
           cursor: "pointer",
-          backgroundColor: "white"
-          ,color: "black",
+          backgroundColor: "#212121"
+          ,color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Sportart" && istSichtbar) ? "#00e5ff" :   "white",
         }}
       >
         <option value="H">Handball</option>
@@ -803,11 +839,11 @@ const isAutoPlaying = useRef(false);
       {tutStep > 0 && (
         <div style={{
           position: "absolute",
-          top: isMobile ? "20vw" : "10vw",
-          left: isMobile ? "10vw" : "35vw",
+          top: isMobile ? "10vw" : "10vw",
+          left: isMobile ? "25vw" : "35vw",
           width: isMobile ? "65vw" : "30vw",
           backgroundColor: "rgba(255, 255, 255, 0.95)",
-          border: "0.4vw solid orange",
+          border: "0.4vw solid #44c6d5",
           borderRadius: "1.5vw",
           padding: "2vw",
           zIndex: 1000,
@@ -817,21 +853,35 @@ const isAutoPlaying = useRef(false);
           flexDirection: "column",
           gap: "1vw"
         }}>
-          <h2 style={{ margin: 0, color: "orange", fontSize: isMobile ? "5vw" : "1.8vw" }}>
+          <h2 style={{ margin: 0, color: "#44c6d5", fontSize: isMobile ? "5vw" : "1.8vw" }}>
             {tutInhalt[tutStep -1].t}
           </h2>
-          <p style={{ margin: 0, fontSize: isMobile ? "4vw" : "1.1vw", lineHeight: 1.4 }}>
+          <p style={{ margin: 0, fontSize: isMobile ? "3vw" : "1.1vw", lineHeight: 1.4 }}>
             {tutInhalt[tutStep - 1].d}
           </p>
           
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1vw" }}>
-            <span style={{ fontSize: "1vw", color: "#666" }}>
+            <span style={{ fontSize: isMobile ? "2vw" : "1vw", color: "#666" }}>
               Schritt {tutStep} von {tutInhalt.length}
             </span>
             <button 
-              onClick={tutorial}
+              onClick={tutorialm}
               style={{
-                backgroundColor: "orange",
+                backgroundColor: "#44c6d5",
+                border: "none",
+                color: "white",
+                padding: "0.5vw 1.5vw",
+                borderRadius: "0.5vw",
+                cursor: "pointer",
+                fontWeight: "bold"
+              }}
+            >
+              {tutStep > 1 ? "Zurück" : "Schliessen"}
+            </button>
+            <button 
+              onClick={tutorialp}
+              style={{
+                backgroundColor: "#44c6d5",
                 border: "none",
                 color: "white",
                 padding: "0.5vw 1.5vw",
@@ -849,12 +899,12 @@ const isAutoPlaying = useRef(false);
             onClick={() => setTutStep(0)}
             style={{
               position: "absolute",
-              top: "0.5vw",
-              right: "0.5vw",
+              top: isMobile ? "0.5vw" : "0.5vw",
+              right: isMobile ? "0.5vw" : "0.5vw",
               background: "none",
               border: "none",
               cursor: "pointer",
-              fontSize: "1.2vw"
+              fontSize: isMobile ? "2vw" : "1.2vw"
             }}
           >
             ✕
@@ -925,6 +975,9 @@ const isAutoPlaying = useRef(false);
             ghost={true}                
             aktuellerBall={aktuellerBall}
             isMobile={isMobile}
+            tutInhalt={tutInhalt}
+            tutStep={tutStep}
+            istSichtbar={istSichtbar}
           />
         ))
       }
@@ -955,6 +1008,9 @@ const isAutoPlaying = useRef(false);
               } : null}
             aktuellerBall={aktuellerBall}
             isMobile={isMobile}
+            tutInhalt={tutInhalt}
+            istSichtbar={istSichtbar}
+            tutStep={tutStep}
           />
 
         </React.Fragment>
