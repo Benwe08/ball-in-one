@@ -266,7 +266,7 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
             flexDirection: "column", 
             height: "100%", 
             width: "100%",
-            paddingTop: isMobile ? '12vw' : '0vw',
+            paddingTop: isMobile ? '0vw' : '0vw',
           }}>
 
             <div style={{ 
@@ -274,7 +274,7 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
             flexDirection: "column", 
             height: "10%", 
             width: "100%",
-            paddingTop: isMobile ? '12vw' : '1vw',
+            paddingTop: isMobile ? '2vw' : '1vw',
             border: '0.1vw solid #2e2e2e',
             borderRadius:"1vw"
           }}>
@@ -293,7 +293,7 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
             </h2>
             </div>
 
-        <div className='no-scrollbar' style={{ display: "flex", flexWrap: "wrap", gap: "2vw", overflowY: "auto", maxHeight: "79%",padding: "0vw 0vw 2vw 4vw" ,paddingTop: isMobile ?'12vw' : "1vw", paddingBottom: isMobile ?'0vw' : "0vw"}}>
+        <div className='no-scrollbar' style={{ display: "flex", flexWrap: "wrap", gap: "2vw", overflowY: "auto", maxHeight: "79%",padding: "0vw 0vw 2vw 4vw" ,paddingTop: isMobile ?'2vw' : "1vw", paddingBottom: isMobile ?'2vw' : "0vw"}}>
 
           
           
