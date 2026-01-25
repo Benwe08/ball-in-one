@@ -69,12 +69,12 @@ export default function App() {
         <SignedOut>
             
             <div style={{
-              position: 'fixed',    
+              position: 'fixed',
               top: 0,
               left: 0,
               width: '100vw',
               height: '100vh',
-              display: 'flex',      
+              display: 'flex',
               flexDirection: 'column', 
               justifyContent: 'center', 
               alignItems: 'center',     
@@ -109,8 +109,8 @@ export default function App() {
               position: 'fixed',    // Fixiert über dem Rest der Seite
               top: 0,
               left: 0,
-              width: '100vw',
-              height: '100vh',
+              width: '100%',
+              height: '100%',
               display: 'flex',      
               flexDirection: 'column', 
               justifyContent: 'center', 
@@ -120,10 +120,31 @@ export default function App() {
               pointerEvents:"none"
             }}
         />
+        <div style={{
+          width: "100%",   
+          height: "5vw",
+          borderBottom: isMobile ?'0.3vw solid #2e2e2e' :'0.1vw solid #2e2e2e',
+          borderRight: "none",
+          borderLeft: "none",
+          borderTop: "none",
+          backgroundColor:"none",
+          color:"white",
+          borderRadius: '0vw',
+          position: 'absolute',
+          left: "0vw",
+          top: isMobile ?'8vw' :"0vw",
+          fontFamily: "sans-serif",
+          fontWeight: "bold",
+          display: "flex",
+          flexDirection:"column",
+          fontSize: isMobile ?'3vw' :"0.9vw",
+          overflowY: "hidden",
+          zIndex:1
+        }}></div>
             <div style={{ 
               position: 'absolute', 
-              top: '0.8vw', 
-              right: '0.5vw', 
+              top:isMobile ?'1.3vw' : '0.4vw', 
+              right: isMobile ?'1.3vw' :'0.5vw', 
               zIndex: 1000,
             }}>
               <UserButton 
@@ -141,9 +162,9 @@ export default function App() {
             <img 
                 src={Logo} 
                 alt="Ball-in-one" 
-                style={{ width: isMobile ?'10vw' :'5vw', height:isMobile ?'10vw' : "5vw",position:"absolute",left:isMobile ? '2vw' : "0.6vw",top:isMobile ? '1.2vw' : "0.1vw", borderRadius:"50%"}} 
+                style={{ width: isMobile ?'12vw' :'5vw', height:isMobile ?'12vw' : "5vw",position:"absolute",left:isMobile ? '0.5vw' : "0.6vw",top:isMobile ? '0.1vw' : "-0.1vw", borderRadius:"50%", }} 
               />
-              <button onClick={() => setIstOffen(!istOffen)} style={{padding: 0,overflow: "hidden",right: isMobile ?'12vw' :"5vw",top: '0.8vw', position: "absolute", cursor:"pointer", width:isMobile ?'10vw' : "4vw", height:isMobile ?'10vw' :"4vw", backgroundColor:"#2e2e2e", color:"white", zIndex: 200, border: "none", borderRadius:"50%", fontSize:"3.5vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}>
+              <button onClick={() => setIstOffen(!istOffen)} style={{padding: 0,overflow: "hidden",right: isMobile ?'14vw' :"5.5vw",top: isMobile ?'1.3vw' :'0.4vw', position: "absolute", cursor:"pointer", width:isMobile ?'10vw' : "4vw", height:isMobile ?'10vw' :"4vw", backgroundColor:"#2e2e2e", color:"white", zIndex: 200, border: "none", borderRadius:"50%", fontSize:"3.5vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}>
               {aktuellesTeam && aktuellesTeam.bild ? (
                 <img 
                   src={aktuellesTeam.bild} 
@@ -161,7 +182,7 @@ export default function App() {
                 isMobile={isMobile}
                 />
             )}
-
+            
             <Taktiktafel isMobile={isMobile} aktuellesTeam={aktuellesTeam}/>
             </>
     )}

@@ -223,13 +223,13 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
     <div 
     onClick={schliessen}
     style={{
-              position: 'fixed',    // Fixiert über dem Rest der Seite
+              position: 'fixed',
               top: 0,
               left: 0,
               width: '100vw',
               height: '100vh',
               display: 'flex',      
-              flexDirection: 'column', 
+              flexDirection: 'column',
               justifyContent: 'center', 
               alignItems: 'center',     
               zIndex: 1000,        
@@ -272,11 +272,11 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
             <div style={{ 
             display: "flex", 
             flexDirection: "column", 
-            height: "10%", 
+            height: "16%", 
             width: "100%",
             paddingTop: isMobile ? '2vw' : '1vw',
-            border: '0.1vw solid #2e2e2e',
-            borderRadius:"1vw"
+            borderBottom: '0.1vw solid #2e2e2e',
+            borderRadius:"0vw"
           }}>
 
           
@@ -293,7 +293,7 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
             </h2>
             </div>
 
-        <div className='no-scrollbar' style={{ display: "flex", flexWrap: "wrap", gap: "2vw", overflowY: "auto", maxHeight: "79%",padding: "0vw 0vw 2vw 4vw" ,paddingTop: isMobile ?'2vw' : "1vw", paddingBottom: isMobile ?'2vw' : "0vw"}}>
+        <div className='no-scrollbar' style={{ display: "flex", flexWrap: "wrap", gap: "2vw", overflowY: "auto",padding: "0vw 0vw 2vw 4vw" ,paddingTop: isMobile ?'2vw' : "1vw", paddingBottom: isMobile ?'2vw' : "0vw"}}>
 
           
           
@@ -375,7 +375,7 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
           </div>
         ):(
           <>
-          <h2 style={{ color: "white", textAlign: "center", fontFamily:"sans-serif", top:"10%", fontSize:isMobile ?'5vw':"2vw", border:"none", borderRadius:"2vw"}}>
+          <h2 style={{ color: "white", textAlign: "center", fontFamily:"sans-serif", fontSize:isMobile ?'5vw':"2vw", borderBottom:'0.1vw solid #2e2e2e', borderRadius:"0vw", marginTop:"3.2%"}}>
           Team erstellen
           </h2>
           <button 

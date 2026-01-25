@@ -44,3 +44,15 @@
   -ms-overflow-style: none;  /* IE und Edge */
   scrollbar-width: none;     /* Firefox */
 }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Optional: Verhindert, dass Elemente über den Rand hinaus "boxen" */
+* {
+  box-sizing: border-box;
+}
