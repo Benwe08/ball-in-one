@@ -10,68 +10,75 @@ import FußballB from "./assets/FußballBall.png"
 import TennisB from "./assets/TennisBall.png"
 import VolleyballB from "./assets/VolleyballBall.png"
 import { createClient } from '@supabase/supabase-js';
-import { FiChevronRight,FiPlay,FiChevronLeft,FiTrash2,FiSave, FiRefreshCw} from "react-icons/fi";
+import { FiChevronRight,FiChevronLeft,FiTrash2,FiSave, FiRefreshCw,} from "react-icons/fi";
 import { FaQuestion } from "react-icons/fa6";
 import { TbFileExport, TbFileImport } from "react-icons/tb";
+import { MdOutlineSportsSoccer } from "react-icons/md";
+import { CiPause1, CiPlay1 } from "react-icons/ci";
 
 
 const supabase = createClient('https://fdwsacwvndkerbjbqcmi.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZkd3NhY3d2bmRrZXJiamJxY21pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNDQ2NjksImV4cCI6MjA4MzcyMDY2OX0.01CcKVq-bSO7M97DoT-o9PJ-jgVJ1RqTtarQRbktyiY');
 
 
 const Liste = ({ title, children, isMobile }) => {
-  let posl, post, w, h, bc,zi, bb, bri, bl, bt,p
+  let posl, post, w, h, bc,zi, bo,p, br
   if (title === "Widgets:"){
-    posl = isMobile ?'0vw' :"0vw";
-    post = isMobile ?'71.5vw' :"5vw";
-    w = isMobile ?'100%' :"16vw";
-    h = isMobile ?'25.5vw' :'40.95vw';
-    bc = "rgb(23, 23, 23)";
-    bb = isMobile ?'0.3vw solid #2e2e2e' :"none";
-    bri = isMobile ?'none' :'0.1vw solid #2e2e2e';
-    bl = "none";
-    bt = isMobile ?'0.3vw solid #2e2e2e' :"none";
-    p = "0.5vw"    
+    posl = isMobile ?'0vw' :"2vw";
+    post = isMobile ?'71.5vw' :"10vw";
+    w = isMobile ?'48vw' :"5vw";
+    h = isMobile ?'10vw' :'25vw';
+    bc = "#212121";
+    bo = isMobile ?'0.3vw solid #2e2e2e' :'0.1vw solid #2e2e2e';
+    p = "0.5vw"
+    br = isMobile ? "10vw": "4vw"
     zi= 0
   }
   else if (title === "Spielzüge:"){
-    posl = isMobile ?'0vw' :"77vw"
-    post = isMobile ?'97vw' :"5vw";
-    w = isMobile ?'100%' :"22.2vw";
-    h = isMobile ?'70vw' :'40.95vw';
-    bc = "rgb(23, 23, 23)";
-    bb = isMobile ?'0.3vw solid #2e2e2e' :"none";
-    bri = "none";
-    bl = isMobile ?'none' :'0.1vw solid #2e2e2e';
-    bt = isMobile ?'none' :"none";
-    p = "0.5vw";
+    posl = isMobile ?'10vw' :"78vw";
+    post = isMobile ?'96vw' :"11vw";
+    w = isMobile ?'80vw' :"20vw";
+    h = isMobile ?'50vw' :'35vw';
+    bc = "#212121";
+    bo = isMobile ?'0.3vw solid #2e2e2e' :'0.1vw solid #2e2e2e';
+    p = "0.5vw"
+    br = isMobile ? "5vw": "2vw"
     zi= 0
+  
+  }
+  else if (title === "2"){
+    posl = isMobile ?'30vw' :"78vw";
+    post = isMobile ?'85vw' :"5vw";
+    w = isMobile ?'40vw' :"20vw";
+    h = isMobile ?'10vw' :'5vw';
+    bc = "#212121";
+    bo = isMobile ?'0.3vw solid #2e2e2e' :'0.1vw solid #2e2e2e';
+    p = "0.5vw"
+    br = isMobile ? "10vw": "4vw"
+    zi= 0
+  
   }
   else{
-    posl = "0vw"
-    post = isMobile ?'11vw' :"5vw";
-    w = isMobile ?'96.4vw' :"100%";
-    h = isMobile ?'70vw' :'41vw';
-    bc = "rgb(23, 23, 23)";
-    bb = isMobile ?'0.3vw solid #2e2e2e' :'0.1vw solid #2e2e2e';
-    bri = "none";
-    bl = "none";
-    bt = "none";
-    p = "0vw"
-    zi= -1
+    posl = isMobile ?'49vw' :"32.5vw";
+    post = isMobile ?'71.5vw' :"43vw";
+    w = isMobile ?'48vw' :"25vw";
+    h = isMobile ?'10vw' :'5vw';
+    bc = "#212121";
+    bo = isMobile ?'0.3vw solid #2e2e2e' :'0.1vw solid #2e2e2e';
+    p = "0.5vw"
+    br = isMobile ? "10vw": "4vw"
+    zi= 0
   }
   
   return (
     <div style={{
       width: w,   
       height: h,
-      borderBottom: bb,
-      borderRight: bri,
-      borderLeft: bl,
-      borderTop: bt,
+      border: bo,
       backgroundColor:bc,
       color:"white",
-      padding: p,
-      borderRadius: '0vw',
+      paddingLeft: p,
+      paddingRight: p,
+      borderRadius: br,
       position: 'absolute',
       left: posl,
       top: post,
@@ -83,9 +90,7 @@ const Liste = ({ title, children, isMobile }) => {
       overflowY: "hidden",
       zIndex:zi
     }}>
-      {title && (
-      <h3 style={{margin: "0.5vw 0", borderBottom: isMobile ? "6vw solid #171717" : "1.5vw solid #171717"}}>{title}</h3>)}
-      <div style={{ display: 'flex', flexDirection: 'column', paddingBottom:"1vw",paddingTop:"1vw", overflowY:"auto", flexGrow:1 }}>
+      <div className='no-scrollbar' style={{ display: 'flex', flexDirection: 'column', paddingBottom:"0vw",paddingTop:"0vw", overflowY:"auto", flexGrow:1 }}>
         {children}
         </div>
     </div>
@@ -98,10 +103,10 @@ const Gespeichert = ({title, onClick, isMobile, tutInhalt,tutStep, istSichtbar})
       onClick={() => onClick(title)} 
       style={{
       width: '100%',   
-      height: isMobile? '15vw' : "8vw",  
+      height: isMobile? '10vw' : "4vw",  
       border: (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spielzug" && istSichtbar) ? "0.3vw solid #00e5ff" : "0.25vw solid #00e5ff",
       padding: '0.5vw',
-      borderRadius: '2vw',
+      borderRadius: isMobile?"5vw":'2vw',
       boxShadow: '2px 2px 5px rgba(0,0,0,0.1)',
       position: 'relative',
       backgroundColor: "#44c6d5",
@@ -121,23 +126,23 @@ const Gespeichert = ({title, onClick, isMobile, tutInhalt,tutStep, istSichtbar})
   );
 }
 
-const Szenewid = ({ title,isMobile }) => {
+const Szenewid = ({ title,isMobile,insgesamt }) => {
   return (
     <div style={{
-      left: isMobile ?'40.2vw' :'5.5vw',
-      top: isMobile ?'77vw' :'35.5vw',
+      left: isMobile ?'48.6vw' :'34vw',
+      top: isMobile ?'65.7vw' :'40.9vw',
       width: isMobile ?'20vw' :'5.5vw',   
       height: isMobile ?'8vw' :'3vw',
       position: 'absolute',  
       border: 'none',
-      fontSize: isMobile ?'8vw' :'2.5vw',
+      fontSize: isMobile ?'5.8vw' :'2.5vw',
       textAlign: 'center',
       fontFamily: "sans-serif",
       fontWeight: "bold",
       display: "inline-block",
       color: "white"
     }}>
-      <h3>{title}</h3>
+      <h3>{title}/{insgesamt}</h3>
     </div>
   );
 };
@@ -191,7 +196,7 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
   if (kennung === 1){
     we = isMobile ?'8vw' :'4vw';
     h = isMobile ?'8vw' :'4vw';  
-    b = (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spieler" && istSichtbar) ? "0.2vw solid #00e5ff" : '0.2vw solid #ffff';
+    b = (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spieler" && istSichtbar) ? "0.15vw solid #00e5ff" : '0.15vw solid white';
     br = '50%';
     bc = 'blue';
     bi = 'none'
@@ -206,7 +211,7 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
   else if (kennung === 2){
     we = isMobile ?'8vw' :'4vw';
     h = isMobile ?'8vw' :'4vw';  
-    b = (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spieler" && istSichtbar) ? "0.2vw solid #00e5ff" : '0.2vw solid #ffff';
+    b = (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spieler" && istSichtbar) ? "0.15vw solid #00e5ff" : '0.15vw solid #ffff';
     br = '50%';
     bc = 'red';
     bi = 'none'
@@ -221,7 +226,7 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
   else if (kennung === 3){
     we = isMobile ?'6vw' :'3vw';
     h = isMobile ?'6vw' :'3vw';  
-    b = (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spieler" && istSichtbar) ? "0.2vw solid #00e5ff" : '0.2vw solid #ffffff';
+    b = (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spieler" && istSichtbar) ? "0.15vw solid #00e5ff" : '0.15vw solid #ffff';
     br = '50%';
     bc = 'none'
     bi = `url(${aktuellerBall})`;
@@ -296,7 +301,22 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
 const Taktiktafel = ({ isMobile, aktuellesTeam }) => {
   const [szene, setSzene] = useState(0);
   const [sportart, setSportart] = useState("H");
+  const optionen = [
+    { label: "Handball", value: "H" },
+    { label: "Fußball", value: "F" },
+    { label: "Volleyball", value: "V" },
+    { label: "Tennis", value: "T" },
+  ];
   const [isAnimating, setIsAnimating] = useState(false);
+  const [IsHoveredspo, setIsHoveredspo] = useState(false);
+  const [IsHoveredcle, setIsHoveredcle] = useState(false);
+  const [IsHoveredpla, setIsHoveredpla] = useState(false);
+  const [IsHoveredrec, setIsHoveredrec] = useState(false);
+  const [IsHoveredsav, setIsHoveredsav] = useState(false);
+  const [IsHovereddel, setIsHovereddel] = useState(false);
+  const [IsHoveredexp, setIsHoveredexp] = useState(false);
+  const [IsHoveredimp, setIsHoveredimp] = useState(false);
+  const [IsHoveredlin, setIsHoveredlin] = useState(false);
   const [tutStep, setTutStep] = useState(0);
   const tutInhalt = [
     { t: "Willkommen!", d: "Die zu benutzenden Knöpfe etc. werden im Tutorial mit blinkendem türkisem Rand und Schrift markiert (Siehe Tutorial Knopf)", i:"Tutorial"},
@@ -318,6 +338,7 @@ const Taktiktafel = ({ isMobile, aktuellesTeam }) => {
   ];
 
   const [isMoving, setIsMoving] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [gespeicherteZuege, setGespeicherteZuege] = useState([]);
   const [isExporting, setIsExporting] = useState(false);
   const [isdeleting, setIsdeleting] = useState(false);
@@ -339,9 +360,9 @@ const Taktiktafel = ({ isMobile, aktuellesTeam }) => {
   const aktuellesFeld = bilderFMap[sportart]
   const [szenen, setSzenen] = useState({
     0: [
-      { id: 1,familie: Math.random().toString(36).substr(2, 9), kennung: 1, x: isMobile ? 1 :2,  y: isMobile ? 78 : 10 ,title: "TW"},
-      { id: 2,familie: Math.random().toString(36).substr(2, 9), kennung: 2, x: isMobile ? 12 : 10,  y:isMobile ? 78: 10,title: "TW"},
-      { id: 3,familie: Math.random().toString(36).substr(2, 9), kennung: 3, x: isMobile ? 7.5 : 6.5,  y:isMobile ? 88: 15,title: ""}
+      { id: 1,familie: Math.random().toString(36).substr(2, 9), kennung: 1, x: isMobile ? 1 :2.5,  y: isMobile ? 72.5 : 11 ,title: "TW"},
+      { id: 2,familie: Math.random().toString(36).substr(2, 9), kennung: 2, x: isMobile ? 9.5 : 2.5,  y:isMobile ? 72.5: 15.5,title: "TW"},
+      { id: 3,familie: Math.random().toString(36).substr(2, 9), kennung: 3, x: isMobile ? 18 : 3,  y:isMobile ? 73.6: 20,title: ""}
     ]
   });
   const [, setWindowSize] = useState({ w: window.innerWidth, h: window.innerWidth });
@@ -367,9 +388,9 @@ const Taktiktafel = ({ isMobile, aktuellesTeam }) => {
   setSzene(0);
 
   const basisWidgets = [
-      { id: `b1-${resetId}`, familie: Math.random().toString(36).substr(2, 9), kennung: 1, x: isMobile ? 1 :2,  y:isMobile ? 78 : 10 , title: "TW" },
-      { id: `b2-${resetId}`, familie: Math.random().toString(36).substr(2, 9), kennung: 2, x: isMobile ? 12 :10,  y:isMobile ? 78 : 10, title: "TW" },
-      { id: `b3-${resetId}`, familie: Math.random().toString(36).substr(2, 9), kennung: 3, x: isMobile ? 7.5 :6.5,  y:isMobile ? 88 : 15, title: "" }
+      { id: `b1-${resetId}`, familie: Math.random().toString(36).substr(2, 9), kennung: 1, x: isMobile ? 1 :2.5,  y:isMobile ? 72.5 : 11 , title: "TW" },
+      { id: `b2-${resetId}`, familie: Math.random().toString(36).substr(2, 9), kennung: 2, x: isMobile ? 9.5 :2.5,  y:isMobile ? 72.5 : 15.5, title: "TW" },
+      { id: `b3-${resetId}`, familie: Math.random().toString(36).substr(2, 9), kennung: 3, x: isMobile ? 18 :3,  y:isMobile ? 73.6 : 20, title: "" }
   ];
 
   setSzenen({
@@ -402,15 +423,15 @@ const tutorialm = () => {
     setSzenen(prevSzenen => {
       const updatedSzenen = { ...prevSzenen };
       const desk = { xStart: 16.1, width: 60.9, yStart: 6 };
-      const mob = { xStart: 0, width: 95, yStart: 12 };
+      const mob = { xStart: 2, width: 95, yStart: 12 };
 
       Object.keys(updatedSzenen).forEach(sceneKey => {
         updatedSzenen[sceneKey] = updatedSzenen[sceneKey].map(widget => {
           // BASIS-WIDGETS (ID 1, 2, 3) 
           // Diese behalten feste Positionen am Rand/Menü
-          if ((widget.x === 2 || widget.x === 1) && (widget.y === 78 || widget.y === 10)) return { ...widget, x: isMobile ? 1 : 2, y: isMobile ? 78 : 10 };
-          if ((widget.x === 10 ||widget.x === 12) && (widget.y === 78 || widget.y ===   10)) return { ...widget, x: isMobile ? 12 : 10, y: isMobile ? 78 : 10 };
-          if ((widget.x === 6.5 || widget.x === 7.5) && (widget.y === 88 || widget.y === 15)) return { ...widget, x: isMobile ? 7.5 : 6.5, y: isMobile ? 88 : 15 };
+          if ((widget.x === 2.5 || widget.x === 1) && (widget.y === 72.5 || widget.y === 11)) return { ...widget, x: isMobile ? 1 : 2.5, y: isMobile ? 72.5 : 11 };
+          if ((widget.x === 2.5 ||widget.x === 9.5) && (widget.y === 72.5 || widget.y === 15.5)) return { ...widget, x: isMobile ? 9.5 : 2.5, y: isMobile ? 72.5 : 15.5 };
+          if ((widget.x === 3 || widget.x === 18) && (widget.y === 73.6 || widget.y === 20)) return { ...widget, x: isMobile ? 18 : 3, y: isMobile ? 73.6 : 20 };
 
 
 
@@ -457,9 +478,9 @@ const tutorialm = () => {
         let startX = xRelativ;
         let startY = yRelativ;
 
-        if (kennung === 1) { startX = isMobile ? 1 : 2; startY = isMobile ? 78 : 10; }
-        if (kennung === 2) { startX = isMobile ? 12 : 10; startY = isMobile ? 78 : 10; }
-        if (kennung === 3) { startX = isMobile ? 7.5 : 6.5; startY = isMobile ? 88 : 15; }
+        if (kennung === 1) { startX = isMobile ? 1 : 2.5; startY = isMobile ? 72.5 : 11; }
+        if (kennung === 2) { startX = isMobile ? 9.5 : 2.5; startY = isMobile ? 72.5 : 15.5; }
+        if (kennung === 3) { startX = isMobile ? 18 : 3; startY = isMobile ? 73.6 : 20; }
 
 
       const newWidget = {
@@ -595,6 +616,8 @@ async function spielzugspeichern() {
 
   
   function angeklicktvor() {
+    if (szene === 99) return
+
     setSzene(prev => {
       const next = prev + 1;
 
@@ -633,6 +656,8 @@ const isAutoPlaying = useRef(false);
     if (isAutoPlaying.current) {
       isAutoPlaying.current = false;
       setPlaying(false);
+      setIsAnimating(false)
+      setIsMoving(false)
       return;
     }
     
@@ -704,25 +729,26 @@ const isAutoPlaying = useRef(false);
     <div
       style={{ position: "relative", width: "100%", height: "1000px" }}
     >
-      <img src={aktuellesFeld} alt="Externes Bild" style={{left: isMobile ?'0vw' :"16.1vw",top: isMobile ?'12vw' :"6vw", position: "absolute", width: isMobile ?'95vw' :'60.9vw', height: 'auto'}} />
+      <img src={aktuellesFeld} alt="Externes Bild" style={{left: isMobile ?'1.5vw' :"15.1vw",top: isMobile ?'10vw' :"4vw", position: "absolute", width: isMobile ?'95vw' :'60.9vw', height: 'auto', borderRadius:"4vw"}} />
       <Liste title="Widgets:" isMobile={isMobile}/>
       <Liste title="" isMobile={isMobile}/>
-      <button onClick={angeklicktvor} style={{padding: 0 ,color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfvor" && istSichtbar) ? "#00e5ff" :  "#ffff", left:isMobile ?'60vw' : "11vw",top:isMobile ?'86vw' : '37.9vw', position: "absolute",width:isMobile ?'10vw' :"4.5vw",height:isMobile ?'10vw' :"4.5vw", borderRadius:"50%", border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfvor" && istSichtbar) ? "0.5vw solid #00e5ff" :  "0.5vw solid #2e2e2e" :(tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfvor" && istSichtbar) ? "0.3vw solid #00e5ff" :  "0.15vw solid #2e2e2e", cursor:"pointer", fontSize:isMobile ?'8vw' :"3.5vw", display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:"#212121"}}>
+      <Liste title="2" isMobile={isMobile}/>
+      <button onClick={angeklicktvor} onMouseEnter={() => setIsHoveredrec(true)} onMouseLeave={() => setIsHoveredrec(false)} style={{padding: 0 ,color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfvor" && istSichtbar) ? "#00e5ff" :  "#ffff", left:isMobile ?'87.4vw' : "52.65vw",top:isMobile ?'71.8vw' : '43.1vw', position: "absolute",width:isMobile ?'9.4vw' :"4.8vw",height:isMobile ?'9.4vw' :"4.8vw", borderRadius:"50%", border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfvor" && istSichtbar) ? "0.5vw solid #00e5ff" :  "none" :(tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfvor" && istSichtbar) ? "0.3vw solid #00e5ff" :  "none", cursor:"pointer", fontSize:isMobile ?'8vw' :"3.5vw", display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:IsHoveredrec ? "#2e2e2e" :"#212121"}}>
       <FiChevronRight />
       </button>
-      <button onClick={angeklicktzur} style={{padding: 0 ,color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfzur" && istSichtbar) ? "#00e5ff" :   "#ffff",left: isMobile ?'30vw' :"0.8vw",top:isMobile ?'86vw' : '37.9vw', position: "absolute",width:isMobile ?'10vw' :"4.5vw",height:isMobile ?'10vw' :"4.5vw", borderRadius:"50%", border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfzur" && istSichtbar) ? "0.5vw solid #00e5ff" :  "0.5vw solid #2e2e2e" :(tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfzur" && istSichtbar) ? "0.3vw solid #00e5ff" :  "0.15vw solid #2e2e2e", cursor:"pointer", fontSize:isMobile ?'8vw' :"3.5vw", display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:"#212121"}}>
+      <button onClick={angeklicktzur} onMouseEnter={() => setIsHoveredlin(true)} onMouseLeave={() => setIsHoveredlin(false)} style={{padding: 0 ,color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfzur" && istSichtbar) ? "#00e5ff" :   "#ffff",left: isMobile ?'67.4vw' :"42.65vw",top:isMobile ?'71.8vw' : '43.1vw', position: "absolute",width:isMobile ?'9.4vw' :"4.8vw",height:isMobile ?'9.4vw' :"4.8vw", borderRadius:"50%", border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfzur" && istSichtbar) ? "0.5vw solid #00e5ff" :  "none" :(tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfzur" && istSichtbar) ? "0.3vw solid #00e5ff" :  "none", cursor:"pointer", fontSize:isMobile ?'8vw' :"3.5vw", display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:IsHoveredlin ? "#2e2e2e" :"#212121"}}>
       <FiChevronLeft />
       </button>
-      <Szenewid title={szene} isMobile={isMobile}/>
-      <button onClick={abspielen} style={{padding: 0 ,color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Play" && istSichtbar) ? "#00e5ff" :   "#ffff",left: isMobile ?'42.5vw' :"5vw",top: isMobile ?'72.5vw' :'31vw', position: "absolute", width:isMobile ?'15vw' :"6.5vw", height:isMobile ?'15vw' :"6.5vw",cursor:"pointer", borderRadius:"50%", border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Play" && istSichtbar) ? "0.5vw solid #00e5ff" :  "0.5vw solid #2e2e2e" :(tutStep > 0 && tutInhalt[tutStep - 1].i === "Play" && istSichtbar) ? "0.5vw solid #00e5ff" : "0.15vw solid #2e2e2e", fontSize:isMobile ?'8vw' :"4vw", display:"flex", alignItems:"center", justifyContent:"center", paddingLeft:"1vw",backgroundColor:"#212121"}}>
-      <FiPlay/>
+      <Szenewid title={szene} isMobile={isMobile} insgesamt={Object.keys(szenen).length - 1}/>
+      <button onClick={abspielen} onMouseEnter={() => setIsHoveredpla(true)} onMouseLeave={() => setIsHoveredpla(false)} style={{padding: 0 ,color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Play" && istSichtbar) ? "#00e5ff" :   "#ffff",left: isMobile ?'77.4vw' :"47.65vw",top: isMobile ?'71.8vw' :'43.1vw', position: "absolute", width:isMobile ?'9.4vw' :"4.8vw", height:isMobile ?'9.4vw' :"4.8vw",cursor:"pointer", borderRadius:"50%", border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Play" && istSichtbar) ? "0.5vw solid #00e5ff" :  "none" :(tutStep > 0 && tutInhalt[tutStep - 1].i === "Play" && istSichtbar) ? "0.3vw solid #00e5ff" : "none", fontSize:isMobile ?'8vw' :"3vw", display:"flex", alignItems:"center", justifyContent:"center", paddingLeft:isAutoPlaying.current ? "0vw" : "0.6vw",backgroundColor:IsHoveredpla ? "#2e2e2e" :"#212121"}}>
+      {isAutoPlaying.current ? <CiPause1/> : <CiPlay1/>}
       </button>
-      <dev style={{borderRadius:"2vw",position:"absolute",left: isMobile ? "0vw":"0.5vw", top:isMobile ? "77vw":"9vw", width:isMobile ? "21vw":"15vw", height:isMobile ? "18.5vw":"10vw", zIndex:1,border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spieler" && istSichtbar) ? "0.5vw solid #00e5ff" :  "none" : (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spieler" && istSichtbar) ? "0.3vw solid #00e5ff" : "none" }}>
+      <dev style={{borderRadius:"10vw",position:"absolute",left: isMobile ? "0vw":"2vw", top:isMobile ? "71.5vw":"10vw", width:isMobile ? "26vw":"5vw", height:isMobile ? "10vw":"14vw", zIndex:1,border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spieler" && istSichtbar) ? "0.5vw solid #00e5ff" :  "none" : (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spieler" && istSichtbar) ? "0.3vw solid #00e5ff" : "none" }}>
       </dev>
-      <button onClick={clear} style={{padding: 0 ,color: (tutStep > 0 && tutInhalt[tutStep - 1].i === "Clear" && istSichtbar) ? "#00e5ff" :  "#ffff",left:isMobile ?'73vw' : "11vw",top: isMobile ?'74vw' :'27vw', position: "absolute", width:isMobile ?'10vw' :"4vw",height:isMobile ?'10vw' :"4vw", border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Clear" && istSichtbar) ? "0.5vw solid #00e5ff" :  "0.5vw solid #2e2e2e" : (tutStep > 0 && tutInhalt[tutStep - 1].i === "Clear" && istSichtbar) ? "0.3vw solid #00e5ff" : "0.15vw solid #2e2e2e",cursor:"pointer",display: 'flex',justifyContent: 'center',alignItems: 'center', borderRadius:"50%", fontSize:isMobile ?'6vw' :"2.5vw",backgroundColor:"#212121"}}>
+      <button onClick={clear} onMouseEnter={() => setIsHoveredcle(true)} onMouseLeave={() => setIsHoveredcle(false)} style={{padding: 0 ,color: (tutStep > 0 && tutInhalt[tutStep - 1].i === "Clear" && istSichtbar) ? "#00e5ff" :  "#ffff",left:isMobile ?'28.4vw' : "2.1vw",top: isMobile ?'71.8vw' :'25.1vw', position: "absolute", width:isMobile ?'9.4vw' :"4.8vw",height:isMobile ?'9.4vw' :"4.8vw", border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Clear" && istSichtbar) ? "0.5vw solid #00e5ff" :  "none" : (tutStep > 0 && tutInhalt[tutStep - 1].i === "Clear" && istSichtbar) ? "0.15vw solid #00e5ff" : "none",cursor:"pointer",display: 'flex',justifyContent: 'center',alignItems: 'center', borderRadius:"50%", fontSize:isMobile ?'6vw' :"2.5vw",backgroundColor:IsHoveredcle ? "#2e2e2e" : "#212121"}}>
         <FiRefreshCw />
       </button>
-      <button onClick={tutorialp} style={{padding: 0 ,left:isMobile ? '13vw' : "5.5vw",top:isMobile ? '1.3vw' : '0.4vw', position: "absolute", width:isMobile ?'10vw' :"4.2vw",height:isMobile ?'10vw' :"4.2vw", border: isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Tutorial" && istSichtbar) ? "0.5vw solid #00e5ff" :  "0.5vw solid #2e2e2e" :(tutStep > 0 && tutInhalt[tutStep - 1].i === "Tutorial" && istSichtbar) ? "0.3vw solid #00e5ff" : "0.15vw solid #2e2e2e",cursor:"pointer",display: 'flex',justifyContent: 'center',alignItems: 'center', borderRadius:"50%", fontSize:isMobile ?'6vw' :"2.5vw",backgroundColor: "#212121",color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Tutorial" && istSichtbar) ? "#00e5ff" :  "white", zIndex: 2}}>
+      <button onClick={tutorialp} style={{padding: 0 ,left:isMobile ? '16vw' : "7vw",top:isMobile ? '1.5vw' : '0.5vw', position: "absolute", width:isMobile ?'6vw' :"2.5vw",height:isMobile ?'6vw' :"2.5vw", border: isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Tutorial" && istSichtbar) ? "0.5vw solid #00e5ff" :  "0.5vw solid #2e2e2e" :(tutStep > 0 && tutInhalt[tutStep - 1].i === "Tutorial" && istSichtbar) ? "0.15vw solid #00e5ff" : "0.15vw solid #2e2e2e",cursor:"pointer",display: 'flex',justifyContent: 'center',alignItems: 'center', borderRadius:"50%", fontSize:isMobile ?'4vw' :"1.5vw",backgroundColor: "#212121",color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Tutorial" && istSichtbar) ? "#00e5ff" :  "white", zIndex: 2}}>
         <FaQuestion />
       </button>
       <Liste title="Spielzüge:" isMobile={isMobile}>
@@ -767,7 +793,7 @@ const isAutoPlaying = useRef(false);
 
                 // 2. Definition der Spielfeld-Zonen (Deine Werte aus dem CSS/Style)
                 const desk = { xStart: 16.1, width: 60.9, yStart: 6, height: 38 }; 
-                const mob = { xStart: 0, width: 95, yStart: 12, height: 60 };
+                const mob = { xStart: 2, width: 95, yStart: 12, height: 60 };
 
                 // 3. Transformation NUR wenn der Speicher-Modus vom aktuellen Modus abweicht
                 if (zug.is_mobile_data !== isMobile) {
@@ -778,9 +804,9 @@ const isAutoPlaying = useRef(false);
                     konvertierteSzenen[szeneKey] = geladeneDaten[szeneKey].map(w => {
                       // Basis-Icons (TW/Ball im Menü) nicht transformieren
 
-                      if ((w.x === 2 || w.x === 1) && (w.y === 78 || w.y === 10)) return { ...w, x: isMobile ? 1 : 2, y: isMobile ? 78 : 10 };
-                      if ((w.x === 10 ||w.x === 12) && (w.y === 78 || w.y ===   10)) return { ...w, x: isMobile ? 12 : 10, y: isMobile ? 78 : 10 };
-                      if ((w.x === 6.5 || w.x === 7.5) && (w.y === 88 || w.y === 15)) return { ...w, x: isMobile ? 7.5 : 6.5, y: isMobile ? 88 : 15 };
+                      if ((w.x === 2.5 || w.x === 1) && (w.y === 72.5 || w.y === 11)) return { ...w, x: isMobile ? 1 : 2.5, y: isMobile ? 72.5 : 11 };
+                      if ((w.x === 2.5 ||w.x === 9.5) && (w.y === 72.5 || w.y === 15.5)) return { ...w, x: isMobile ? 9.5 : 2.5, y: isMobile ? 72.5 : 15.5 };
+                      if ((w.x === 3 || w.x === 18) && (w.y === 73.6 || w.y === 20)) return { ...w, x: isMobile ? 18 : 3, y: isMobile ? 73.6 : 20 };
 
 
                       let newX, newY;
@@ -819,43 +845,79 @@ const isAutoPlaying = useRef(false);
         />
       ))}
       </Liste>
-      <button onClick={spielzugspeichern} style={{padding: 0 ,color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Save" && istSichtbar) ? "#00e5ff" :  "white",left: isMobile ?'50vw' :"83vw",top:isMobile ?'98vw' : '5.5vw', position: "absolute", width:isMobile ?'10vw' :"3.5vw",height:isMobile ?'10vw' :"3.5vw", border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Save" && istSichtbar) ? "0.5vw solid #00e5ff" :  "0.5vw solid #2e2e2e" : (tutStep > 0 && tutInhalt[tutStep - 1].i === "Save" && istSichtbar) ? "0.3vw solid #00e5ff" : "0.15vw solid #2e2e2e", cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'8vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:"#212121"}}>
+      <button onClick={spielzugspeichern} onMouseEnter={() => setIsHoveredsav(true)} onMouseLeave={() => setIsHoveredsav(false)} style={{padding: 0 ,color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Save" && istSichtbar) ? "#00e5ff" :  "white",left: isMobile ?'30.3vw' :"78.05vw",top:isMobile ?'85.2vw' : '5.1vw', position: "absolute", width:isMobile ?'9.6vw' :"4.8vw",height:isMobile ?'9.6vw' :"4.8vw", border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Save" && istSichtbar) ? "0.5vw solid #00e5ff" :  "none"  : (tutStep > 0 && tutInhalt[tutStep - 1].i === "Save" && istSichtbar) ? "0.3vw solid #00e5ff" : "none" , cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'7vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:IsHoveredsav? "#2e2e2e" : "#212121"}}>
       <FiSave />
       </button>
-      <button onClick={spielzugloeschen} style={{padding: 0 ,left:isMobile ?'61vw' : "87vw",top:isMobile ?'98vw' : '5.5vw',color: isdeleting ? "#212121" : ((tutStep > 0 && tutInhalt[tutStep - 1].i === "Löschen" && istSichtbar) ? "#00e5ff" :  "white") ,position: "absolute", width:isMobile ?'10vw' :"3.5vw",height:isMobile ?'10vw' :"3.5vw", border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Löschen" && istSichtbar) ? "0.5vw solid #00e5ff" :  "0.5vw solid #2e2e2e" : (tutStep > 0 && tutInhalt[tutStep - 1].i === "Löschen" && istSichtbar) ? "0.3vw solid #00e5ff" : "0.15vw solid #2e2e2e", cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'8vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:isdeleting ? "#00e5ff" : "#212121"}}>
+      <button onClick={spielzugloeschen} onMouseEnter={() => setIsHovereddel(true)} onMouseLeave={() => setIsHovereddel(false)} style={{padding: 0 ,left:isMobile ?'40.3vw' : "83.05vw",top:isMobile ?'85.2vw' : '5.1vw',color: isdeleting ? "#212121" : ((tutStep > 0 && tutInhalt[tutStep - 1].i === "Löschen" && istSichtbar) ? "#00e5ff" :  "white") ,position: "absolute", width:isMobile ?'9.6vw' :"4.8vw",height:isMobile ?'9.6vw' :"4.8vw", border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Löschen" && istSichtbar) ? "0.5vw solid #00e5ff" :  "none"  : (tutStep > 0 && tutInhalt[tutStep - 1].i === "Löschen" && istSichtbar) ? "0.3vw solid #00e5ff" : "none" , cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'7vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:isdeleting ? "#00e5ff" : IsHovereddel? "#2e2e2e" : "#212121"}}>
         <FiTrash2/>
       </button>
-      <button onClick={exporting} style={{padding: 0 ,color: isExporting ? "#212121" :(tutStep > 0 && tutInhalt[tutStep - 1].i === "Export" && istSichtbar) ? "#00e5ff" :   "white",left:isMobile ?'72vw' : "91vw",top:isMobile ?'98vw' : '5.5vw', position: "absolute", width:isMobile ?'10vw' :"3.5vw",height:isMobile ?'10vw' :"3.5vw", border: isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Export" && istSichtbar) ? "0.5vw solid #00e5ff" :  "0.5vw solid #2e2e2e" :(tutStep > 0 && tutInhalt[tutStep - 1].i === "Export" && istSichtbar) ? "0.3vw solid #00e5ff" : "0.15vw solid #2e2e2e", cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'8vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:isExporting ? "#00e5ff" : "#212121"}}>
+      <button onClick={exporting} onMouseEnter={() => setIsHoveredexp(true)} onMouseLeave={() => setIsHoveredexp(false)} style={{padding: 0 ,color: isExporting ? "#212121" :(tutStep > 0 && tutInhalt[tutStep - 1].i === "Export" && istSichtbar) ? "#00e5ff" :   "white",left:isMobile ?'50.3vw' : "88.05vw",top:isMobile ?'85.2vw' : '5.1vw', position: "absolute", width:isMobile ?'9.6vw' :"4.8vw",height:isMobile ?'9.6vw' :"4.8vw", border: isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Export" && istSichtbar) ? "0.5vw solid #00e5ff" :  "none"  :(tutStep > 0 && tutInhalt[tutStep - 1].i === "Export" && istSichtbar) ? "0.3vw solid #00e5ff" : "none" , cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'7vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:isExporting ? "#00e5ff" : IsHoveredexp? "#2e2e2e" : "#212121"}}>
         <TbFileExport />
       </button>
-      <button onClick={importing} style={{padding: 0 ,left:isMobile ?'83vw' : "95vw",top:isMobile ?'98vw' : '5.5vw',color: (tutStep > 0 && tutInhalt[tutStep - 1].i === "Import" && istSichtbar) ? "#00e5ff" :  "white", position: "absolute", width:isMobile ?'10vw' :"3.5vw",height:isMobile ?'10vw' :"3.5vw", border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Import" && istSichtbar) ? "0.5vw solid #00e5ff" :  "0.5vw solid #2e2e2e" : (tutStep > 0 && tutInhalt[tutStep - 1].i === "Import" && istSichtbar) ? "0.3vw solid #00e5ff" : "0.15vw solid #2e2e2e", cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'8vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:"#212121"}}>
+      <button onClick={importing} onMouseEnter={() => setIsHoveredimp(true)} onMouseLeave={() => setIsHoveredimp(false)} style={{padding: 0 ,left:isMobile ?'60.3vw' : "93.05vw",top:isMobile ?'85.2vw' : '5.1vw',color: (tutStep > 0 && tutInhalt[tutStep - 1].i === "Import" && istSichtbar) ? "#00e5ff" :  "white", position: "absolute", width:isMobile ?'9.6vw' :"4.8vw",height:isMobile ?'9.6vw' :"4.8vw", border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Import" && istSichtbar) ? "0.5vw solid #00e5ff" :  "none" : (tutStep > 0 && tutInhalt[tutStep - 1].i === "Import" && istSichtbar) ? "0.3vw solid #00e5ff" : "none" , cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'7vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:IsHoveredimp? "#2e2e2e" : "#212121"}}>
         <TbFileImport />
       </button>
-      <select 
-        value={sportart} 
-        onChange={(e) => setSportart(e.target.value)}
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        onMouseEnter={() => setIsHoveredspo(true)}
+        onMouseLeave={() => setIsHoveredspo(false)}
         style={{
-          position: "absolute",
-          left: isMobile ?'74vw' :"1.5vw",
-          top: isMobile ?'86vw' :"22vw", // Über dem Edit-Button
-          width: isMobile ?'20vw' :"13.5vw",
-          height: isMobile ?'10vw' :"3vw",
-          borderRadius: isMobile ?'3vw' :"0.5vw",
-          border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Sportart" && istSichtbar) ? "0.5vw solid #00e5ff" :  "0.5vw solid #2e2e2e" : (tutStep > 0 && tutInhalt[tutStep - 1].i === "Sportart" && istSichtbar) ? "0.15vw solid #00e5ff" : "0.15vw solid #2e2e2e",
-          fontFamily: "sans-serif",
-          fontWeight: "bold",
-          fontSize: isMobile ?'3vw' :"1vw",
-          padding: "0.2vw",
+          width: isMobile ? '9.4vw' : "4.8vw",
+          position:"absolute",
+          top:isMobile ? '71.8vw' : "30.1vw",
+          left:isMobile ? '38.4vw' : "2.1vw",
+          height: isMobile ? '9.4vw' : "4.8vw",
+          borderRadius: "50%",
+          border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Sportart" && istSichtbar) ? "0.5vw solid #00e5ff" :  "none" : (tutStep > 0 && tutInhalt[tutStep - 1].i === "Sportart" && istSichtbar) ? "0.15vw solid #00e5ff" : "none",
+          backgroundColor: IsHoveredspo ? "#2e2e2e" : "#212121",
+          color: (tutStep > 0 && tutInhalt[tutStep - 1].i === "Sportart" && istSichtbar) ? "#00e5ff" :   "white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center", // Icon zentrieren
           cursor: "pointer",
-          backgroundColor: "#212121"
-          ,color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Sportart" && istSichtbar) ? "#00e5ff" :   "white",
+          fontSize: isMobile ? '7vw' : "2.5vw",
         }}
       >
-        <option value="H">Handball</option>
-        <option value="F">Fußball</option>
-        <option value="V">Volleyball</option>
-        <option value="T">Tennis</option>
-      </select>
+        <MdOutlineSportsSoccer /> {/* HIER DEIN ICON */}
+      </div>
+      {isOpen && (
+        <div style={{
+          position: "absolute",
+          top: isMobile ? '50vw' : "32vw",
+          left: isMobile ? '40vw' : "6vw",
+          width: isMobile ? '20vw' : "10vw",
+          backgroundColor: "#212121",
+          borderRadius: "0.5vw",
+          border: "0.1vw solid #2e2e2e",
+          overflow: "hidden",
+          boxShadow: "0px 4px 15px rgba(0,0,0,0.5)"
+        }}>
+          {optionen.map((opt) => (
+            <div
+              key={opt.value}
+              onClick={() => {
+                setSportart(opt.value);
+                setIsOpen(false);
+              }}
+              style={{
+                padding: "1vw",
+                color: "white",
+                fontSize: isMobile ? '3vw' : "0.9vw",
+                fontFamily: "sans-serif",
+                fontWeight: "bold",
+                backgroundColor: sportart === opt.value ? "#2e2e2e" : "transparent",
+                cursor: "pointer",
+                textAlign: "center",
+                borderBottom: "0.1vw solid #333"
+              }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = "#333"}
+              onMouseLeave={(e) => e.target.style.backgroundColor = sportart === opt.value ? "#2e2e2e" : "transparent"}
+            >
+              {opt.label}
+            </div>
+          ))}
+        </div>
+        )}
       
       {tutStep > 0 && (
         <div style={{
@@ -897,7 +959,7 @@ const isAutoPlaying = useRef(false);
                 fontWeight: "bold"
               }}
             >
-              {tutStep > 1 ? "Zurück" : "Schliessen"}
+              {tutStep > 1 ? "Zurück" : "essen"}
             </button>
             <button 
               onClick={tutorialp}

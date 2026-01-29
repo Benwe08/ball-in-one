@@ -3,14 +3,21 @@ import { useState,useEffect } from "react";
 import Taktiktafel from "./Taktiktafel";
 import Logo from "./assets/ball-in-one-logo.png";
 import Teameinstellung from "./Teameinstellung"
+import Menu from "./menu"
+import Impressums from "./Impressum"
+import Datenschutzs from "./Datenschutz"
 import JoinTeam from "./JoinTeam";
 import { useUser } from "@clerk/clerk-react";
 import { createClient } from '@supabase/supabase-js';
+import { CgMenu } from "react-icons/cg";
 
 const supabase = createClient('https://fdwsacwvndkerbjbqcmi.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZkd3NhY3d2bmRrZXJiamJxY21pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNDQ2NjksImV4cCI6MjA4MzcyMDY2OX0.01CcKVq-bSO7M97DoT-o9PJ-jgVJ1RqTtarQRbktyiY');
 
 export default function App() {
   const [istOffen, setIstOffen] = useState(false);
+  const [Taktik, setTaktik] = useState(false);
+  const [Impressum, setImpressum] = useState(false);
+  const [Datenschutz, setDatenschutz] = useState(false);
   const [aktuellesTeam, setAktuellesTeam] = useState(null);
 
   const {user} = useUser();
@@ -18,6 +25,8 @@ export default function App() {
   const params = new URLSearchParams(window.location.search);
   const einladungsCode = params.get("code");
   
+  const [isOpenMen, setIsOpenMen] = useState(false);
+
   useEffect(() => {
     async function initialesTeamLaden() {
       if (!user) return;
@@ -49,7 +58,11 @@ export default function App() {
     }
   }, [user]); // Wird ausgeführt, sobald der User eingeloggt ist
 
-
+  const neuwahl = () => {
+    setTaktik(false)
+    setImpressum(false)
+    setDatenschutz(false)
+  }
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < window.innerHeight);
 
@@ -85,7 +98,7 @@ export default function App() {
               <img 
                 src={Logo} 
                 alt="Ball-in-one" 
-                style={{ width: isMobile ?'50vw' : "20vw", height: 'auto',top: isMobile ? "0vw" : "none"}} 
+                style={{ width: isMobile ?'50vw' : "20vw", height: 'auto',top: isMobile ? "0vw" : "none", scale:"100%"}} 
               />
 
               <SignInButton mode="modal">
@@ -122,7 +135,7 @@ export default function App() {
         />
         <div style={{
           width: "100%",   
-          height: "5vw",
+          height: isMobile ?'1vw' :"3.5vw",
           borderBottom: isMobile ?'0.3vw solid #2e2e2e' :'0.1vw solid #2e2e2e',
           borderRight: "none",
           borderLeft: "none",
@@ -151,8 +164,8 @@ export default function App() {
                 appearance={{
                   elements: {
                     userButtonAvatarBox: {
-                      width: isMobile ?'clamp(0vw, 10vw, 100vw)' : "clamp(0vw, 4.2vw, 100vw)",
-                      height: isMobile ?'clamp(0vw, 10vw, 100vw)' : "clamp(0vw, 4.2vw, 100vw)"
+                      width: isMobile ?'clamp(0vw, 6vw, 100vw)' : "clamp(0vw, 2.5vw, 100vw)",
+                      height: isMobile ?'clamp(0vw, 6vw, 100vw)' : "clamp(0vw, 2.5vw, 100vw)"
                     }
                   }
                 }}
@@ -162,18 +175,21 @@ export default function App() {
             <img 
                 src={Logo} 
                 alt="Ball-in-one" 
-                style={{ width: isMobile ?'12vw' :'5vw', height:isMobile ?'12vw' : "5vw",position:"absolute",left:isMobile ? '0.5vw' : "0.6vw",top:isMobile ? '0.1vw' : "-0.1vw", borderRadius:"50%", }} 
+                style={{ width: isMobile ?'7vw' :'3vw', height:isMobile ?'7vw' : "3vw",position:"absolute",left:isMobile ? '8.8vw' : "3.5vw",top:isMobile ? '0.8vw' : "0.2vw", borderRadius:"50%",scale:"150%" }} 
               />
-              <button onClick={() => setIstOffen(!istOffen)} style={{padding: 0,overflow: "hidden",right: isMobile ?'14vw' :"5.5vw",top: isMobile ?'1.3vw' :'0.4vw', position: "absolute", cursor:"pointer", width:isMobile ?'10vw' : "4vw", height:isMobile ?'10vw' :"4vw", backgroundColor:"#2e2e2e", color:"white", zIndex: 200, border: "none", borderRadius:"50%", fontSize:"3.5vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}>
+              <button onClick={() => setIstOffen(!istOffen)} style={{padding: 0,overflow: "hidden",right: isMobile ?'9vw' :"3.5vw",top: isMobile ?'1.3vw' :'0.4vw', position: "absolute", cursor:"pointer", width:isMobile ?'6vw' : "2.5vw", height:isMobile ?'6vw' :"2.5vw", backgroundColor:"#2e2e2e", color:"white", zIndex: 200, border: "none", borderRadius:"50%", fontSize:"3.5vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}>
               {aktuellesTeam && aktuellesTeam.bild ? (
                 <img 
                   src={aktuellesTeam.bild} 
                   alt="Team" 
-                  style={{ width:isMobile ?'10vw' : "4vw", height:isMobile ?'10vw' : "4vw", objectFit: "cover" }} 
+                  style={{ width:isMobile ?'6vw' : "2.5vw", height:isMobile ?'6vw' : "2.5vw", objectFit: "cover" }} 
                 />
               ):(
               <h3>+</h3>
               )}
+              </button>
+              <button onClick={() => setIsOpenMen(!isOpenMen)} style={{padding: 0 ,left:isMobile ? '2vw' : "0.6vw",top:isMobile ? '1.3vw' : '0.4vw', position: "absolute", width:isMobile ?'6vw' :"2.5vw",height:isMobile ?'6vw' :"2.5vw", border: isMobile ? "0.5vw solid #2e2e2e" : "0.15vw solid #2e2e2e",cursor:"pointer",display: 'flex',justifyContent: 'center',alignItems: 'center', borderRadius:"30%", fontSize:isMobile ?'4vw' :"1.5vw",backgroundColor: "#212121",color:"white", zIndex: 20}}>
+                <CgMenu />
               </button>
               {istOffen && (
                
@@ -182,8 +198,25 @@ export default function App() {
                 isMobile={isMobile}
                 />
             )}
-            
+            {isOpenMen && (
+               
+                <Menu schliessenmen={() => setIsOpenMen(false)} 
+                isMobile={isMobile}
+                neuwahl = {neuwahl}
+                opentak={() => {setIsOpenMen(false); setTaktik(true) }}
+                openimp={() => {setIsOpenMen(false); setImpressum(true) }}
+                opendat={() => {setIsOpenMen(false); setDatenschutz(true) }}
+                />
+            )}
+            {Taktik && (
             <Taktiktafel isMobile={isMobile} aktuellesTeam={aktuellesTeam}/>
+            )}
+            {Impressum && (
+            <Impressums isMobile={isMobile}/>
+            )}
+            {Datenschutz && (
+            <Datenschutzs isMobile={isMobile}/>
+            )}
             </>
     )}
         </SignedIn>

@@ -3,6 +3,7 @@ import React, {useState, useEffect} from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useUser } from "@clerk/clerk-react";
 import { FiShare2, FiLogOut} from "react-icons/fi";
+import { IoMdArrowRoundBack, IoMdClose } from 'react-icons/io';
 
 const supabase = createClient('https://fdwsacwvndkerbjbqcmi.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZkd3NhY3d2bmRrZXJiamJxY21pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNDQ2NjksImV4cCI6MjA4MzcyMDY2OX0.01CcKVq-bSO7M97DoT-o9PJ-jgVJ1RqTtarQRbktyiY');
 
@@ -140,7 +141,7 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
       justifyContent: "center",
       cursor: "pointer",
       backgroundColor: "#212121",
-      borderRadius: "1vw",
+      borderRadius: isMobile ? "4vw" : "2vw",
       border: "0.2vw solid #2e2e2e",
       transition: "transform 0.2s",
     };
@@ -257,7 +258,7 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
             padding: 0
           }}
         >
-          X
+        <IoMdClose/>
         </button>
         {!erstellenModus ? (
           
@@ -393,10 +394,9 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
             cursor: 'pointer',
             zIndex: 1002,
             borderRadius:"50%",
-            transform: "rotate(90deg)"
           }}
         >
-          V
+          <IoMdArrowRoundBack />
         </button>
         <input 
               type="text" 
