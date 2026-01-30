@@ -4,7 +4,9 @@ import App from './App.js'
 import { ClerkProvider } from '@clerk/clerk-react'
 import './App.css';
 
-const PUBLISHABLE_KEY = "pk_test_c3VyZS1kb3ZlLTgxLmNsZXJrLmFjY291bnRzLmRldiQ";
+
+
+const PUBLISHABLE_KEY = process.env.REACT_APP__CLERK_PUBLISHABLE_KEY;
 
 if (!PUBLISHABLE_KEY) {
   console.log("Key ist leider noch undefined!");
