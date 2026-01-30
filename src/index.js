@@ -6,7 +6,7 @@ import './App.css';
 
 
 
-const PUBLISHABLE_KEY = process.env.REACT_APP__CLERK_PUBLISHABLE_KEY;
+const PUBLISHABLE_KEY = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
 
 if (!PUBLISHABLE_KEY) {
   console.log("Key ist leider noch undefined!");
