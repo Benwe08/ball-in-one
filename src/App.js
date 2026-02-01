@@ -6,6 +6,7 @@ import Teameinstellung from "./Teameinstellung"
 import Menu from "./menu"
 import Impressums from "./Impressum"
 import Datenschutzs from "./Datenschutz"
+import Teammanagments from "./Teammanagment"
 import JoinTeam from "./JoinTeam";
 import { useUser } from "@clerk/clerk-react";
 import { createClient } from '@supabase/supabase-js';
@@ -19,6 +20,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export default function App() {
   const [istOffen, setIstOffen] = useState(false);
   const [Taktik, setTaktik] = useState(false);
+  const [Teammanagment, setTeammanagment] = useState(false);
   const [Impressum, setImpressum] = useState(false);
   const [Datenschutz, setDatenschutz] = useState(false);
   const [aktuellesTeam, setAktuellesTeam] = useState(null);
@@ -29,6 +31,35 @@ export default function App() {
   const einladungsCode = params.get("code");
   
   const [isOpenMen, setIsOpenMen] = useState(false);
+
+
+
+  useEffect(() => {
+    const syncImage = async () => {
+      if (!user) {
+        console.log("Kein User von Clerk geladen");
+        return;
+      }
+
+      console.log("Versuche Sync für User:", user.id);
+
+      const { data, error } = await supabase
+        .from('nutzer')
+        .upsert({ 
+          user_id: user.id, 
+          profilbild_url: user.imageUrl, 
+        }, { onConflict: 'user_id' });
+
+      if (error) {
+        console.error("Supabase Fehler Details:", error.message, error.details, error.hint);
+      } else {
+        console.log("Sync erfolgreich! Gespeicherte Daten:", data);
+      }
+    };
+
+    syncImage();
+  }, [user]);
+
 
   useEffect(() => {
     async function initialesTeamLaden() {
@@ -65,6 +96,7 @@ export default function App() {
     setTaktik(false)
     setImpressum(false)
     setDatenschutz(false)
+    setTeammanagment(false)
   }
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < window.innerHeight);
@@ -117,7 +149,7 @@ export default function App() {
       <main>
         <SignedIn>
           {einladungsCode ? (
-      <JoinTeam />
+      <JoinTeam isMobile={isMobile}/>
     ) : (
       <>
       <div 
@@ -180,7 +212,7 @@ export default function App() {
                 alt="Ball-in-one" 
                 style={{ width: isMobile ?'7vw' :'3vw', height:isMobile ?'7vw' : "3vw",position:"absolute",left:isMobile ? '8.8vw' : "3.5vw",top:isMobile ? '0.8vw' : "0.2vw", borderRadius:"50%",scale:"150%" }} 
               />
-              <button onClick={() => setIstOffen(!istOffen)} style={{padding: 0,overflow: "hidden",right: isMobile ?'9vw' :"3.5vw",top: isMobile ?'1.3vw' :'0.4vw', position: "absolute", cursor:"pointer", width:isMobile ?'6vw' : "2.5vw", height:isMobile ?'6vw' :"2.5vw", backgroundColor:"#2e2e2e", color:"white", zIndex: 200, border: "none", borderRadius:"50%", fontSize:"3.5vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}>
+              <button onClick={() => setIstOffen(!istOffen)} style={{padding: 0,overflow: "hidden",right: isMobile ?'9vw' :"3.5vw",top: isMobile ?'1.3vw' :'0.4vw', position: "absolute", cursor:"pointer", width:isMobile ?'6vw' : "2.5vw", height:isMobile ?'6vw' :"2.5vw", backgroundColor:"#2e2e2e", color:"white", zIndex: 200, border: "none", borderRadius:"50%", fontSize:"2vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}>
               {aktuellesTeam && aktuellesTeam.bild ? (
                 <img 
                   src={aktuellesTeam.bild} 
@@ -209,6 +241,7 @@ export default function App() {
                 opentak={() => {setIsOpenMen(false); setTaktik(true) }}
                 openimp={() => {setIsOpenMen(false); setImpressum(true) }}
                 opendat={() => {setIsOpenMen(false); setDatenschutz(true) }}
+                opentmm={() => {setIsOpenMen(false); setTeammanagment(true) }}
                 />
             )}
             {Taktik && (
@@ -219,6 +252,9 @@ export default function App() {
             )}
             {Datenschutz && (
             <Datenschutzs isMobile={isMobile}/>
+            )}
+            {Teammanagment && (
+            <Teammanagments isMobile={isMobile} aktuellesTeam={aktuellesTeam}/>
             )}
             </>
     )}

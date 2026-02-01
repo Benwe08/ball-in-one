@@ -1,13 +1,14 @@
 import { useState, useEffect} from "react";
 import { IoMdClose } from "react-icons/io";
 
-export default function Menu({schliessenmen, isMobile, opentak,openimp,opendat, neuwahl}) {
+export default function Menu({schliessenmen, isMobile, opentak,openimp,opendat, neuwahl, opentmm}) {
 
 
 const [isOpen, setIsOpen] = useState(false);
 const [IsHoveredtak, setIsHoveredtak] = useState(false);
 const [IsHoveredimp, setIsHoveredimp] = useState(false);
 const [IsHovereddat, setIsHovereddat] = useState(false);
+const [IsHoveredtmm, setIsHoveredtmm] = useState(false);
 
 useEffect(() => {
     // Sobald die Komponente geladen ist, fahren wir sie rein
@@ -84,6 +85,32 @@ return(
           }}
         >
           Taktiktafel
+        </button>
+        <button 
+        onMouseEnter={() => setIsHoveredtmm(true)}
+        onMouseLeave={() => setIsHoveredtmm(false)}
+        onClick={() => {
+            neuwahl();
+            opentmm();
+        }}
+        style={{
+            position:"absolute",
+            top: "30%",         
+            left: "4%",        
+            width:  isMobile ?'27vw':"18vw",
+            height:  isMobile ?'4vw':"2vw",
+            backgroundColor:IsHoveredtmm ? '#4a4a4a' : "#171717",
+            fontSize: isMobile ?'3vw':"1.5vw",
+            color: IsHoveredtmm ? '#171717' : '#4a4a4a',
+            border: 'none',
+            cursor: 'pointer',
+            pointerEvents: "painted",
+            zIndex: 1002,
+            borderRadius:"0.5vw",
+            textAlign:"left"
+          }}
+        >
+          Teammanagment
         </button>
         <button 
         onMouseEnter={() => setIsHoveredimp(true)}

@@ -14,6 +14,8 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
 
   const [erstellenModus, setErstellenModus] = useState(false);
   const [teamName, setTeamName] = useState("");
+  const [username, setusername] = useState("");
+  const [usernumber, setusernumber] = useState("");
   const [teamBild, setTeamBild] = useState(null);
   const [bildDatei, setBildDatei] = useState(null);
   const { user } = useUser();
@@ -46,7 +48,7 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
 
   const handleSpeichern = async () => {
     // 1. Validierung: Haben wir einen Namen, einen User und eine Datei?
-    if (!teamName || !user || !bildDatei) {
+    if (!teamName || !user || !bildDatei || !username) {
       alert("Bitte gib einen Team-Namen ein und lade ein Bild hoch!");
       return;
     }
@@ -93,6 +95,7 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
       // Wir fügen das neue Team der Liste hinzu und schließen den Erstellen-Modus
       setMeineTeams([...meineTeams, dbData[0]]);
       setTeamName("");
+      setusername("")
       setTeamBild(null); // Vorschau leeren
       setBildDatei(null); // Datei-State leeren
       setErstellenModus(false);
@@ -100,12 +103,15 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
       const neuErstelltesTeam = dbData[0];
 
       // Ersteller automatisch als Admin-Mitglied hinzufügen
+      console.log("jadhwajkd")
       const { error: mitgliedError } = await supabase
         .from('team_mitglieder')
         .insert([{
           team_id: neuErstelltesTeam.id,
           user_id: user.id,
-          rolle: 'admin'
+          rolle: 'admin',
+          Name: username,
+          Nummer: usernumber,
         }]);
 
       if (mitgliedError) {
@@ -406,7 +412,21 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
               placeholder="Team Name" 
               value={teamName}
               onChange={(e) => setTeamName(e.target.value)}
-              style={{right: "5%",top: '25%', position: "absolute", cursor:"text", width: isMobile ?'35vw':"20vw", height:isMobile ?'9vw':"3vw", backgroundColor:"#ffffff", color:"black", border: isMobile ?'0.6vw solid #9c9c9c':"2px solid #9c9c9c", borderRadius:isMobile ?'20vw':"5vw", fontSize:isMobile ?'4vw':"2vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}
+              style={{right: "5%",top: '20%', position: "absolute", cursor:"text", width: isMobile ?'35vw':"20vw", height:isMobile ?'9vw':"3vw", backgroundColor:"#ffffff", color:"black", border: isMobile ?'0.6vw solid #9c9c9c':"2px solid #9c9c9c", borderRadius:isMobile ?'20vw':"5vw", fontSize:isMobile ?'4vw':"2vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}
+            />
+        <input 
+              type="text" 
+              placeholder="Dein Name" 
+              value={username}
+              onChange={(e) => setusername(e.target.value)}
+              style={{right: "5%",top: '32.5%', position: "absolute", cursor:"text", width: isMobile ?'35vw':"20vw", height:isMobile ?'9vw':"3vw", backgroundColor:"#ffffff", color:"black", border: isMobile ?'0.6vw solid #9c9c9c':"2px solid #9c9c9c", borderRadius:isMobile ?'20vw':"5vw", fontSize:isMobile ?'4vw':"2vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}
+            />
+        <input 
+              type="text" 
+              placeholder="Deine Nummer" 
+              value={usernumber}
+              onChange={(e) => setusernumber(e.target.value)}
+              style={{right: "5%",top: '45%', position: "absolute", cursor:"text", width: isMobile ?'35vw':"20vw", height:isMobile ?'9vw':"3vw", backgroundColor:"#ffffff", color:"black", border: isMobile ?'0.6vw solid #9c9c9c':"2px solid #9c9c9c", borderRadius:isMobile ?'20vw':"5vw", fontSize:isMobile ?'4vw':"2vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}
             />
           
         <input 

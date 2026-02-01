@@ -1,14 +1,19 @@
 import { useUser } from "@clerk/clerk-react"; 
+import { useState } from "react";
+import fallback from "./assets/fallback-bild.png.png";
 import { createClient } from "@supabase/supabase-js";
 
-// Supabase Client (Keys bitte prüfen)
-const supabase = createClient(
-  'https://fdwsacwvndkerbjbqcmi.supabase.co', 
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZkd3NhY3d2bmRrZXJiamJxY21pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNDQ2NjksImV4cCI6MjA4MzcyMDY2OX0.01CcKVq-bSO7M97DoT-o9PJ-jgVJ1RqTtarQRbktyiY' 
-);
 
-export default function JoinTeam() {
+// Supabase Client (Keys bitte prüfen)
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+export default function JoinTeam({isMobile}) {
+  const [hatgeklappt, setHatgeklappt] = useState(false);
   const { user } = useUser();
+  const [spielerDaten, setSpielerDaten] = useState([]);
 
   const beitreten = async () => {
     // STATT useSearchParams: Wir lesen den Code direkt aus der Adresszeile
@@ -29,7 +34,7 @@ export default function JoinTeam() {
       // 1. Team suchen
       const { data: teams, error: teamError } = await supabase
         .from('teams')
-        .select('id')
+        .select('*')
         .eq('invite_code', code)
 
       if (teamError || !teams) {
@@ -43,36 +48,90 @@ export default function JoinTeam() {
         return;
         }
 
-    const team = teams[0]; // Wir nehmen das erste gefundene Team
+    const team = teams[0]; 
+
+    const { data: existiertSchon, } = await supabase
+      .from('team_mitglieder')
+      .select('id')
+      .eq('team_id', team.id)
+      .eq('user_id', user.id) // Wir suchen nach der Clerk-ID des aktuellen Users
+      .maybeSingle(); // Gibt ein Objekt zurück oder null, falls nichts gefunden wurde
+
+    if (existiertSchon) {
+      alert("Du bist bereits Mitglied dieses Teams!");
+      window.location.href = "/"; // Direkt zum Dashboard/Startseite
+      return;
+    }
+
     console.log("Team gefunden:", team.name);
 
-      // 2. User eintragen
-      const { error: joinError } = await supabase
-        .from('team_mitglieder')
-        .insert([{ 
-          team_id: team.id, 
-          user_id: user.id, 
-          rolle: 'mitglied' 
-        }]);
-
-      if (joinError) {
-          if (joinError.code === '23505') {
-              alert("Du bist bereits in diesem Team!");
-          } else {
-              throw joinError;
-          }
-      } else {
-          alert("Erfolgreich beigetreten!");
-      }
-
-      // STATT navigate: Seite neu laden und Code aus URL entfernen
-      window.location.href = "/";
-
+    setHatgeklappt(true)
+    ladeSpieler(team.id)
     } catch (err) {
       console.error(err);
       alert("Fehler beim Beitreten: " + err.message);
     }
   };
+
+  const eingeloggtals = async(spieler) => {
+    if (!window.confirm("Bist du "+ spieler.Name + " ?")) return;
+
+    try {
+    // 2. Wir warten mit "await", bis die Datenbank fertig ist
+    const { data, error } = await supabase
+      .from('team_mitglieder')
+      .update({ user_id: user.id })
+      .eq('id', spieler.id)
+      .select();
+
+    if (error) {
+      console.error("Datenbank-Fehler:", error.message);
+      alert("Fehler beim Speichern: " + error.message);
+      return;
+    }
+
+    console.log("Erfolgreich verknüpft:", data);
+
+    // 3. Erst wenn alles geklappt hat, leiten wir weiter
+    window.location.href = "/";
+
+  } catch (err) {
+    console.error("Allgemeiner Fehler:", err);
+  }
+};
+
+  const ladeSpieler = async (teamID) => {
+    console.log(teamID)
+
+      const { data, error } = await supabase
+      .from('team_mitglieder')
+      .select(`
+        id,
+        user_id,
+        Name,
+        Nummer,
+        nutzer (profilbild_url)
+      `)
+        .eq('team_id', teamID);
+
+      if (!error && data) {
+        setSpielerDaten(data);
+      }
+    };
+
+  const playerCardStyle = {
+      width:  isMobile ?'22vw':"17vw",
+      height: isMobile ?'35vw':"10vw",
+      position:"relative",
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      cursor: "pointer",
+      backgroundColor: "#212121",
+      borderRadius: isMobile ? "4vw" : "2vw",
+      border: "0.2vw solid #00e5ff",
+      transition: "transform 0.2s",
+    };
 
   const buttonStyle = {
     padding: '15px 30px',
@@ -87,7 +146,7 @@ export default function JoinTeam() {
 
   return (
     <div style={{ textAlign: 'center', marginTop: '100px', padding: '20px', fontFamily: 'sans-serif' }}>
-      <div style={{ backgroundColor: '#f9f9f9', padding: '40px', borderRadius: '15px', display: 'inline-block', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
+      <div style={{ backgroundColor: '#d8d8d8', padding: '40px', borderRadius: '15px', display: 'inline-block', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
         <h2>Team-Einladung</h2>
         <p>Du wurdest eingeladen, einem Team beizutreten.</p>
         <button onClick={beitreten} style={buttonStyle}>
@@ -99,6 +158,49 @@ export default function JoinTeam() {
             </button>
         </div>
       </div>
+      {hatgeklappt &&(
+
+        <div 
+        onClick={(e) => e.stopPropagation()}
+        style={{ width:'100vw', height: "100vh", marginBottom: '20px', opacity: "1", zIndex:"1001", backgroundColor:"#171717", borderRadius:"none",position:"fixed", border:"0.2vw solid #2e2e2e", color:"white", fontFamily:"sans-serif", fontSize:"3vw", left:0, top: 0 }} 
+              >
+                <h3>Wer bist du?</h3>
+
+        <div style={{ 
+          display: "flex", 
+          flexWrap: "wrap", 
+          gap: "1.97vw", 
+          padding: "1.97vw",
+          justifyContent: "flex-start" ,
+          width:"100%",
+          boxSizing:"border-box"
+        }}>
+          
+          {spielerDaten
+          .filter((spieler) => spieler.user_id === null)
+          .map((spieler) => (
+            <div key={spieler.id} onClick={() => eingeloggtals(spieler)}style={playerCardStyle}>
+              <img 
+                src={spieler.nutzer?.profilbild_url|| fallback} 
+                style={{ width: '6.5vw',height:"6.5vw", borderRadius: '10vw',objectFit:"cover",position:"absolute", left:"3%", border:"0.3vw solid #8b8b8b" }} 
+                alt="Profil"
+              />
+              <h3 style={{position:"absolute", fontSize:"1.5vw", top:"10%", left:"40%", display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical", overflow:"hidden", textOverflow:"ellipsis", width:"50%"}}>{spieler.Name}</h3>
+              <div
+                style={{ width: '2.5vw',height:"1.5vw", borderRadius: '5vw',objectFit:"cover",position:"absolute", right:"7%",top:"7%", backgroundColor:"#00e5ff",fontSize:"1vw", color:"#2e2e2e", display:"flex",justifyContent:"center", alignItems:"center" }}>
+                  <h3>{spieler.Nummer}</h3>
+              </div>
+              
+              
+            </div>
+            
+          ))}
+          </div>
+
+              </div>
+        
+        
+      )}
     </div>
   );
 }
