@@ -14,6 +14,10 @@ export default function Neuerspielers({schliessen, isMobile, aktuellesTeam}) {
 
 
 const handleSpeichern = async () => {
+    if(username === ""){
+        alert("Bitte gib einen Namen an");
+        return
+    }
     const {error} = await supabase
         .from('team_mitglieder')
         .insert([{
@@ -54,9 +58,9 @@ const handleSpeichern = async () => {
                     }}>
                 <div 
                 onClick={(e) => e.stopPropagation()}
-                style={{ width: isMobile ?'80vw':'30vw', height:  isMobile ?'60vw':'20vw', marginBottom: '20px', opacity: "1", zIndex:"1001", backgroundColor:"#171717", borderRadius:"1vw",position:"relative", border:"0.2vw solid #2e2e2e" }} 
+                style={{ width: isMobile ?'50vw':'30vw', height:  isMobile ?'40vw':'20vw', marginBottom: '20px', opacity: "1", zIndex:"1001", backgroundColor:"#171717", borderRadius:"1vw",position:"relative", border:"0.2vw solid #2e2e2e" }} 
                       >
-                        <h3 style={{textAlign:"center", fontFamily:"sans-serif", color:"white", fontSize:"2vw"}}>Neuen Spieler erstellen</h3>
+                        <h3 style={{textAlign:"center", fontFamily:"sans-serif", color:"white", fontSize:isMobile ?'3vw':"2vw"}}>Neuen Spieler erstellen</h3>
                 <button 
                   onClick={schliessen}
                   style={{
@@ -82,16 +86,16 @@ const handleSpeichern = async () => {
                     placeholder="Spieler Name" 
                     value={username}
                     onChange={(e) => setusername(e.target.value)}
-                    style={{right: "4vw",top: '30%', position: "absolute", cursor:"text", width: isMobile ?'35vw':"20vw", height:isMobile ?'9vw':"3vw", backgroundColor:"#ffffff", color:"black", border: isMobile ?'0.6vw solid #9c9c9c':"2px solid #9c9c9c", borderRadius:isMobile ?'20vw':"5vw", fontSize:isMobile ?'4vw':"2vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}
+                    style={{right:isMobile ?'6vw': "4vw",top:isMobile ?'20%': '30%', position: "absolute", cursor:"text", width: isMobile ?'35vw':"20vw", height:isMobile ?'9vw':"3vw", backgroundColor:"#ffffff", color:"black", border: isMobile ?'0.6vw solid #9c9c9c':"2px solid #9c9c9c", borderRadius:isMobile ?'20vw':"5vw", fontSize:isMobile ?'4vw':"2vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}
                     />
                 <input 
                     type="text" 
                     placeholder="Spieler Nummer" 
                     value={usernumber}
                     onChange={(e) => setusernumber(e.target.value)}
-                    style={{right: "4vw",top: '50%', position: "absolute", cursor:"text", width: isMobile ?'35vw':"20vw", height:isMobile ?'9vw':"3vw", backgroundColor:"#ffffff", color:"black", border: isMobile ?'0.6vw solid #9c9c9c':"2px solid #9c9c9c", borderRadius:isMobile ?'20vw':"5vw", fontSize:isMobile ?'4vw':"2vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}
+                    style={{right: isMobile ?'6vw':"4vw",top:isMobile ?'45%': '50%', position: "absolute", cursor:"text", width: isMobile ?'35vw':"20vw", height:isMobile ?'9vw':"3vw", backgroundColor:"#ffffff", color:"black", border: isMobile ?'0.6vw solid #9c9c9c':"2px solid #9c9c9c", borderRadius:isMobile ?'20vw':"5vw", fontSize:isMobile ?'4vw':"2vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}
                     />
-                <button onClick={handleSpeichern} style={{ width:isMobile ?'35vw':"20vw",height:isMobile ?'9vw':"4vw", backgroundColor: "#4CAF50", color: "white", border: "none", borderRadius: isMobile ?'3vw':"1vw", cursor: "pointer", fontSize: isMobile ?'4vw':"1.5vw", top:isMobile ?'60%':"70%", right:"4vw", position:"absolute" }}>
+                <button onClick={handleSpeichern} style={{ width:isMobile ?'35vw':"20vw",height:isMobile ?'9vw':"4vw", backgroundColor: "#4CAF50", color: "white", border: "none", borderRadius: isMobile ?'3vw':"1vw", cursor: "pointer", fontSize: isMobile ?'4vw':"1.5vw", top:isMobile ?'70%':"70%", right:isMobile ?'6vw':"4vw", position:"absolute" }}>
                 Spieler Speichern
                 </button>
             </div>

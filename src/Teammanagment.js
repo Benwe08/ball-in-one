@@ -2,6 +2,9 @@ import {  useEffect, useState, useCallback } from "react";
 import { createClient } from '@supabase/supabase-js';
 import fallback from "./assets/fallback-bild.png.png";
 import NeuerSpielers from "./Neuerspieler";
+import Editplayers from "./editplayer";
+import NeueRolles from "./NeueRolle";
+import EditRolles from "./editrolle";
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
@@ -12,32 +15,43 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function Teammanagments({isMobile, aktuellesTeam}) {
   const [neuerspieler, setneuerspieler] = useState(false);
+  const [edispieler, setedispieler] = useState(false);
+  const [neuroll, setneuroll] = useState(false);
+  const [editroll, seteditrolle] = useState(false);
+  const [welcherspieler, setwelcherspieler] = useState();
+  const [welcherolle, setwelcherolle] = useState();
   const [spielerDaten, setSpielerDaten] = useState([]);
+  const [rollenDaten, setRollenDaten] = useState([]);
 
 
 const neuladen = () => {
   setneuerspieler(false)
+  setneuroll(false)
+  seteditrolle(false)
+  setwelcherspieler()
+  setedispieler(false)
   ladeSpieler()
+  ladeRolle()
 
 }
 
 const Liste = ({ title, children, isMobile }) => {
   let posl, post, w, h, bc,zi, bo, br
   if (title === "Spieler"){
-    posl = isMobile ?'0vw' :"20vw";
-    post = isMobile ?'71.5vw' :"5vw";
-    w = isMobile ?'48vw' :"78vw";
-    h = isMobile ?'10vw' :'40vw';
+    posl = isMobile ?'30vw' :"20vw";
+    post = isMobile ?'10.5vw' :"5vw";
+    w = isMobile ?'65vw' :"78vw";
+    h = isMobile ?'85vh' :'80vh';
     bc = "#212121";
     bo = isMobile ?'0.3vw solid #2e2e2e' :'0.1vw solid #2e2e2e';
     br = isMobile ? "10vw": "4vw"
     zi= 0
   }
   else if (title === "  "){
-    posl = isMobile ?'0vw' :"3vw";
-    post = isMobile ?'71.5vw' :"5vw";
-    w = isMobile ?'48vw' :"15vw";
-    h = isMobile ?'10vw' :'40vw';
+    posl = isMobile ?'2vw' :"3vw";
+    post = isMobile ?'10.5vw' :"5vw";
+    w = isMobile ?'25vw' :"15vw";
+    h = isMobile ?'85vh' :'80vh';
     bc = "#212121";
     bo = isMobile ?'0.3vw solid #2e2e2e' :'0.1vw solid #2e2e2e';
     br = isMobile ? "10vw": "4vw"
@@ -59,7 +73,7 @@ const Liste = ({ title, children, isMobile }) => {
       fontWeight: "bold",
       display: "flex",
       flexDirection:"column",
-      fontSize: isMobile ?'3vw' :"4vw",
+      fontSize: isMobile ?'3vw' :"5vh",
       overflowY: "hidden",
       zIndex:zi,
       textAlign:"center"
@@ -85,10 +99,27 @@ const Liste = ({ title, children, isMobile }) => {
         Nummer,
         nutzer (profilbild_url)
       `)
-        .eq('team_id', aktuellesTeam.id);
+        .eq('team_id', aktuellesTeam.id)
+        .order('Name', { ascending: true });
 
       if (!error && data) {
         setSpielerDaten(data);
+      }
+    }, [aktuellesTeam]);
+
+
+          const ladeRolle = useCallback(async () => {
+      if (!aktuellesTeam) return;
+
+      const { data, error } = await supabase
+      .from('rollen')
+      .select(`*
+      `)
+        .eq('team_id', aktuellesTeam.id)
+        .order('name', { ascending: true });
+
+      if (!error && data) {
+        setRollenDaten(data);
       }
     }, [aktuellesTeam]);
 
@@ -106,10 +137,35 @@ useEffect(() => {
     ladeSpieler();
   }, [ladeSpieler]);
 
+useEffect(() => {
+    ladeRolle();
+  }, [ladeRolle]);
 
+
+const editspieler = (spielerID) => {
+  setedispieler(!edispieler)
+  setwelcherspieler(spielerID)
+}
+const nr = () => {
+  setneuroll(!neuroll)
+}
+const er = (rolleID) => {
+  seteditrolle(!editroll)
+  setwelcherolle(rolleID)
+}
+
+const getKontrastFarbe = (hexColor) => {
+  const r = parseInt(hexColor.slice(1, 3), 16);
+  const g = parseInt(hexColor.slice(3, 5), 16);
+  const b = parseInt(hexColor.slice(5, 7), 16);
+
+  const helligkeit = (r * 299 + g * 587 + b * 114) / 1000;
+
+  return helligkeit > 128 ? "black" : "white";
+};
 
 const playerCardStyle = {
-      width:  isMobile ?'22vw':"17vw",
+      width:  isMobile ?'18.8vw':"17vw",
       height: isMobile ?'35vw':"10vw",
       position:"relative",
       display: "flex",
@@ -123,7 +179,7 @@ const playerCardStyle = {
     };
 const createCardStyle = {
       ...playerCardStyle,
-      border: "2px dashed #9c9c9c",
+      border: "0.2vw dashed #9c9c9c",
       backgroundColor: "transparent"
     };
 
@@ -134,25 +190,27 @@ const createCardStyle = {
         <div style={{ 
           display: "flex", 
           flexWrap: "wrap", 
-          gap: "1.97vw", 
-          padding: "1.97vw",
+          gap: "1.95vw", 
+          padding: "1.95vw",
           justifyContent: "flex-start" ,
           width:"100%",
           boxSizing:"border-box"
         }}>
           
           {spielerDaten.map((spieler) => (
-            <div key={spieler.id} style={playerCardStyle}>
+            <div key={spieler.id} onClick={() => editspieler(spieler.id)} style={playerCardStyle}>
               <img 
                 src={spieler.nutzer?.profilbild_url|| fallback} 
-                style={{ width: '6.5vw',height:"6.5vw", borderRadius: '10vw',objectFit:"cover",position:"absolute", left:"3%", border:"0.3vw solid #8b8b8b" }} 
+                style={{ width:isMobile ?'13vw': '6.5vw',height:isMobile ?'13vw':"6.5vw", borderRadius: '15vw',objectFit:"cover",position:"absolute", left:isMobile ?'15%':"3%",top:isMobile ?'10%':"10%", border:"0.3vw solid #8b8b8b" }} 
                 alt="Profil"
               />
-              <h3 style={{position:"absolute", fontSize:"1.5vw", top:"10%", left:"40%", display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical", overflow:"hidden", textOverflow:"ellipsis", width:"50%"}}>{spieler.Name}</h3>
+              <h3 style={{position:"absolute", fontSize:isMobile ?'2.5vw':"1.5vw", top:isMobile ?'45%':"10%", left:isMobile ?'5%':"40%", display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical", overflow:"hidden", textOverflow:"ellipsis", width:isMobile ?'90%':"50%"}}>{spieler.Name}</h3>
+              {spieler.Nummer !== null && spieler.Nummer !== "" && (
               <div
-                style={{ width: '2.5vw',height:"1.5vw", borderRadius: '5vw',objectFit:"cover",position:"absolute", right:"7%",top:"7%", backgroundColor:"#00e5ff",fontSize:"1vw", color:"#2e2e2e", display:"flex",justifyContent:"center", alignItems:"center" }}>
+                style={{ width: isMobile ?'5vw':'2.5vw',height:isMobile ?'3vw':"1.5vw", borderRadius: isMobile ?'10vw':'5vw',objectFit:"cover",position:"absolute", right:isMobile ?'10%':"7%",top:isMobile ?'2%':"7%", backgroundColor:"#00e5ff",fontSize:isMobile ?'1.5vw':"1vw", color:"#2e2e2e", display:"flex",justifyContent:"center", alignItems:"center" }}>
                   <h3>{spieler.Nummer}</h3>
               </div>
+              )}
               
               
             </div>
@@ -160,17 +218,60 @@ const createCardStyle = {
           ))}
           <div onClick={() => neuopen()} style={createCardStyle}>
               <p style={{ fontSize: isMobile ?'3.3vw':"1.5vw", color: "#9c9c9c", fontFamily:"sans-serif", textAlign:"center" }}>Neuen Spieler erstellen</p>
+
             </div>
           
         </div>
 
       </Liste>
-        <Liste title="  " isMobile={isMobile}/>
+        <Liste title="  " isMobile={isMobile}>
+          <div 
+          
+          style={{ 
+          display: "flex", 
+          flexWrap: "wrap", 
+          paddingTop: isMobile ?'5vw':"1.5vw",
+          justifyContent: "flex-start" ,
+          width:"100%",
+          boxSizing:"border-box"
+        }}>
+          <button onClick={() => nr()} style={{width:  "100%",height: isMobile ?'8vw':"5vw",position:"relative",display: "flex",flexDirection: "row",alignItems: "center",cursor: "pointer",backgroundColor: "#00e5ff",borderRadius: isMobile ? "2vw" : "2vw",border: "0.2vw solid #00e5ff",fontSize: isMobile ?'2.5vw':"1.5vw", fontFamily:"sans-serif", marginBottom:"1vw"}}>Neue Rolle erstellen</button>
+          {rollenDaten.map((rollen) => (
+            <div onClick={() => er(rollen.id)} style={{width:  "100%",height: isMobile ?'8vw':"5vw",position:"relative",flexDirection: "row",borderRadius:"1vw",cursor: "pointer",border: "none",fontSize: isMobile ?'2.5vw':"1.5vw", fontFamily:"sans-serif", backgroundColor:rollen.farbe, textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center",color:getKontrastFarbe(rollen.farbe)}}>{rollen.name}{rollen.main ? "*" : ""}
+
+            </div>
+          ))}
+          </div>
+        </Liste>
       {neuerspieler && (
                      
                       <NeuerSpielers schliessen={() => neuladen()} 
                       isMobile={isMobile}
                       aktuellesTeam={aktuellesTeam}
+                      />
+                  )}
+      {edispieler && (
+                     
+                      <Editplayers schliessen={() => neuladen()} 
+                      isMobile={isMobile}
+                      aktuellesTeam={aktuellesTeam}
+                      aktuellerspieler={welcherspieler}
+                      />
+                  )}
+      {neuroll && (
+                     
+                      <NeueRolles schliessen={() => neuladen()} 
+                      isMobile={isMobile}
+                      aktuellesTeam={aktuellesTeam}
+                      aktuellerspieler={welcherspieler}
+                      />
+                  )}
+      {editroll && (
+                     
+                      <EditRolles schliessen={() => neuladen()} 
+                      isMobile={isMobile}
+                      aktuellesTeam={aktuellesTeam}
+                      aktuellerolle={welcherolle}
                       />
                   )}
       </div>
