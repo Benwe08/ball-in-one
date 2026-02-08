@@ -14,28 +14,62 @@ export default function Neuerspielers({schliessen, isMobile, aktuellesTeam}) {
 
 
 const handleSpeichern = async () => {
-    if(username === ""){
+    if (username === "") {
         alert("Bitte gib einen Namen an");
-        return
+        return;
     }
-    const {error} = await supabase
-        .from('team_mitglieder')
-        .insert([{
-          team_id: aktuellesTeam.id,
-          user_id: null,
-          rolle: 'mitglied',
-          Name: username,
-          Nummer: usernumber,
-        }]);
 
-    if (error) {
+    try {
+        // 1. Schritt: Den neuen Spieler in 'team_mitglieder' erstellen
+        // .select().single() ist wichtig, um die ID des neuen Spielers zu erhalten
+        const { data: neuerSpieler, error: spielerError } = await supabase
+            .from('team_mitglieder')
+            .insert([{
+                team_id: aktuellesTeam.id,
+                user_id: null,
+                rolle: 'mitglied',
+                Name: username,
+                Nummer: usernumber,
+            }])
+            .select()
+            .single();
+
+        if (spielerError) throw spielerError;
+
+        // 2. Schritt: Die ID der Rolle mit main: 2 für dieses Team finden
+        const { data: rolleData, error: rollenSucheError } = await supabase
+            .from('rollen')
+            .select('id')
+            .eq('team_id', aktuellesTeam.id)
+            .eq('main', 2)
+            .single();
+
+        // Falls eine Rolle mit main: 2 existiert, weisen wir sie zu
+        if (rolleData && !rollenSucheError) {
+            // 3. Schritt: Verknüpfung in 'spieler_rollen' erstellen
+            const { error: verknuepfungsError } = await supabase
+                .from('spieler_rollen')
+                .insert([{
+                    spieler_id: neuerSpieler.id,
+                    rollen_id: rolleData.id
+                }]);
+
+            if (verknuepfungsError) {
+                console.error("Fehler beim Zuweisen der Rolle:", verknuepfungsError.message);
+                // Wir werfen hier keinen harten Fehler, da der Spieler ja schon erstellt wurde
+            }
+        } else {
+            console.warn("Keine Standard-Rolle (main: 2) für dieses Team gefunden.");
+        }
+
+        // Alles erfolgreich -> Fenster schließen
+        schliessen();
+
+    } catch (error) {
         console.error("Fehler beim Speichern:", error.message);
         alert("Fehler: " + error.message);
-        return; // Funktion abbrechen, damit das Fenster NICHT schließt
     }
-    
-    schliessen()
-}
+};
 
 
 

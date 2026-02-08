@@ -47,39 +47,36 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
 }, [user]);
 
   const handleSpeichern = async () => {
-    // 1. Validierung: Haben wir einen Namen, einen User und eine Datei?
     if (!teamName || !user || !bildDatei || !username) {
       alert("Bitte gib einen Team-Namen ein und lade ein Bild hoch!");
       return;
     }
 
     try {
-      // A: BILD-UPLOAD ZUM STORAGE
-      // Wir erstellen einen eindeutigen Dateinamen (Zeitstempel + Name), damit nichts überschrieben wird
       const fileExt = bildDatei.name.split('.').pop();
       const fileName = `${user.id}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-      const filePath = fileName; // Pfad im Bucket
+      const filePath = fileName;
 
       const {error: uploadError } = await supabase.storage
-        .from('teambilder') // Dein Bucket-Name
+        .from('teambilder') 
         .upload(filePath, bildDatei);
 
       if (uploadError) {
         throw new Error("Fehler beim Bild-Upload: " + uploadError.message);
       }
 
-      // B: ÖFFENTLICHE URL DES BILDES HOLEN
+
       const { data: urlData } = supabase.storage
         .from('teambilder')
         .getPublicUrl(filePath);
 
       const publicUrl = urlData.publicUrl;
 
-      // C: TEAM-DATEN IN DIE DATENBANK SCHREIBEN
+
       const neuesTeam = {
-        user_id: user.id,   // Clerk User ID
-        name: teamName,     // Aus dem Input-Feld
-        bild: publicUrl     // Jetzt die URL aus dem Storage, nicht mehr der Base64-String!
+        user_id: user.id,   
+        name: teamName,     
+        bild: publicUrl     
       };
 
       const { data: dbData, error: dbError } = await supabase
@@ -102,22 +99,65 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
 
       const neuErstelltesTeam = dbData[0];
 
-      // Ersteller automatisch als Admin-Mitglied hinzufügen
       console.log("jadhwajkd")
-      const { error: mitgliedError } = await supabase
+      const { data: adminMitglied, error: mitgliedError } = await supabase
         .from('team_mitglieder')
         .insert([{
           team_id: neuErstelltesTeam.id,
           user_id: user.id,
-          rolle: 'admin',
           Name: username,
           Nummer: usernumber,
-        }]);
-
+        }])
+        .select() // Gibt die Daten zurück
+        .single();
       if (mitgliedError) {
         console.error("Fehler beim Hinzufügen des Mitglieds:", mitgliedError.message);
       }
 
+      const { data: erstellteRollen, error: rollenError } = await supabase
+        .from('rollen')
+        .insert([
+          {
+            team_id: neuErstelltesTeam.id,
+            name: 'Trainer',
+            farbe: '#ff0000', // Rot für Trainer
+            TaTa: true, // Darf Taktik
+            SpieEr: true, // Darf Spieler erstellen
+            Spidel: true, // Darf löschen
+            Roll: true, // Darf Rollen verwalten
+            main: 1  // Main Wert 1
+          },
+          {
+            team_id: neuErstelltesTeam.id,
+            name: 'Spieler',
+            farbe: '#ffffff', // Blau für Spieler
+            TaTa: false,
+            SpieEr: false,
+            Spidel: false,
+            Roll: false,
+            main: 2  // Main Wert 2
+          }
+        ])
+        .select();
+
+      if (rollenError) {
+        console.error("Fehler beim Erstellen der Standard-Rollen:", rollenError.message);
+      } else if (adminMitglied && erstellteRollen) {
+        // 3. OPTIONAL: Dem Admin direkt die Trainer-Rolle (main: 1) zuweisen
+        // Damit der Ersteller sofort die Rechte hat
+        const trainerRolle = erstellteRollen.find(r => r.main === 1);
+        const spielerRolle = erstellteRollen.find(r => r.main === 2);
+        
+        await supabase
+          .from('spieler_rollen')
+          .insert([{
+            spieler_id: adminMitglied.id,
+            rollen_id: trainerRolle.id
+          },{
+            spieler_id: adminMitglied.id,
+            rollen_id: spielerRolle.id
+          }]);
+      }
     } catch (error) {
       console.error("Gesamtfehler:", error.message);
       alert(error.message);
@@ -185,31 +225,52 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
       e.preventDefault(); // Verhindert, dass der Browser das Bild einfach nur öffnet
     };
 
-    const teamVerlassen = async (e, teamId) => {
-      e.stopPropagation();
+const teamVerlassen = async (e, teamId) => {
+  e.stopPropagation();
+  if (!user) return;
+  if (!window.confirm("Möchtest du dieses Team wirklich verlassen?")) return;
 
-      if (!user) return;
+  try {
+    // 1. Hole die interne ID des Mitglieds aus der team_mitglieder Tabelle
+    const { data: mitglied, error: findError } = await supabase
+      .from('team_mitglieder')
+      .select('id')
+      .eq('team_id', teamId)
+      .eq('user_id', user.id)
+      .single();
 
-      if (!window.confirm("Möchtest du dieses Team wirklich verlassen?")) return;
+    if (findError || !mitglied) throw new Error("Mitgliedschaft nicht gefunden.");
 
-      try {
+    // 2. Lösche alle Rollen-Verknüpfungen für dieses Mitglied
+    const { error: roleError } = await supabase
+      .from('spieler_rollen')
+      .delete()
+      .eq('spieler_id', mitglied.id); // Nutzt die interne ID (Integer)
 
-        const { error } = await supabase
-          .from('team_mitglieder')
-          .delete()
-          .eq('team_id', teamId)
-          .eq('user_id', user.id); 
+    if (roleError) throw roleError;
 
-        if (error) throw error;
+    // 3. Lösche das Mitglied selbst aus dem Team
+    const { error: memberError } = await supabase
+      .from('team_mitglieder')
+      .delete()
+      .eq('id', mitglied.id);
 
-        setMeineTeams(meineTeams.filter(t => t.id !== teamId));
-        
-        alert("Du hast das Team verlassen.");
-      } catch (error) {
-        console.error("Fehler beim Verlassen des Teams:", error.message);
-        alert("Fehler: " + error.message);
-      }
-    };
+    if (memberError) throw memberError;
+
+    // 4. UI aktualisieren
+    setMeineTeams(meineTeams.filter(t => t.id !== teamId));
+    alert("Du hast das Team verlassen.");
+    
+    // Optional: Wenn das aktive Team verlassen wurde, zurücksetzen
+    // setAktuellesTeam(null); 
+    
+    schliessen();
+
+  } catch (error) {
+    console.error("Fehler beim Verlassen:", error.message);
+    alert("Fehler: " + error.message);
+  }
+};
 
     const dateiAuswaehlen = () => {
       document.getElementById('hidden-file-input').click();

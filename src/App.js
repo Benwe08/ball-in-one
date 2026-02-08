@@ -1,5 +1,5 @@
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
-import { useState,useEffect } from "react";
+import { useState,useEffect,useCallback } from "react";
 import Taktiktafel from "./Taktiktafel";
 import Logo from "./assets/ball-in-one-logo.png";
 import Teameinstellung from "./Teameinstellung"
@@ -24,6 +24,12 @@ export default function App() {
   const [Impressum, setImpressum] = useState(false);
   const [Datenschutz, setDatenschutz] = useState(false);
   const [aktuellesTeam, setAktuellesTeam] = useState(null);
+  const [userRechte, setUserRechte] = useState({
+  kannSpielerErstellen: false,
+  kannSpielerbearbeiten: false,
+  kannRollenVerwalten: false,
+  kannTaktikenErstellen: false
+  });
 
   const {user} = useUser();
 
@@ -92,11 +98,76 @@ export default function App() {
     }
   }, [user]); // Wird ausgeführt, sobald der User eingeloggt ist
 
+  const ladeUserRechte = useCallback(async () => {
+    
+    if (!user || !aktuellesTeam) {
+    console.log("Rechte-Check abgebrochen: User oder Team fehlt noch.");
+    return;
+  }
+
+    // 1. Suche das Team-Mitglied basierend auf der Clerk User ID
+    const { data: mitgliedData, error } = await supabase
+      .from('team_mitglieder')
+      .select(`
+        id,
+        spieler_rollen (
+          rollen (
+            SpieEr, Spidel, Roll, TaTa
+          )
+        )
+      `)
+      .eq('team_id', aktuellesTeam.id)
+      .eq('user_id', user.id) // Clerk User ID
+      .maybeSingle(); // maybeSingle verhindert Fehler, wenn kein Eintrag gefunden wird
+
+    if (error) {
+      console.error("Fehler beim Laden der Rechte:", error);
+      return;
+    }
+
+    if (mitgliedData && mitgliedData.spieler_rollen) {
+      // 2. Rechte wie gehabt berechnen
+      const rechte = mitgliedData.spieler_rollen.reduce((acc, curr) => {
+        const r = curr.rollen;
+        // Falls eine Rolle mal null ist (Sicherheitscheck)
+        if (!r) return acc; 
+        
+        return {
+          kannSpielerErstellen: acc.kannSpielerErstellen || r.SpieEr,
+          kannSpielerbearbeiten: acc.kannSpielerbearbeiten || r.Spidel,
+          kannRollenVerwalten: acc.kannRollenVerwalten || r.Roll,
+          kannTaktikenErstellen: acc.kannTaktikenErstellen || r.TaTa,
+        };
+      }, {
+        kannSpielerErstellen: false,
+        kannSpielerbearbeiten: false,
+        kannRollenVerwalten: false,
+        kannTaktikenErstellen: false
+      });
+
+      setUserRechte(rechte);
+    } else {
+      // Falls der User keine Rollen hat, Rechte zurücksetzen
+      setUserRechte({
+        kannSpielerErstellen: false,
+        kannSpielerbearbeiten: false,
+        kannRollenVerwalten: false,
+        kannTaktikenErstellen: false
+      });
+    }
+  }, [aktuellesTeam, user]); // 'user' muss hier in die Abhängigkeiten!
+  // Im useEffect aufrufen
+  useEffect(() => {
+    ladeUserRechte();
+  }, [ladeUserRechte]);
+
+
   const neuwahl = () => {
     setTaktik(false)
     setImpressum(false)
     setDatenschutz(false)
     setTeammanagment(false)
+    ladeUserRechte()
   }
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < window.innerHeight);
@@ -109,6 +180,7 @@ export default function App() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
 
   return (
     <div>
@@ -241,11 +313,11 @@ export default function App() {
                 opentak={() => {setIsOpenMen(false); setTaktik(true) }}
                 openimp={() => {setIsOpenMen(false); setImpressum(true) }}
                 opendat={() => {setIsOpenMen(false); setDatenschutz(true) }}
-                opentmm={() => {setIsOpenMen(false); setTeammanagment(true) }}
+                opentmm={() => {setIsOpenMen(false); setTeammanagment(true);console.log(userRechte) }}
                 />
             )}
             {Taktik && (
-            <Taktiktafel isMobile={isMobile} aktuellesTeam={aktuellesTeam}/>
+            <Taktiktafel isMobile={isMobile} aktuellesTeam={aktuellesTeam} userRechte={userRechte}/>
             )}
             {Impressum && (
             <Impressums isMobile={isMobile}/>
@@ -254,7 +326,7 @@ export default function App() {
             <Datenschutzs isMobile={isMobile}/>
             )}
             {Teammanagment && (
-            <Teammanagments isMobile={isMobile} aktuellesTeam={aktuellesTeam}/>
+            <Teammanagments isMobile={isMobile} aktuellesTeam={aktuellesTeam} userRechte={userRechte} neuladensss={() => ladeUserRechte()}/>
             )}
             </>
     )}

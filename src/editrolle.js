@@ -46,8 +46,25 @@ const handleSpeichern = async () => {
     
     schliessen()
 }
+const delet1 = async () => {
 
-const handleDelete = async () => {
+    const {error} = await supabase
+        .from('spieler_rollen')
+        .delete()
+        .eq('rollen_id', aktuellerolle)     
+
+    if (error) {
+        console.error("Fehler beim Speichern:", error.message);
+        alert("Fehler: " + error.message);
+        return;
+    }
+
+
+    
+    delet2()
+}
+
+const delet2 = async () => {
 
     const {error} = await supabase
         .from('rollen')
@@ -59,8 +76,16 @@ const handleDelete = async () => {
         alert("Fehler: " + error.message);
         return;
     }
+
+
     
     schliessen()
+}
+
+
+const handleDelete = () => {
+
+    delet1()
 }
 
 
@@ -109,7 +134,7 @@ useEffect(() => {
                     }}>
                 <div 
                 onClick={(e) => e.stopPropagation()}
-                style={{ width: isMobile ?'50vw':'80vw', height:  isMobile ?'40vw':'40vw', marginBottom: '20px', opacity: "1", zIndex:"1001", backgroundColor:"#171717", borderRadius:"1vw",position:"relative", border:"0.2vw solid #2e2e2e" }} 
+                style={{ width: isMobile ?'80vw':'80vw', height:  isMobile ?'90vw':'40vw', marginBottom: '20px', opacity: "1", zIndex:"1001", backgroundColor:"#171717", borderRadius:"1vw",position:"relative", border:"0.2vw solid #2e2e2e" }} 
                       >
                         <h3 style={{textAlign:"center", fontFamily:"sans-serif", color:"white", fontSize:isMobile ?'3vw':"2vw"}}>{oldrolename} bearbeiten</h3>
                 <button 
@@ -137,7 +162,7 @@ useEffect(() => {
                     placeholder="Rollen Name" 
                     value={rolename}
                     onChange={(e) => setrolename(e.target.value)}
-                    style={{right:isMobile ?'6vw': "4vw",top:isMobile ?'20%': '20%', position: "absolute", cursor:"text", width: isMobile ?'35vw':"20vw", height:isMobile ?'9vw':"3vw", backgroundColor:"#ffffff", color:"black", border: isMobile ?'0.6vw solid #9c9c9c':"2px solid #9c9c9c", borderRadius:isMobile ?'20vw':"5vw", fontSize:isMobile ?'4vw':"2vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}
+                    style={{right:isMobile ?'45vw': "4vw",top:isMobile ?'20%': '20%', position: "absolute", cursor:"text", width: isMobile ?'30vw':"20vw", height:isMobile ?'9vw':"3vw", backgroundColor:"#ffffff", color:"black", border: isMobile ?'0.6vw solid #9c9c9c':"2px solid #9c9c9c", borderRadius:isMobile ?'20vw':"5vw", fontSize:isMobile ?'4vw':"2vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}
                     />
                 
                 <input 
@@ -146,35 +171,35 @@ useEffect(() => {
                     onChange={(e) => setrolfarb(e.target.value)} 
                     style={{
                     border: 'none',
-                    width: '15vw',
-                    height: '15vw',
+                    width: isMobile ?'40vw':'15vw',
+                    height:isMobile ?'40vw': '15vw',
                     
                     cursor: 'pointer',
                     backgroundColor: 'transparent',   
                     position: "absolute",
-                    right:isMobile ?'6vw': "6vw",
-                    top:isMobile ?'20%': '55%',
+                    right:isMobile ?'4vw': "6vw",
+                    top:isMobile ?'12%': '55%',
                     }}
                 />
-                <button onClick={handleSpeichern} style={{ width:isMobile ?'35vw':"20vw",height:isMobile ?'9vw':"4vw", backgroundColor: "#4CAF50", color: "white", border: "none", borderRadius: isMobile ?'3vw':"1vw", cursor: "pointer", fontSize: isMobile ?'4vw':"1.5vw", top:isMobile ?'70%':"30%", right:isMobile ?'6vw':"4vw", position:"absolute" }}>
+                <button onClick={handleSpeichern} style={{ width:isMobile ?'30vw':"20vw",height:isMobile ?'9vw':"4vw", backgroundColor: "#4CAF50", color: "white", border: "none", borderRadius: isMobile ?'3vw':"1vw", cursor: "pointer", fontSize: isMobile ?'4vw':"1.5vw", top:isMobile ?'32%':"30%", right:isMobile ?'45vw':"4vw", position:"absolute" }}>
                 Rolle Speichern 
                 </button>
                 {!main && (
-                <button onClick={handleDelete} style={{ width:isMobile ?'35vw':"20vw",height:isMobile ?'9vw':"4vw", backgroundColor: "red", color: "white", border: "none", borderRadius: isMobile ?'3vw':"1vw", cursor: "pointer", fontSize: isMobile ?'4vw':"1.5vw", top:isMobile ?'70%':"42%", right:isMobile ?'6vw':"4vw", position:"absolute" }}>
+                <button onClick={handleDelete} style={{ width:isMobile ?'30vw':"20vw",height:isMobile ?'9vw':"4vw", backgroundColor: "red", color: "white", border: "none", borderRadius: isMobile ?'3vw':"1vw", cursor: "pointer", fontSize: isMobile ?'4vw':"1.5vw", top:isMobile ?'44%':"42%", right:isMobile ?'45vw':"4vw", position:"absolute" }}>
                 Rolle Löschen 
                 </button>
                 )}
-                <button onClick={() => setrollb(!rollb)} style={{ width:isMobile ?'35vw':"65%",height:isMobile ?'9vw':"4vw", backgroundColor: "#171717", color: "white", border: "0.1vw solid #2e2e2e",cursor: "pointer", fontSize: isMobile ?'4vw':"2vw", top:isMobile ?'70%':"20%", left:isMobile ?'6vw':"0vw", position:"absolute", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center" }}>
+                <button onClick={() => main === 1 ? console.log("nichts") :setrollb(!rollb)} style={{ width:isMobile ?'100%':"65%",height:isMobile ?'9vw':"4vw", backgroundColor: "#171717", color: "white", border: "0.1vw solid #2e2e2e",cursor: "pointer", fontSize: isMobile ?'4vw':"2vw", top:isMobile ?'60%':"20%", left:"0vw", position:"absolute", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center" }}>
                 Rollen erstellen & verwalten {!rollb ? <MdOutlineCheckBoxOutlineBlank /> : <MdOutlineCheckBox/>}
                 </button>
-                <button onClick={() => setTaTab(!taTab)} style={{ width:isMobile ?'35vw':"65%",height:isMobile ?'9vw':"4vw", backgroundColor: "#171717", color: "white", border: "0.1vw solid #2e2e2e",cursor: "pointer", fontSize: isMobile ?'4vw':"2vw", top:isMobile ?'70%':"30%", left:isMobile ?'6vw':"0vw", position:"absolute", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center" }}>
+                <button onClick={() =>main === 1 ? console.log("nichts") : setTaTab(!taTab)} style={{ width:isMobile ?'100%':"65%",height:isMobile ?'9vw':"4vw", backgroundColor: "#171717", color: "white", border: "0.1vw solid #2e2e2e",cursor: "pointer", fontSize: isMobile ?'4vw':"2vw", top:isMobile ?'70%':"30%", left:"0vw", position:"absolute", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center" }}>
                 Taktiken erstellen {!taTab ? <MdOutlineCheckBoxOutlineBlank /> : <MdOutlineCheckBox/>}
                 </button>
-                <button onClick={() => setSpieErb(!spieErb)} style={{ width:isMobile ?'35vw':"65%",height:isMobile ?'9vw':"4vw", backgroundColor: "#171717", color: "white", border: "0.1vw solid #2e2e2e",cursor: "pointer", fontSize: isMobile ?'4vw':"2vw", top:isMobile ?'70%':"40%", left:isMobile ?'6vw':"0vw", position:"absolute", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center" }}>
+                <button onClick={() =>main === 1? console.log("nichts") : setSpieErb(!spieErb)} style={{ width:isMobile ?'100%':"65%",height:isMobile ?'9vw':"4vw", backgroundColor: "#171717", color: "white", border: "0.1vw solid #2e2e2e",cursor: "pointer", fontSize: isMobile ?'4vw':"2vw", top:isMobile ?'80%':"40%", left:"0vw", position:"absolute", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center" }}>
                 Spieler erstellen {!spieErb ? <MdOutlineCheckBoxOutlineBlank /> : <MdOutlineCheckBox/>}
                 </button>
-                <button onClick={() => setSpidel(!spidelb)} style={{ width:isMobile ?'35vw':"65%",height:isMobile ?'9vw':"4vw", backgroundColor: "#171717", color: "white", border: "0.1vw solid #2e2e2e",cursor: "pointer", fontSize: isMobile ?'4vw':"2vw", top:isMobile ?'70%':"50%", left:isMobile ?'6vw':"0vw", position:"absolute", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center" }}>
-                Spieler löschen {!spidelb ? <MdOutlineCheckBoxOutlineBlank /> : <MdOutlineCheckBox/>}
+                <button onClick={() => main === 1? console.log("nichts") :setSpidel(!spidelb)} style={{ width:isMobile ?'100%':"65%",height:isMobile ?'9vw':"4vw", backgroundColor: "#171717", color: "white", border: "0.1vw solid #2e2e2e",cursor: "pointer", fontSize: isMobile ?'4vw':"2vw", top:isMobile ?'90%':"50%", left:"0vw", position:"absolute", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center" }}>
+                Spieler bearbeiten {!spidelb ? <MdOutlineCheckBoxOutlineBlank /> : <MdOutlineCheckBox/>}
                 </button>
             </div>
             </div>

@@ -151,7 +151,7 @@ const Szenewid = ({ title,isMobile,insgesamt }) => {
 /* --------------------------------------------------
    A SINGLE WIDGET (original or clone)
    -------------------------------------------------- */
-const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, isAnimating,isMoving, startPos,canEdit,aktuellerBall, isMobile, tutInhalt, tutStep, istSichtbar}) => {
+const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, isAnimating,isMoving, startPos,canEdit,aktuellerBall, isMobile, tutInhalt, tutStep, istSichtbar, userRechte}) => {
   let we, h, b, br, bc, co, ta, fs, c, bi, bs, zi;
   const [isEditing, setIsEditing] = useState(false);
   const lastTap = useRef(0);
@@ -244,7 +244,7 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
     <Draggable
       nodeRef={nodeRef}
       position={{ x: currentX, y: currentY }}
-      disabled={ghost || isAnimating || isMoving || isEditing}
+      disabled={ghost || isAnimating || isMoving || isEditing || !userRechte?.kannTaktikenErstellen}
       onStart={handleDragStart} 
       onStop={ghost ? () => {} : (e, data) => onStopCommand(id, data)}
     >
@@ -299,7 +299,7 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
    -------------------------------------------------- */
 
 
-const Taktiktafel = ({ isMobile, aktuellesTeam }) => {
+const Taktiktafel = ({ isMobile, aktuellesTeam,userRechte }) => {
   const [szene, setSzene] = useState(0);
   const [sportart, setSportart] = useState("H");
   const optionen = [
@@ -732,8 +732,11 @@ const isAutoPlaying = useRef(false);
     >
       <img src={aktuellesFeld} alt="Externes Bild" style={{left: isMobile ?'1.5vw' :"15.1vw",top: isMobile ?'10vw' :"4vw", position: "absolute", width: isMobile ?'95vw' :'60.9vw', height: 'auto', borderRadius:"4vw"}} />
       <Liste title="Widgets:" isMobile={isMobile}/>
+      
       <Liste title="" isMobile={isMobile}/>
+      {userRechte?.kannTaktikenErstellen && (
       <Liste title="2" isMobile={isMobile}/>
+      )}
       <button onClick={angeklicktvor} onMouseEnter={() => setIsHoveredrec(true)} onMouseLeave={() => setIsHoveredrec(false)} style={{padding: 0 ,color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfvor" && istSichtbar) ? "#00e5ff" :  "#ffff", left:isMobile ?'87.4vw' : "52.65vw",top:isMobile ?'71.8vw' : '43.1vw', position: "absolute",width:isMobile ?'9.4vw' :"4.8vw",height:isMobile ?'9.4vw' :"4.8vw", borderRadius:"50%", border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfvor" && istSichtbar) ? "0.5vw solid #00e5ff" :  "none" :(tutStep > 0 && tutInhalt[tutStep - 1].i === "Knopfvor" && istSichtbar) ? "0.3vw solid #00e5ff" :  "none", cursor:"pointer", fontSize:isMobile ?'8vw' :"3.5vw", display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:IsHoveredrec ? "#2e2e2e" :"#212121"}}>
       <FiChevronRight />
       </button>
@@ -846,6 +849,8 @@ const isAutoPlaying = useRef(false);
         />
       ))}
       </Liste>
+      {userRechte?.kannTaktikenErstellen && (
+        <>
       <button onClick={spielzugspeichern} onMouseEnter={() => setIsHoveredsav(true)} onMouseLeave={() => setIsHoveredsav(false)} style={{padding: 0 ,color:(tutStep > 0 && tutInhalt[tutStep - 1].i === "Save" && istSichtbar) ? "#00e5ff" :  "white",left: isMobile ?'30.3vw' :"78.05vw",top:isMobile ?'85.2vw' : '5.1vw', position: "absolute", width:isMobile ?'9.6vw' :"4.8vw",height:isMobile ?'9.6vw' :"4.8vw", border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Save" && istSichtbar) ? "0.5vw solid #00e5ff" :  "none"  : (tutStep > 0 && tutInhalt[tutStep - 1].i === "Save" && istSichtbar) ? "0.3vw solid #00e5ff" : "none" , cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'7vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:IsHoveredsav? "#2e2e2e" : "#212121"}}>
       <FiSave />
       </button>
@@ -858,6 +863,8 @@ const isAutoPlaying = useRef(false);
       <button onClick={importing} onMouseEnter={() => setIsHoveredimp(true)} onMouseLeave={() => setIsHoveredimp(false)} style={{padding: 0 ,left:isMobile ?'60.3vw' : "93.05vw",top:isMobile ?'85.2vw' : '5.1vw',color: (tutStep > 0 && tutInhalt[tutStep - 1].i === "Import" && istSichtbar) ? "#00e5ff" :  "white", position: "absolute", width:isMobile ?'9.6vw' :"4.8vw",height:isMobile ?'9.6vw' :"4.8vw", border:isMobile ? (tutStep > 0 && tutInhalt[tutStep - 1].i === "Import" && istSichtbar) ? "0.5vw solid #00e5ff" :  "none" : (tutStep > 0 && tutInhalt[tutStep - 1].i === "Import" && istSichtbar) ? "0.3vw solid #00e5ff" : "none" , cursor:"pointer", borderRadius:"50%",fontSize:isMobile ?'7vw' :"2.7vw",display:"flex", alignItems:"center", justifyContent:"center",backgroundColor:IsHoveredimp? "#2e2e2e" : "#212121"}}>
         <TbFileImport />
       </button>
+      </>
+      )}
       <div
         onClick={() => setIsOpen(!isOpen)}
         onMouseEnter={() => setIsHoveredspo(true)}
@@ -1062,6 +1069,7 @@ const isAutoPlaying = useRef(false);
             tutInhalt={tutInhalt}
             tutStep={tutStep}
             istSichtbar={istSichtbar}
+            userRechte={userRechte}
           />
         ))
       }
@@ -1095,6 +1103,7 @@ const isAutoPlaying = useRef(false);
             tutInhalt={tutInhalt}
             istSichtbar={istSichtbar}
             tutStep={tutStep}
+            userRechte={userRechte}
           />
 
         </React.Fragment>
