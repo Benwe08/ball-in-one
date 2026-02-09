@@ -280,7 +280,7 @@ useEffect(() => {
                   {rollenDaten.map((rollen) => {
                     const istAusgewaehlt = aktiveRollenIds.includes(rollen.id);
                     return(
-                  <div onClick={() =>rollen.main ? console.log("nichts") : toggleRolle(rollen.id)} style={{width: isMobile ?'17vw': "10vw",height: isMobile ?'17vw':"10vw",position:"relative",borderRadius:"1vw",cursor: "pointer",border: istAusgewaehlt ? "0.3vw solid green" : "0.3vw solid red",fontSize: isMobile ?'2.5vw':"1.5vw", fontFamily:"sans-serif", backgroundColor:rollen.farbe, textAlign: "center", justifyContent:"center", display:"flex",transition: "all 0.2s ease" , alignItems:"center",color:getKontrastFarbe(rollen.farbe)}}>{rollen.main ? "*" : ""}{rollen.name}{rollen.main ? "*" : ""}
+                  <div onClick={() =>rollen.main ? console.log("nichts") : toggleRolle(rollen.id)} style={{width: isMobile ?'17vw': "10vw",height: isMobile ?'17vw':"10vw",position:"relative",borderRadius:"1vw",cursor: "pointer",border:isMobile ? istAusgewaehlt ? "0.5vw solid green" : "0.5vw solid red" :istAusgewaehlt ? "0.3vw solid green" : "0.3vw solid red",fontSize: isMobile ?'2.5vw':"1.5vw", fontFamily:"sans-serif", backgroundColor:rollen.farbe, textAlign: "center", justifyContent:"center", display:"flex",transition: "all 0.2s ease" , alignItems:"center",color:getKontrastFarbe(rollen.farbe)}}>{rollen.main ? "*" : ""}{rollen.name}{rollen.main ? "*" : ""}
 
                   </div>
                     );

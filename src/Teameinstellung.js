@@ -1,9 +1,11 @@
 // Teameinstellung.js
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect,} from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useUser } from "@clerk/clerk-react";
-import { FiShare2, FiLogOut} from "react-icons/fi";
-import { IoMdArrowRoundBack, IoMdClose } from 'react-icons/io';
+import { FiShare2} from "react-icons/fi";
+import { IoMdArrowRoundBack, IoMdClose, IoMdSettings } from 'react-icons/io';
+import { QRCodeSVG } from 'qrcode.react';
+import { FaCopy } from 'react-icons/fa';
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
@@ -14,11 +16,16 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
 
   const [erstellenModus, setErstellenModus] = useState(false);
   const [teamName, setTeamName] = useState("");
+  const [aktteam, setaktteam] = useState("");
+  const [teamsname, setteamsname] = useState("");
   const [username, setusername] = useState("");
   const [usernumber, setusernumber] = useState("");
   const [teamBild, setTeamBild] = useState(null);
+  const [teamsbild, setteamsbild] = useState(null);
   const [bildDatei, setBildDatei] = useState(null);
   const { user } = useUser();
+  const [ansicht, setAnsicht] = useState(false);
+  const [bearbeitung, setBearbeitung] = useState(false);
   const [meineTeams, setMeineTeams] = useState([]);
 
 
@@ -181,6 +188,21 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
       }
     };
 
+      const handleDrop2 = (e) => {
+      e.preventDefault();
+      const file = e.dataTransfer.files[0]; 
+
+      if (file && file.type.startsWith("image/")) {
+        setBildDatei(file);
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          setteamsbild(reader.result); 
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
     const teamCardStyle = {
       width:  isMobile ?'22vw':"9vw",
       height: isMobile ?'35vw':"15vw",
@@ -201,21 +223,24 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
       backgroundColor: "transparent"
     };
 
+const generiereLink = (team) =>{
+  const code = team.invite_code || team.inviteCode; 
+
+        if (!code) {
+          alert("Dieses Team hat noch keinen Einladungscode. Bitte erstelle ein neues Team oder prüfe die Datenbank.");
+          console.log("Team-Objekt ohne Code:", team);
+          return;
+        }
+
+        // 2. Link korrekt zusammenbauen
+        const baseUrl = window.location.origin;
+        const link = `${baseUrl}/join?code=${code}`;
+        return link;
+}
+
 
     const kopiereEinladungsLink = (team) => {
-      // 1. Sicherheitscheck: Existiert das Team und hat es einen Code?
-      // WICHTIG: Prüfe in Supabase, ob die Spalte invite_code (mit Unterstrich) heißt!
-      const code = team.invite_code || team.inviteCode; 
-
-      if (!code) {
-        alert("Dieses Team hat noch keinen Einladungscode. Bitte erstelle ein neues Team oder prüfe die Datenbank.");
-        console.log("Team-Objekt ohne Code:", team);
-        return;
-      }
-
-      // 2. Link korrekt zusammenbauen
-      const baseUrl = window.location.origin; // http://localhost:3000
-      const link = `${baseUrl}/join?code=${code}`;
+      const link = generiereLink(team)
 
       // 3. Kopieren
       navigator.clipboard.writeText(link);
@@ -225,8 +250,7 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
       e.preventDefault(); // Verhindert, dass der Browser das Bild einfach nur öffnet
     };
 
-const teamVerlassen = async (e, teamId) => {
-  e.stopPropagation();
+const teamVerlassen = async (teamId) => {
   if (!user) return;
   if (!window.confirm("Möchtest du dieses Team wirklich verlassen?")) return;
 
@@ -289,6 +313,74 @@ const teamVerlassen = async (e, teamId) => {
       }
     };
 
+    const handleFileChange2 = (e) => {
+      const file = e.target.files[0];
+      if (file && file.type.startsWith("image/")) {
+        setBildDatei(file);
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          setteamsbild(reader.result); 
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
+const handleSpeichern2 = async () => {
+    if(teamsname === ""){
+        alert("Bitte gib einen Namen an");
+        return
+    }
+    const {error} = await supabase
+        .from('teams')
+        .update([{
+          name: teamsname,
+          bild: teamsbild
+        }])
+        .eq("id", aktteam.id)
+
+    if (error) {
+        console.error("Fehler beim Speichern:", error.message);
+        alert("Fehler: " + error.message);
+        return; // Funktion abbrechen, damit das Fenster NICHT schließt
+    }
+    
+    schliessen()
+}
+
+
+
+const teilen = (team) => {
+  setAnsicht(true)
+  setaktteam(team)
+}
+
+const insbearbeiten = (team) => {
+  setaktteam(team)
+  setBearbeitung(true)
+  
+}
+
+useEffect(() => {
+  const ladeDaten = async () => {
+    if (bearbeitung && aktteam?.id) {
+      const { data, error } = await supabase
+        .from('teams')
+        .select('*')
+        .eq('id', aktteam.id)
+        .single();
+
+      if (!error && data) {
+        setteamsname(data.name);
+        setteamsbild(data.bild);
+        setTeamBild(data.bild); 
+      }
+    }
+  };
+  ladeDaten();
+}, [bearbeitung, aktteam]);
+
+
   return (
     
     <div 
@@ -308,7 +400,7 @@ const teamVerlassen = async (e, teamId) => {
             }}>
         <div 
         onClick={(e) => e.stopPropagation()}
-        style={{ width: isMobile ?'80vw':'40vw', height:  isMobile ?'60vw':'25vw', marginBottom: '20px', opacity: "1", zIndex:"1001", backgroundColor:"#171717", borderRadius:"1vw",position:"relative", border:"0.2vw solid #2e2e2e" }} 
+        style={{ width:ansicht?isMobile ?'90vw':'30vw':  isMobile ?'80vw':'40vw', height: ansicht?isMobile ?'110vw':'40vw': isMobile ?'60vw':'25vw', marginBottom: '20px', opacity: "1", zIndex:"1001", backgroundColor:"#171717", borderRadius:"1vw",position:"relative", border:"0.2vw solid #2e2e2e" }} 
               >
         <button 
           onClick={schliessen}
@@ -330,7 +422,7 @@ const teamVerlassen = async (e, teamId) => {
         >
         <IoMdClose/>
         </button>
-        {!erstellenModus ? (
+        {!erstellenModus && !ansicht && !bearbeitung && (
           
           <div style={{ 
             display: "flex", 
@@ -379,7 +471,10 @@ const teamVerlassen = async (e, teamId) => {
                 style={{...teamCardStyle, position: "relative"}}
               >
                 <button 
-                onClick={(e) => teamVerlassen(e, team.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  insbearbeiten(team);
+                }}
                 style={{
                   position: "absolute",
                   top: "2%",
@@ -399,12 +494,12 @@ const teamVerlassen = async (e, teamId) => {
                   padding: 0
                 }}
               >
-                <FiLogOut />
+                <IoMdSettings />
               </button>
                 <button 
                 onClick={(e) => {
                   e.stopPropagation();
-                  kopiereEinladungsLink(team)
+                  teilen(team);
                 }}
                 style={{
                   position: "absolute",
@@ -444,7 +539,8 @@ const teamVerlassen = async (e, teamId) => {
             </div>
           </div>
           </div>
-        ):(
+        )}
+        {erstellenModus && !ansicht && !bearbeitung && (
           <>
           <h2 style={{ color: "white", textAlign: "center", fontFamily:"sans-serif", fontSize:isMobile ?'5vw':"2vw", borderBottom:'0.1vw solid #2e2e2e', borderRadius:"0vw", marginTop:"3.2%"}}>
           Team erstellen
@@ -515,6 +611,161 @@ const teamVerlassen = async (e, teamId) => {
             </button>
             <button onClick={() => setErstellenModus(false)} style={{ width:isMobile ?'35vw':"20vw",height:isMobile ?'9vw':"4vw", backgroundColor: "#ff0000", color: "white", border: "none", borderRadius: isMobile ?'3vw':"1vw", cursor: "pointer", fontSize: isMobile ?'4vw':"1.5vw", top:isMobile ?'80%':"80%", right:"6%", position:"absolute" }}>Abbrechen</button>
     </>
+        )}
+        {!erstellenModus && ansicht && !bearbeitung && (
+          <>
+            <div style={{ background: 'white', padding: '1vw', borderRadius: '1vw', display: 'inline-block',marginTop:isMobile ?'12vw':"4vw", marginLeft:isMobile ?'8vw':"2.5vw" }}>
+            <QRCodeSVG 
+              value={generiereLink(aktteam)} 
+              size={isMobile ?'70vw':"23vw"}      // Größe in Pixeln
+              bgColor={"#ffffff"} 
+              fgColor={"#000000"} 
+              level={"L"}
+            />
+          </div>
+          <div style={{
+            width: '85%',           // Breite angepasst
+            height: isMobile ?'10vw':"4.5vw", 
+            backgroundColor: '#ffffff',
+            border: "0.2vw solid #2e2e2e",
+            borderRadius: "1vw",
+            overflow: "hidden",
+            display: "flex",        // Aktiviert Flexbox für die Reihe
+            alignItems: "stretch",
+            margin:isMobile ?'6vw':"2vw"   // Macht Input und Button gleich hoch
+          }}>
+            <input 
+              type="text" 
+              value={generiereLink(aktteam)} 
+              readOnly 
+              style={{
+                flex: 1,             // Nimmt den Platz links vom Button ein
+                padding: '0 1vw',    // Horizontaler Abstand innen
+                backgroundColor: 'transparent',
+                border: "none",
+                outline: "none",
+                fontSize: isMobile ? "4vw" : "1.2vw",
+                color: "black",
+                display: "flex",
+                alignItems: "center", // Vertikale Zentrierung des Textes
+                height: "100%"
+              }}
+            />
+            <button
+              onClick={() => kopiereEinladungsLink(aktteam)}
+              style={{
+                width: '20%',
+                backgroundColor: '#171717',
+                color: 'white',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: isMobile ? "5vw" : "2vw",
+                display: "flex",
+                alignItems: "center",    // Text im Button zentrieren
+                justifyContent: "center"
+              }}
+            >
+              <FaCopy />
+            </button>
+          </div>
+          <button 
+          onClick={() => setAnsicht(false)}
+          style={{
+            position:"absolute",
+            top: "2%",         
+            left: "2%",        
+            width: isMobile ?'7vw':"3vw",
+            height: isMobile ?'7vw':"3vw",
+            backgroundColor:"#171717",
+            fontSize:isMobile ?'5vw':"2vw",
+            color: '#9c9c9c',
+            border: 'none',
+            cursor: 'pointer',
+            zIndex: 1002,
+            borderRadius:"50%",
+          }}
+        >
+          <IoMdArrowRoundBack />
+        </button>
+        <div
+          onClick={() => setAnsicht(false)}
+          style={{
+            position:"absolute",
+            top: "2%",         
+            left: isMobile ?'10%':"15%",        
+            width: isMobile ?'78%':"20vw",
+            height: isMobile ?'7vw':"3vw",
+            backgroundColor:"#171717",
+            fontSize:isMobile ?'5vw':"2vw",
+            color: '#ffffff',
+            border: 'none',
+            cursor: 'pointer',
+            zIndex: 1002,
+            fontFamily:"sans-serif",
+            textAlign:"center"
+          }}
+        >
+          {aktteam.name} teilen
+        </div>
+          </>
+        )}
+        {!erstellenModus && !ansicht && bearbeitung && (
+          <>
+          <h2 style={{ color: "white", textAlign: "center", fontFamily:"sans-serif", fontSize:isMobile ?'5vw':"2vw", borderBottom:'0.1vw solid #2e2e2e', borderRadius:"0vw", marginTop:"3.2%"}}>
+          {aktteam.name} bearbeiten
+          </h2>
+          <button 
+          onClick={() => setBearbeitung(false)}
+          style={{
+            position:"absolute",
+            top: "2%",         
+            left: "2%",        
+            width: isMobile ?'7vw':"3vw",
+            height: isMobile ?'7vw':"3vw",
+            backgroundColor:"#171717",
+            fontSize:isMobile ?'5vw':"2vw",
+            color: '#9c9c9c',
+            border: 'none',
+            cursor: 'pointer',
+            zIndex: 1002,
+            borderRadius:"50%",
+          }}
+        >
+          <IoMdArrowRoundBack />
+        </button>
+        <input 
+              type="text" 
+              placeholder="Team Name" 
+              value={teamsname}
+              onChange={(e) => setteamsname(e.target.value)}
+              style={{right: "5%",top: '20%', position: "absolute", cursor:"text", width: isMobile ?'35vw':"20vw", height:isMobile ?'9vw':"3vw", backgroundColor:"#ffffff", color:"black", border: isMobile ?'0.6vw solid #9c9c9c':"2px solid #9c9c9c", borderRadius:isMobile ?'20vw':"5vw", fontSize:isMobile ?'4vw':"2vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}
+            />
+            <input 
+          type="file" 
+          id="hidden-file-input"
+          accept="image/*" 
+          style={{ display: 'none' }} 
+          onChange={handleFileChange2} 
+        />
+
+        <div 
+              onDrop={handleDrop2} 
+              onDragOver={handleDragOver}
+              onClick={dateiAuswaehlen}
+              style={{width:isMobile ?'35vw': "15vw",height:isMobile ?'35vw': "15vw",border: isMobile ?'0.6vw dashed #9c9c9c':"2px dashed #9c9c9c",borderRadius: "50%",display: "flex",justifyContent: "center",alignItems: "center",textAlign: "center",fontSize: isMobile ?'5vw':"2vw",color: "#9c9c9c",backgroundColor: "#f9f9f9",cursor: "pointer",overflow: "hidden",margin: "1vw 1vw", fontFamily:"sans-serif"}}
+            >
+        {teamsbild ? (
+          <img src={teamsbild} alt="Vorschau" style={{width:"100%", height: "100%", objectFit:"cover"}} />
+              ) : (
+                <p>Bild hierher ziehen oder fallen lassen</p>
+              )}
+            </div>
+            <button onClick={handleSpeichern2} style={{ width:isMobile ?'35vw':"20vw",height:isMobile ?'9vw':"4vw", backgroundColor: "#4CAF50", color: "white", border: "none", borderRadius: isMobile ?'3vw':"1vw", cursor: "pointer", fontSize: isMobile ?'4vw':"1.5vw", top:isMobile ?'60%':"60%", right:"6%", position:"absolute" }}>
+              Team Speichern
+            </button>
+            <button onClick={() => teamVerlassen(aktteam.id)} style={{ width:isMobile ?'35vw':"20vw",height:isMobile ?'9vw':"4vw", backgroundColor: "#ff0000", color: "white", border: "none", borderRadius: isMobile ?'3vw':"1vw", cursor: "pointer", fontSize: isMobile ?'4vw':"1.5vw", top:isMobile ?'80%':"80%", right:"6%", position:"absolute" }}>Team verlassen</button>
+    
+          </>
         )}
     </div>
     </div>

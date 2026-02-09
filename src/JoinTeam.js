@@ -182,12 +182,12 @@ export default function JoinTeam({isMobile}) {
             <div key={spieler.id} onClick={() => eingeloggtals(spieler)}style={playerCardStyle}>
               <img 
                 src={spieler.nutzer?.profilbild_url|| fallback} 
-                style={{ width: '6.5vw',height:"6.5vw", borderRadius: '10vw',objectFit:"cover",position:"absolute", left:"3%", border:"0.3vw solid #8b8b8b" }} 
+                style={{ width:isMobile ? "20vw" : '6.5vw',height:isMobile ? "20vw" : "6.5vw", borderRadius: '10vw',objectFit:"cover",position:isMobile ? "absolute":"relative", left:"3%",top:isMobile ? "10%" : "0%", border:"0.3vw solid #8b8b8b" }} 
                 alt="Profil"
               />
-              <h3 style={{position:"absolute", fontSize:"1.5vw", top:"10%", left:"40%", display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical", overflow:"hidden", textOverflow:"ellipsis", width:"50%"}}>{spieler.Name}</h3>
+              <h3 style={{position:"absolute", fontSize:isMobile ? "3vw" : "1.5vw", top:isMobile ? "63%" : "10%", left:isMobile ? "0%" : "40%", display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical", overflow:"hidden", textOverflow:"ellipsis", width:isMobile ? "100%" : "50%"}}>{spieler.Name}</h3>
               <div
-                style={{ width: '2.5vw',height:"1.5vw", borderRadius: '5vw',objectFit:"cover",position:"absolute", right:"7%",top:"7%", backgroundColor:"#00e5ff",fontSize:"1vw", color:"#2e2e2e", display:"flex",justifyContent:"center", alignItems:"center" }}>
+                style={{ width:isMobile ? "4.5vw" :  '2.5vw',height:isMobile ? "3vw" : "1.5vw", borderRadius: '5vw',objectFit:"cover",position:"absolute", right:"7%",top:isMobile ? "4%" : "7%", backgroundColor:"#00e5ff",fontSize:isMobile ? "1.5vw" : "1vw", color:"#2e2e2e", display:"flex",justifyContent:"center", alignItems:"center" }}>
                   <h3>{spieler.Nummer}</h3>
               </div>
               

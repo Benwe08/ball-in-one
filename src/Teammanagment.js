@@ -1,6 +1,7 @@
 import {  useEffect, useState, useCallback } from "react";
 import { createClient } from '@supabase/supabase-js';
 import fallback from "./assets/fallback-bild.png.png";
+import logosw from "./assets/logoschwarzweiß.png"
 import NeuerSpielers from "./Neuerspieler";
 import Editplayers from "./editplayer";
 import NeueRolles from "./NeueRolle";
@@ -38,13 +39,14 @@ const neuladen = () => {
 }
 
 const Liste = ({ title, children, isMobile }) => {
-  let posl, post, w, h, bc,zi, bo, br
+  let posl, post, w, h, bc,zi, bo, br, bi
   if (title === "Spieler"){
     posl = isMobile ?'30vw' :"20vw";
     post = isMobile ?'10.5vw' :"5vw";
     w = isMobile ?'65vw' :"78vw";
     h = isMobile ?'85vh' :'80vh';
     bc = "#212121";
+    bi = `url(${logosw})`;;
     bo = isMobile ?'0.3vw solid #2e2e2e' :'0.1vw solid #2e2e2e';
     br = isMobile ? "10vw": "4vw"
     zi= 0
@@ -55,6 +57,7 @@ const Liste = ({ title, children, isMobile }) => {
     w = isMobile ?'25vw' :"15vw";
     h = isMobile ?'85vh' :'80vh';
     bc = "#212121";
+    bi = "none"
     bo = isMobile ?'0.3vw solid #2e2e2e' :'0.1vw solid #2e2e2e';
     br = isMobile ? "10vw": "4vw"
     zi= 0
@@ -78,7 +81,11 @@ const Liste = ({ title, children, isMobile }) => {
       fontSize: isMobile ?'3vw' :"5vh",
       overflowY: "hidden",
       zIndex:zi,
-      textAlign:"center"
+      textAlign:"center",
+      backgroundImage: bi,
+      backgroundSize: isMobile? "120%" :'80%',     // Empfohlen, damit das Logo nicht verzerrt
+      backgroundRepeat: 'no-repeat', // Verhindert Kachelung
+      backgroundPosition: 'center'
     }}>
          <h3 style={{margin:(title === "Spieler") ? "0.5vw 0" : "0vw 0", }}>{title}</h3>
       <div className='no-scrollbar' style={{ display: 'flex', flexDirection: 'column', paddingBottom:"0vw",paddingTop:"0vw", overflowY:"auto", flexGrow:1, }}>
@@ -181,7 +188,7 @@ const playerCardStyle = {
       flexDirection: "row",
       alignItems: "center",
       cursor: "pointer",
-      backgroundColor: "#212121",
+      backgroundColor: "rgb(33, 33, 33, 0.9)",
       borderRadius: isMobile ? "4vw" : "2vw",
       border: "0.2vw solid #00e5ff",
       transition: "transform 0.2s",
@@ -213,7 +220,7 @@ const createCardStyle = {
                 style={{ width:isMobile ?'13vw': '6.5vw',height:isMobile ?'13vw':"6.5vw", borderRadius: '15vw',objectFit:"cover",position:"absolute", left:isMobile ?'15%':"3%",top:isMobile ?'10%':"10%", border:"0.3vw solid #8b8b8b" }} 
                 alt="Profil"
               />
-              <h3 style={{position:"absolute", fontSize:isMobile ?'2.5vw':"1.5vw", top:isMobile ?'45%':"10%", left:isMobile ?'5%':"40%", display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical", overflow:"hidden", textOverflow:"ellipsis", width:isMobile ?'90%':"50%"}}>{spieler.Name}</h3>
+              <h3 style={{position:"absolute", fontSize:isMobile ?'2.5vw':"1.5vw", top:isMobile ?'45%':"10%", left:isMobile ?'5%':"43%", display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical", overflow:"hidden", textOverflow:"ellipsis", width:isMobile ?'90%':"55%"}}>{spieler.Name}</h3>
               <div style={{
                 position: "absolute",
                 bottom: "8%",            
