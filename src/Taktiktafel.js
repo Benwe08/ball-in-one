@@ -203,7 +203,7 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
     bi = 'none'
     co = (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spieler" && istSichtbar) ? "#00e5ff" :  'white';
     ta = 'center';
-    fs = isMobile ?'2.5vw' :'1vw';
+    fs = isMobile ?'2vw' :'1vw';
     c = 'grab';
     bs = 'cover'
     zi = 1
@@ -218,7 +218,7 @@ const Spieler = ({ id, orititle, onClone, onStopCommand, kennung,  x, y, ghost, 
     bi = 'none'
     co = (tutStep > 0 && tutInhalt[tutStep - 1].i === "Spieler" && istSichtbar) ? "#00e5ff" :  'white';
     ta = 'center';
-    fs = isMobile ?'2.5vw' :'1vw';
+    fs = isMobile ?'2vw' :'1vw';
     c = 'grab';
     bs = 'cover'
     zi = 1
@@ -322,7 +322,7 @@ const Taktiktafel = ({ isMobile, aktuellesTeam,userRechte }) => {
   const tutInhalt = [
     { t: "Willkommen!", d: "Die zu benutzenden Knöpfe etc. werden im Tutorial mit blinkendem türkisem Rand und Schrift markiert (Siehe Tutorial Knopf)", i:"Tutorial"},
     { t: "Sportart", d: "Wählen sie zuerst ihre Sportart aus.", i:"Sportart" },
-    { t: "Spieler", d: "Ziehen sie die Icons mit dem Namen TW und den Ball auf das Spielfeld.", i:"Spieler"  },
+    { t: "Spieler", d: "Ziehen sie die Icons mit dem Namen Spieler und den Ball auf das Spielfeld.", i:"Spieler"  },
     { t: "Umbenennen", d: "Klicken sie zweimal auf die Icons um den Namen ändern zu können.", i:"Spieler"  },
     { t: "Löschen", d: "Ziehen sie ein Icon aus dem Spielfeld um es zu löschen.", i:"Spieler"  },
     { t: "Szenen", d: "Klicken sie auf den Pfeil nach rechts um in die nächste Szene zu kommen.", i:"Knopfvor"  },
@@ -361,8 +361,8 @@ const Taktiktafel = ({ isMobile, aktuellesTeam,userRechte }) => {
   const aktuellesFeld = bilderFMap[sportart]
   const [szenen, setSzenen] = useState({
     0: [
-      { id: 1,familie: Math.random().toString(36).substr(2, 9), kennung: 1, x: isMobile ? 1 :2.5,  y: isMobile ? 72.5 : 11 ,title: "TW"},
-      { id: 2,familie: Math.random().toString(36).substr(2, 9), kennung: 2, x: isMobile ? 9.5 : 2.5,  y:isMobile ? 72.5: 15.5,title: "TW"},
+      { id: 1,familie: Math.random().toString(36).substr(2, 9), kennung: 1, x: isMobile ? 1 :2.5,  y: isMobile ? 72.5 : 11 ,title: "Spieler"},
+      { id: 2,familie: Math.random().toString(36).substr(2, 9), kennung: 2, x: isMobile ? 9.5 : 2.5,  y:isMobile ? 72.5: 15.5,title: "Spieler"},
       { id: 3,familie: Math.random().toString(36).substr(2, 9), kennung: 3, x: isMobile ? 18 : 3,  y:isMobile ? 73.6: 20,title: ""}
     ]
   });
@@ -389,8 +389,8 @@ const Taktiktafel = ({ isMobile, aktuellesTeam,userRechte }) => {
   setSzene(0);
 
   const basisWidgets = [
-      { id: `b1-${resetId}`, familie: Math.random().toString(36).substr(2, 9), kennung: 1, x: isMobile ? 1 :2.5,  y:isMobile ? 72.5 : 11 , title: "TW" },
-      { id: `b2-${resetId}`, familie: Math.random().toString(36).substr(2, 9), kennung: 2, x: isMobile ? 9.5 :2.5,  y:isMobile ? 72.5 : 15.5, title: "TW" },
+      { id: `b1-${resetId}`, familie: Math.random().toString(36).substr(2, 9), kennung: 1, x: isMobile ? 1 :2.5,  y:isMobile ? 72.5 : 11 , title: "Spieler" },
+      { id: `b2-${resetId}`, familie: Math.random().toString(36).substr(2, 9), kennung: 2, x: isMobile ? 9.5 :2.5,  y:isMobile ? 72.5 : 15.5, title: "Spieler" },
       { id: `b3-${resetId}`, familie: Math.random().toString(36).substr(2, 9), kennung: 3, x: isMobile ? 18 :3,  y:isMobile ? 73.6 : 20, title: "" }
   ];
 
@@ -487,7 +487,7 @@ const tutorialm = () => {
       const newWidget = {
         id: Date.now() + Math.random(),
         familie: Math.random().toString(36).substr(2, 9),  
-        title: original?.title ?? "TW",
+        title: original?.title ?? "Spieler",
         x: startX,
         y: startY,
         kennung

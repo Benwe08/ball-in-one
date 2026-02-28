@@ -15,6 +15,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}) {
 
   const [erstellenModus, setErstellenModus] = useState(false);
+  const [erstellenModusz, setErstellenModusz] = useState(false);
   const [teamName, setTeamName] = useState("");
   const [aktteam, setaktteam] = useState("");
   const [teamsname, setteamsname] = useState("");
@@ -102,7 +103,7 @@ export default function Teameinstellung({schliessen, setAktuellesTeam, isMobile}
       setusername("")
       setTeamBild(null); // Vorschau leeren
       setBildDatei(null); // Datei-State leeren
-      setErstellenModus(false);
+      setErstellenModusz(false);
 
       const neuErstelltesTeam = dbData[0];
 
@@ -422,7 +423,7 @@ useEffect(() => {
         >
         <IoMdClose/>
         </button>
-        {!erstellenModus && !ansicht && !bearbeitung && (
+        {!erstellenModus && !ansicht && !bearbeitung && !erstellenModusz &&(
           
           <div style={{ 
             display: "flex", 
@@ -540,7 +541,7 @@ useEffect(() => {
           </div>
           </div>
         )}
-        {erstellenModus && !ansicht && !bearbeitung && (
+        {erstellenModus && !ansicht && !bearbeitung && !erstellenModusz &&(
           <>
           <h2 style={{ color: "white", textAlign: "center", fontFamily:"sans-serif", fontSize:isMobile ?'5vw':"2vw", borderBottom:'0.1vw solid #2e2e2e', borderRadius:"0vw", marginTop:"3.2%"}}>
           Team erstellen
@@ -571,20 +572,7 @@ useEffect(() => {
               onChange={(e) => setTeamName(e.target.value)}
               style={{right: "5%",top: '20%', position: "absolute", cursor:"text", width: isMobile ?'35vw':"20vw", height:isMobile ?'9vw':"3vw", backgroundColor:"#ffffff", color:"black", border: isMobile ?'0.6vw solid #9c9c9c':"2px solid #9c9c9c", borderRadius:isMobile ?'20vw':"5vw", fontSize:isMobile ?'4vw':"2vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}
             />
-        <input 
-              type="text" 
-              placeholder="Dein Name" 
-              value={username}
-              onChange={(e) => setusername(e.target.value)}
-              style={{right: "5%",top: '32.5%', position: "absolute", cursor:"text", width: isMobile ?'35vw':"20vw", height:isMobile ?'9vw':"3vw", backgroundColor:"#ffffff", color:"black", border: isMobile ?'0.6vw solid #9c9c9c':"2px solid #9c9c9c", borderRadius:isMobile ?'20vw':"5vw", fontSize:isMobile ?'4vw':"2vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}
-            />
-        <input 
-              type="text" 
-              placeholder="Deine Nummer" 
-              value={usernumber}
-              onChange={(e) => setusernumber(e.target.value)}
-              style={{right: "5%",top: '45%', position: "absolute", cursor:"text", width: isMobile ?'35vw':"20vw", height:isMobile ?'9vw':"3vw", backgroundColor:"#ffffff", color:"black", border: isMobile ?'0.6vw solid #9c9c9c':"2px solid #9c9c9c", borderRadius:isMobile ?'20vw':"5vw", fontSize:isMobile ?'4vw':"2vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}
-            />
+        
           
         <input 
           type="file" 
@@ -606,13 +594,74 @@ useEffect(() => {
                 <p>Bild hierher ziehen oder fallen lassen</p>
               )}
             </div>
-            <button onClick={handleSpeichern} style={{ width:isMobile ?'35vw':"20vw",height:isMobile ?'9vw':"4vw", backgroundColor: "#4CAF50", color: "white", border: "none", borderRadius: isMobile ?'3vw':"1vw", cursor: "pointer", fontSize: isMobile ?'4vw':"1.5vw", top:isMobile ?'60%':"60%", right:"6%", position:"absolute" }}>
-              Team Speichern
+            <button onClick={() => {setErstellenModus(false); setErstellenModusz(true)}} style={{ width:isMobile ?'35vw':"20vw",height:isMobile ?'9vw':"4vw", backgroundColor: "#4CAF50", color: "white", border: "none", borderRadius: isMobile ?'3vw':"1vw", cursor: "pointer", fontSize: isMobile ?'4vw':"1.5vw", top:isMobile ?'60%':"60%", right:"6%", position:"absolute" }}>
+              Weiter
             </button>
             <button onClick={() => setErstellenModus(false)} style={{ width:isMobile ?'35vw':"20vw",height:isMobile ?'9vw':"4vw", backgroundColor: "#ff0000", color: "white", border: "none", borderRadius: isMobile ?'3vw':"1vw", cursor: "pointer", fontSize: isMobile ?'4vw':"1.5vw", top:isMobile ?'80%':"80%", right:"6%", position:"absolute" }}>Abbrechen</button>
     </>
         )}
-        {!erstellenModus && ansicht && !bearbeitung && (
+
+
+
+        {!erstellenModus && !ansicht && !bearbeitung && erstellenModusz && (
+          <>
+          <h2 style={{ color: "white", textAlign: "center", fontFamily:"sans-serif", fontSize:isMobile ?'5vw':"2vw", borderBottom:'0.1vw solid #2e2e2e', borderRadius:"0vw", marginTop:"3.2%"}}>
+          Team erstellen
+          </h2>
+          <button 
+          onClick={() => {setErstellenModus(true); setErstellenModusz(false)}}
+          style={{
+            position:"absolute",
+            top: "2%",         
+            left: "2%",        
+            width: isMobile ?'7vw':"3vw",
+            height: isMobile ?'7vw':"3vw",
+            backgroundColor:"#171717",
+            fontSize:isMobile ?'5vw':"2vw",
+            color: '#9c9c9c',
+            border: 'none',
+            cursor: 'pointer',
+            zIndex: 1002,
+            borderRadius:"50%",
+          }}
+        >
+          <IoMdArrowRoundBack />
+        </button>
+        <input 
+              type="text" 
+              placeholder="Dein Name" 
+              value={username}
+              onChange={(e) => setusername(e.target.value)}
+              style={{right: "5%",top: '20%', position: "absolute", cursor:"text", width: isMobile ?'35vw':"20vw", height:isMobile ?'9vw':"3vw", backgroundColor:"#ffffff", color:"black", border: isMobile ?'0.6vw solid #9c9c9c':"2px solid #9c9c9c", borderRadius:isMobile ?'20vw':"5vw", fontSize:isMobile ?'4vw':"2vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}
+            />
+        <input 
+              type="text" 
+              placeholder="Nummer (optional)" 
+              value={usernumber}
+              onChange={(e) => setusernumber(e.target.value)}
+              style={{right: "5%",top: '45%', position: "absolute", cursor:"text", width: isMobile ?'35vw':"20vw", height:isMobile ?'9vw':"3vw", backgroundColor:"#ffffff", color:"black", border: isMobile ?'0.6vw solid #9c9c9c':"2px solid #9c9c9c", borderRadius:isMobile ?'20vw':"5vw", fontSize:isMobile ?'4vw':"2vw", textAlign: "center", justifyContent:"center", display:"flex", alignItems:"center"}}
+            />
+          
+        <input 
+          type="file" 
+          id="hidden-file-input"
+          accept="image/*" 
+          style={{ display: 'none' }} 
+          onChange={handleFileChange} 
+        />
+
+            <button onClick={handleSpeichern} style={{ width:isMobile ?'35vw':"20vw",height:isMobile ?'9vw':"4vw", backgroundColor: "#4CAF50", color: "white", border: "none", borderRadius: isMobile ?'3vw':"1vw", cursor: "pointer", fontSize: isMobile ?'4vw':"1.5vw", top:isMobile ?'60%':"60%", right:"6%", position:"absolute" }}>
+              Team Speichern
+            </button>
+            <button onClick={() => setErstellenModusz(false)} style={{ width:isMobile ?'35vw':"20vw",height:isMobile ?'9vw':"4vw", backgroundColor: "#ff0000", color: "white", border: "none", borderRadius: isMobile ?'3vw':"1vw", cursor: "pointer", fontSize: isMobile ?'4vw':"1.5vw", top:isMobile ?'80%':"80%", right:"6%", position:"absolute" }}>Abbrechen</button>
+    </>
+        )}
+
+
+
+
+
+        {!erstellenModus && ansicht && !bearbeitung && !erstellenModusz &&(
           <>
             <div style={{ background: 'white', padding: '1vw', borderRadius: '1vw', display: 'inline-block',marginTop:isMobile ?'12vw':"4vw", marginLeft:isMobile ?'8vw':"2.5vw" }}>
             <QRCodeSVG 
@@ -709,7 +758,7 @@ useEffect(() => {
         </div>
           </>
         )}
-        {!erstellenModus && !ansicht && bearbeitung && (
+        {!erstellenModus && !ansicht && bearbeitung && !erstellenModusz &&(
           <>
           <h2 style={{ color: "white", textAlign: "center", fontFamily:"sans-serif", fontSize:isMobile ?'5vw':"2vw", borderBottom:'0.1vw solid #2e2e2e', borderRadius:"0vw", marginTop:"3.2%"}}>
           {aktteam.name} bearbeiten
