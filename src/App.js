@@ -19,7 +19,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function App() {
   const [istOffen, setIstOffen] = useState(false);
-  const [Taktik, setTaktik] = useState(false);
+  const [Taktik, setTaktik] = useState(true);
   const [Teammanagment, setTeammanagment] = useState(false);
   const [Impressum, setImpressum] = useState(false);
   const [Datenschutz, setDatenschutz] = useState(false);
@@ -71,7 +71,6 @@ export default function App() {
     async function initialesTeamLaden() {
       if (!user) return;
 
-      // 1. Mitgliedschaften holen
       const { data: mitgliedschaften } = await supabase
         .from('team_mitglieder')
         .select('team_id')
@@ -79,15 +78,14 @@ export default function App() {
 
       if (mitgliedschaften && mitgliedschaften.length > 0) {
         const teamIds = mitgliedschaften.map(m => m.team_id);
-        
-        // 2. Team-Daten holen
+
         const { data: teams } = await supabase
           .from('teams')
           .select('*')
           .in('id', teamIds);
 
         if (teams && teams.length > 0) {
-          // 3. Das erste Team setzen, wenn noch keins ausgewählt wurde
+
           setAktuellesTeam(teams[0]);
         }
       }
@@ -96,8 +94,7 @@ export default function App() {
     if (user) {
       initialesTeamLaden();
     }
-  }, [user]); // Wird ausgeführt, sobald der User eingeloggt ist
-
+  }, [user]); 
   const ladeUserRechte = useCallback(async () => {
     
     if (!user || !aktuellesTeam) {
@@ -105,7 +102,6 @@ export default function App() {
     return;
   }
 
-    // 1. Suche das Team-Mitglied basierend auf der Clerk User ID
     const { data: mitgliedData, error } = await supabase
       .from('team_mitglieder')
       .select(`
@@ -117,8 +113,8 @@ export default function App() {
         )
       `)
       .eq('team_id', aktuellesTeam.id)
-      .eq('user_id', user.id) // Clerk User ID
-      .maybeSingle(); // maybeSingle verhindert Fehler, wenn kein Eintrag gefunden wird
+      .eq('user_id', user.id) 
+      .maybeSingle();
 
     if (error) {
       console.error("Fehler beim Laden der Rechte:", error);
@@ -126,10 +122,10 @@ export default function App() {
     }
 
     if (mitgliedData && mitgliedData.spieler_rollen) {
-      // 2. Rechte wie gehabt berechnen
+
       const rechte = mitgliedData.spieler_rollen.reduce((acc, curr) => {
         const r = curr.rollen;
-        // Falls eine Rolle mal null ist (Sicherheitscheck)
+
         if (!r) return acc; 
         
         return {
@@ -147,7 +143,7 @@ export default function App() {
 
       setUserRechte(rechte);
     } else {
-      // Falls der User keine Rollen hat, Rechte zurücksetzen
+
       setUserRechte({
         kannSpielerErstellen: false,
         kannSpielerbearbeiten: false,
@@ -155,8 +151,7 @@ export default function App() {
         kannTaktikenErstellen: false
       });
     }
-  }, [aktuellesTeam, user]); // 'user' muss hier in die Abhängigkeiten!
-  // Im useEffect aufrufen
+  }, [aktuellesTeam, user]);
   useEffect(() => {
     ladeUserRechte();
   }, [ladeUserRechte]);
@@ -226,7 +221,7 @@ export default function App() {
       <>
       <div 
     style={{
-              position: 'fixed',    // Fixiert über dem Rest der Seite
+              position: 'fixed',
               top: 0,
               left: 0,
               width: '100%',
