@@ -54,12 +54,12 @@ export default function JoinTeam({isMobile}) {
       .from('team_mitglieder')
       .select('id')
       .eq('team_id', team.id)
-      .eq('user_id', user.id) // Wir suchen nach der Clerk-ID des aktuellen Users
-      .maybeSingle(); // Gibt ein Objekt zurück oder null, falls nichts gefunden wurde
+      .eq('user_id', user.id) 
+      .maybeSingle(); 
 
     if (existiertSchon) {
       alert("Du bist bereits Mitglied dieses Teams!");
-      window.location.href = "/"; // Direkt zum Dashboard/Startseite
+      window.location.href = "/"; 
       return;
     }
 
@@ -77,7 +77,7 @@ export default function JoinTeam({isMobile}) {
     if (!window.confirm("Bist du "+ spieler.Name + " ?")) return;
 
     try {
-    // 2. Wir warten mit "await", bis die Datenbank fertig ist
+   
     const { data, error } = await supabase
       .from('team_mitglieder')
       .update({ user_id: user.id })
@@ -92,7 +92,7 @@ export default function JoinTeam({isMobile}) {
 
     console.log("Erfolgreich verknüpft:", data);
 
-    // 3. Erst wenn alles geklappt hat, leiten wir weiter
+   
     window.location.href = "/";
 
   } catch (err) {
@@ -162,7 +162,7 @@ export default function JoinTeam({isMobile}) {
 
         <div 
         onClick={(e) => e.stopPropagation()}
-        style={{ width:'100vw', height: "100vh", marginBottom: '20px', opacity: "1", zIndex:"1001", backgroundColor:"#171717", borderRadius:"none",position:"fixed", border:"0.2vw solid #2e2e2e", color:"white", fontFamily:"sans-serif", fontSize:"3vw", left:0, top: 0 }} 
+        style={{ width:'100vw', height: "100vh",overflowY: "auto", marginBottom: '20px', opacity: "1", zIndex:"1001", backgroundColor:"#171717", borderRadius:"none",position:"fixed", border:"0.2vw solid #2e2e2e", color:"white", fontFamily:"sans-serif", fontSize:"3vw", left:0, top: 0 }} 
               >
                 <h3>Wer bist du?</h3>
 
